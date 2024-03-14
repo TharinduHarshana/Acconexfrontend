@@ -1,11 +1,15 @@
-import logo from './logo.svg';
-import './App.css';
-
+import { DatePicker } from 'antd';
+import { BrowserRouter,Route,Routes } from 'react-router-dom';
+import Homepage from './pages/Homepage';
 function App() {
   return (
-    <div >
-      
-    </div>
+    <>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Homepage />} />
+        </Routes>
+      </BrowserRouter>
+    </>
   );
 }
 

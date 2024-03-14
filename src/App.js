@@ -1,24 +1,24 @@
-import logo from './logo.svg';
+
 import React from 'react';
-import SignIn from './components/LoginComponents/SignIn';
-
-import './App.css';
-import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import ForgetPassword from './components/LoginComponents/ForgetPassword';
-
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import UserForm from './components/UserData/UserForm';
+import UserTable from './components/UserData/UserTable';
+import Dashboard from './components/Dashboard';
+import Login from './components/LoginComponents/Login';
+import { DatePicker } from 'antd';
+import { BrowserRouter,Route,Routes } from 'react-router-dom';
+import Homepage from './pages/Homepage';
 
 function App() {
-  const router=createBrowserRouter([
-    {
-      path:"/",
-      element:<SignIn></SignIn>
-    },{
-      path:"/forgetpwd",
-      element:<ForgetPassword></ForgetPassword>
-    }
-  ])
   return (
-    <RouterProvider router={router}></RouterProvider>
+    <BrowserRouter>
+      <Routes>
+        <Route path='/' element={<Login />} />
+        <Route path='/userform' element={<UserForm />} />
+        <Route path='/userTable' element={<UserTable />} />
+            <Route path="/" element={<Homepage />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

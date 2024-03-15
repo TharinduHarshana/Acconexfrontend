@@ -42,25 +42,9 @@ function UserForm() {
   const [phoneError, setPhoneError] = useState("");
   const [idNumberError, setIdNumberError] = useState("");
 
-  {phoneError && <div className="error">{phoneError}</div>}
-
-
-const clearForm = () => {
-  setFormData({
-    userId: "",
-    userName: "",
-    firstName: "",
-    lastName: "",
-    password: "",
-    gmail: "",
-    dob: "",
-    phoneNumber: "",
-    address: "",
-    idNumber: "",
-    gender: "",
-    role: "",
-  });
-};
+  {
+    phoneError && <div className="error">{phoneError}</div>;
+  }
 
   //call the user function
   async function handleSubmit() {
@@ -81,7 +65,6 @@ const clearForm = () => {
       );
       console.log(res);
       alert("User added successfully!");
-  
     } catch (error) {
       console.log(error);
       alert("Error adding user: " + error.message);
@@ -109,7 +92,7 @@ const clearForm = () => {
       setIdNumberError("Please enter only numbers and letters");
     }
   };
-  
+
   return (
     <>
       <Form
@@ -247,11 +230,10 @@ const clearForm = () => {
           ]}
         >
           <DatePicker
-          onChange={(date, dateString) =>
-            date && setFormData({ ...formData, dob: dateString })
-          }
-          picker="date"
-
+            onChange={(date, dateString) =>
+              date && setFormData({ ...formData, dob: dateString })
+            }
+            picker="date"
           />
         </Form.Item>
 
@@ -267,10 +249,7 @@ const clearForm = () => {
           validateStatus={phoneError ? "error" : ""}
           help={phoneError}
         >
-          <Input
-            value={formData.phoneNumber}
-            onChange={handlePhoneChange}
-          />
+          <Input value={formData.phoneNumber} onChange={handlePhoneChange} />
         </Form.Item>
 
         <Form.Item
@@ -301,14 +280,10 @@ const clearForm = () => {
             },
           ]}
           hasFeedback
-          validateStatus={idNumberError ?"error":" "}
+          validateStatus={idNumberError ? "error" : " "}
           help={idNumberError}
         >
-          <Input
-          value={formData.idNumber}
-            onChange={handleIdNumberChange
-            }
-          />
+          <Input value={formData.idNumber} onChange={handleIdNumberChange} />
         </Form.Item>
 
         <Form.Item
@@ -355,7 +330,7 @@ const clearForm = () => {
             span: 16,
           }}
         >
-          <Button type="primary" htmlType="submit"  onClick={handleSubmit} >
+          <Button type="primary" htmlType="submit" onClick={handleSubmit}>
             Submit
           </Button>
         </Form.Item>

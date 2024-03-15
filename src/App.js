@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import UserForm from './components/UserData/UserForm';
 import UserTable from './components/UserData/UserTable';
 import Dashboard from './components/Dashboard';
@@ -16,7 +15,7 @@ function App() {
         <Route path='/' element={<Login />} />
         <Route path='/userform' element={<UserForm />} />
         <Route path='/userTable' element={<UserTable />} />
-            <Route path="/" element={<Homepage />} />
+        <Route path="/home" element={<Homepage />} />
       </Routes>
     </BrowserRouter>
   );

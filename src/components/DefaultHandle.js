@@ -5,6 +5,7 @@ import "../styles/sidebar.css";
 import { Link } from 'react-router-dom';
 
 
+
 const { Header, Sider, Content } = Layout;
 
 const DefaultHandle = ({ children }) => {
@@ -32,8 +33,8 @@ const DefaultHandle = ({ children }) => {
           selectedKeys={[selectedKey]}
           onClick={handleMenuClick}
         >
-          <Menu.Item key="/" icon={<DashboardOutlined />}>
-            <Link to="/">Home</Link>
+          <Menu.Item key="/dashboard" icon={<DashboardOutlined />}>
+            <Link to="/dashboard">Home</Link>
           </Menu.Item>
 
           <Menu.Item key="/items" icon={<ProductOutlined />}>

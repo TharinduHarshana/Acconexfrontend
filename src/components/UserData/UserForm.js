@@ -39,6 +39,28 @@ function UserForm() {
     gender: "",
     role: "",
   });
+  const [phoneError, setPhoneError] = useState("");
+  const [idNumberError, setIdNumberError] = useState("");
+
+  {phoneError && <div className="error">{phoneError}</div>}
+
+
+const clearForm = () => {
+  setFormData({
+    userId: "",
+    userName: "",
+    firstName: "",
+    lastName: "",
+    password: "",
+    gmail: "",
+    dob: "",
+    phoneNumber: "",
+    address: "",
+    idNumber: "",
+    gender: "",
+    role: "",
+  });
+};
 
   //call the user function
   async function handleSubmit() {
@@ -59,12 +81,35 @@ function UserForm() {
       );
       console.log(res);
       alert("User added successfully!");
+  
     } catch (error) {
       console.log(error);
       alert("Error adding user: " + error.message);
     }
   }
-
+  //phone number validation
+  const handlePhoneChange = (e) => {
+    const { value } = e.target;
+    const containsOnlyDigits = /^\d+$/.test(value);
+    if (containsOnlyDigits || value === "") {
+      setFormData({ ...formData, phoneNumber: value });
+      setPhoneError(""); // Clear any previous error message
+    } else {
+      setPhoneError("Please enter only numbers");
+    }
+  };
+  //id number validation
+  const handleIdNumberChange = (e) => {
+    const { value } = e.target;
+    const containsValidCharacters = /^[a-zA-Z0-9]+$/.test(value);
+    if (containsValidCharacters || value === "") {
+      setFormData({ ...formData, idNumber: value });
+      setIdNumberError(""); // Clear any previous error message
+    } else {
+      setIdNumberError("Please enter only numbers and letters");
+    }
+  };
+  
   return (
     <>
       <Form
@@ -80,7 +125,7 @@ function UserForm() {
           rules={[
             {
               required: true,
-              message: "Please input!",
+              message: "Please input user id!",
             },
           ]}
         >
@@ -99,7 +144,7 @@ function UserForm() {
           rules={[
             {
               required: true,
-              message: "Please input!",
+              message: "Please input user name!",
             },
           ]}
         >
@@ -118,7 +163,7 @@ function UserForm() {
           rules={[
             {
               required: true,
-              message: "Please input!",
+              message: "Please input first name!",
             },
           ]}
         >
@@ -136,7 +181,7 @@ function UserForm() {
           rules={[
             {
               required: true,
-              message: "Please input!",
+              message: "Please input last name!",
             },
           ]}
         >
@@ -155,7 +200,11 @@ function UserForm() {
           rules={[
             {
               required: true,
-              message: "Please input!",
+              message: "Please input password!",
+            },
+            {
+              min: 8,
+              message: "Password must be at least 8 characters long!",
             },
           ]}
         >
@@ -174,7 +223,7 @@ function UserForm() {
           rules={[
             {
               required: true,
-              message: "Please input!",
+              message: "Please input email!",
             },
           ]}
         >
@@ -188,19 +237,21 @@ function UserForm() {
         </Form.Item>
 
         <Form.Item
-          label="DOB"
+          label="Date of Birth"
           name="DOB"
           rules={[
             {
               required: true,
-              message: "Please input!",
+              message: "Please input date of birth!",
             },
           ]}
         >
           <DatePicker
-            onChange={(e) =>
-              e && e.target && setFormData({ ...formData, dob: e.target.value })
-            }
+          onChange={(date, dateString) =>
+            date && setFormData({ ...formData, dob: dateString })
+          }
+          picker="date"
+
           />
         </Form.Item>
 
@@ -210,16 +261,15 @@ function UserForm() {
           rules={[
             {
               required: true,
-              message: "Please input!",
+              message: "Please input phone number!",
             },
           ]}
+          validateStatus={phoneError ? "error" : ""}
+          help={phoneError}
         >
           <Input
-            onChange={(e) =>
-              e &&
-              e.target &&
-              setFormData({ ...formData, phoneNumber: e.target.value })
-            }
+            value={formData.phoneNumber}
+            onChange={handlePhoneChange}
           />
         </Form.Item>
 
@@ -229,7 +279,7 @@ function UserForm() {
           rules={[
             {
               required: true,
-              message: "Please input!",
+              message: "Please input address!",
             },
           ]}
         >
@@ -247,15 +297,16 @@ function UserForm() {
           rules={[
             {
               required: true,
-              message: "Please input!",
+              message: "Please input id number!",
             },
           ]}
+          hasFeedback
+          validateStatus={idNumberError ?"error":" "}
+          help={idNumberError}
         >
           <Input
-            onChange={(e) =>
-              e &&
-              e.target &&
-              setFormData({ ...formData, idNumber: e.target.value })
+          value={formData.idNumber}
+            onChange={handleIdNumberChange
             }
           />
         </Form.Item>
@@ -266,7 +317,7 @@ function UserForm() {
           rules={[
             {
               required: true,
-              message: "Please input!",
+              message: "Please select gender!",
             },
           ]}
         >
@@ -284,7 +335,7 @@ function UserForm() {
           rules={[
             {
               required: true,
-              message: "Please input!",
+              message: "Please select user role!",
             },
           ]}
         >
@@ -304,7 +355,7 @@ function UserForm() {
             span: 16,
           }}
         >
-          <Button type="primary" htmlType="submit" onClick={handleSubmit}>
+          <Button type="primary" htmlType="submit"  onClick={handleSubmit} >
             Submit
           </Button>
         </Form.Item>

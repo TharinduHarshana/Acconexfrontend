@@ -12,10 +12,16 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/' element={<Login />} />
-        <Route path='/userform' element={<UserForm />} />
-        <Route path='/userTable' element={<UserTable />} />
-        <Route path="/home" element={<Homepage />} />
+        {/* User Routes */}
+
+        <Route path='/' element={<Dashboard />} />
+        
+
+        {/* admin routes */}
+        <Route path='/admin' element={<Login />} />
+        <Route path='/admin/userform' element={<UserForm />} />
+        <Route path='/admin/userTable' element={<UserTable />} />
+        <Route path="/admin/home" element={<Homepage />} />
       </Routes>
     </BrowserRouter>
   );

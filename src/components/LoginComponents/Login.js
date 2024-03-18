@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./login.css"; // Corrected import statement
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
-import { Button, Form, Input } from "antd";
+import { Button, Form, Input, Typography } from "antd";
 import { login } from "../../Utility/api/user.api";
 import { useNavigate } from "react-router-dom";
 
@@ -16,7 +16,7 @@ function Login() {
       console.log(res);
       if (res && res.data) {
         // Navigate to dashboard route upon successful login
-        navigate("/home");
+        navigate("/admin/home");
       }
     } catch (error) {
       if (error.response && error.response.status === 401) {
@@ -36,6 +36,9 @@ function Login() {
           remember: true,
         }}
       >
+        <Typography className="login-form-title">CAZZORA SOFT SOLUTION</Typography>
+        <Typography className="customer-support">Customer Support: 071 913 72 98</Typography>
+
         <Form.Item
           name="username"
           rules={[
@@ -45,9 +48,9 @@ function Login() {
             },
           ]}
         >
-          <Input
-            prefix={<UserOutlined className="site-form-item-icon" />}
-            placeholder="Username"
+          <Input className="userName"
+           prefix={<UserOutlined className="site-form-item-icon" />}
+          placeholder="Username"
             onChange={(e) =>
               e &&
               e.target &&
@@ -64,10 +67,11 @@ function Login() {
             },
           ]}
         >
-          <Input
+          <Input.Password
             prefix={<LockOutlined className="site-form-item-icon" />}
             type="password" // Modified this line to set the input type to "password"
             placeholder="Password"
+            className="password"
             onChange={(e) =>
               e &&
               e.target &&
@@ -83,7 +87,7 @@ function Login() {
             className="login-form-button"
             onClick={handleSubmit}
           >
-            Log in
+            LOGIN
           </Button>
         </Form.Item>
       </Form>

@@ -1,8 +1,14 @@
 import React, { useState } from "react";
 import { user } from "../../Utility/api/user.api";
 import { Button, DatePicker, Form, Input, Select } from "antd";
+import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
+
 const { RangePicker } = DatePicker;
 const { Option } = Select;
+
+
+
+
 
 const formItemLayout = {
   labelCol: {
@@ -24,6 +30,8 @@ const formItemLayout = {
 };
 
 function UserForm() {
+  
+
   //get the data from form
   const [formData, setFormData] = useState({
     userId: "",
@@ -41,7 +49,13 @@ function UserForm() {
   });
   const [phoneError, setPhoneError] = useState("");
   const [idNumberError, setIdNumberError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
+  
+
+  const handleTogglePassword = () => {
+    setShowPassword(!showPassword);
+  };
   {
     phoneError && <div className="error">{phoneError}</div>;
   }
@@ -65,11 +79,29 @@ function UserForm() {
       );
       console.log(res);
       alert("User added successfully!");
+      setFormData({
+        userId: "",
+        userName: "",
+        firstName: "",
+        lastName: "",
+        password: "",
+        gmail: "",
+        dob: "",
+        phoneNumber: "",
+        address: "",
+        idNumber: "",
+        gender: "",
+        role: "",
+      });
+    
+      
+    
     } catch (error) {
       console.log(error);
       alert("Error adding user: " + error.message);
     }
   }
+
   //phone number validation
   const handlePhoneChange = (e) => {
     const { value } = e.target;
@@ -81,6 +113,7 @@ function UserForm() {
       setPhoneError("Please enter only numbers");
     }
   };
+
   //id number validation
   const handleIdNumberChange = (e) => {
     const { value } = e.target;
@@ -191,11 +224,19 @@ function UserForm() {
             },
           ]}
         >
-          <Input
+          <Input.Password
+            value={formData.password}
             onChange={(e) =>
               e &&
               e.target &&
               setFormData({ ...formData, password: e.target.value })
+            }
+            iconRender={(visible) =>
+              visible ? (
+                <EyeOutlined onClick={handleTogglePassword} />
+              ) : (
+                <EyeInvisibleOutlined onClick={handleTogglePassword} />
+              )
             }
           />
         </Form.Item>
@@ -330,9 +371,10 @@ function UserForm() {
             span: 16,
           }}
         >
-          <Button type="primary" htmlType="submit" onClick={handleSubmit}>
-            Submit
+          <Button type="primary" htmlType="submit" onClick={handleSubmit} >
+          Submit
           </Button>
+          
         </Form.Item>
       </Form>
     </>
@@ -340,3 +382,4 @@ function UserForm() {
 }
 
 export default UserForm;
+

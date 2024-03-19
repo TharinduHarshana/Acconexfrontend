@@ -23,7 +23,7 @@ const DefaultHandle = ({ children }) => {
     <Layout>
       <Sider trigger={null} collapsible collapsed={collapsed}>
         <div className="demo-logo-vertical">
-          <h3>ACONEX COMPUTER</h3>
+          <h3 >ACONEX COMPUTER</h3>
         </div>
         <Menu
           theme="dark"
@@ -44,12 +44,12 @@ const DefaultHandle = ({ children }) => {
             <Link to="/customer">Customers</Link>
           </Menu.Item>
 
-          <Menu.Item key="/users" icon={<UserOutlined />}>
-            <Link to="/users">Users</Link>
+          <Menu.Item key="/user" icon={<UserOutlined />}>
+            <Link to="/user">Users</Link>
           </Menu.Item>
 
-          <Menu.Item key="/sales" icon={<ShoppingCartOutlined />}>
-            <Link to="/sales">Sales</Link>
+          <Menu.Item key="/sale" icon={<ShoppingCartOutlined />}>
+            <Link to="/sale">Sales</Link>
           </Menu.Item>
 
           <Menu.Item key="/reports" icon={<LineChartOutlined />}>

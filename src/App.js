@@ -3,11 +3,9 @@ import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import UserForm from './components/UserData/UserForm';
 import UserTable from './components/UserData/UserTable';
-import Dashboard from './components/Dashboard';
 import Login from './components/LoginComponents/Login';
-import { DatePicker } from 'antd';
-import { BrowserRouter,Route,Routes } from 'react-router-dom';
 import Homepage from './pages/Homepage';
+import SalesDachboad from './components/SalesComponents/SalesDachboad';
 
 function App() {
   return (
@@ -15,8 +13,9 @@ function App() {
       <Routes>
         <Route path='/' element={<Login />} />
         <Route path='/userform' element={<UserForm />} />
-        <Route path='/userTable' element={<UserTable />} />
-            <Route path="/" element={<Homepage />} />
+        <Route path='/user' element={<UserTable />} />
+          <Route path="/home" element={<Homepage />} />
+          <Route path='/sale' element={<SalesDachboad/>}/>
       </Routes>
     </BrowserRouter>
   );

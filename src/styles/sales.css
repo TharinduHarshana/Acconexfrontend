@@ -1,0 +1,50 @@
+
+.content{
+    text-align: center;
+    padding: 10%;
+    background-color: rgba(195, 192, 192, 0.177);
+    vertical-align: center;
+    margin-left: 30%;
+
+
+
+}
+.input{
+    padding: 0;
+    word-spacing: normal;
+    display: block;
+
+
+}
+.inbox{
+    padding: 10px;
+    margin-left: 10%;
+   
+}
+.topbar{
+    margin-left: 85%;
+}
+
+.inboxserch {
+    width: 500px; /* Adjust width as needed */
+    height: 40px; /* Adjust height as needed */
+    margin-left: 30px;
+    margin-top: 20px;
+}
+
+.seachbtn{
+    height: 40px;
+    margin-left: 20px;
+    margin-top: 20px;
+}
+.table{
+    margin-top: 20px;
+    margin-left: 30px;
+    margin-right: 30px;
+   border-radius: 3;
+   border-color: black;
+
+}
+.dashCard{
+    margin-left: 30px;
+}

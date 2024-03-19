@@ -6,6 +6,9 @@ import UserTable from './components/UserData/UserTable';
 import Login from './components/LoginComponents/Login';
 import Homepage from './pages/Homepage';
 import SalesDachboad from './components/SalesComponents/SalesDachboad';
+import Bill from './components/SalesComponents/Bill';
+import AddCustomer from './components/SalesComponents/AddCustomer';
+import SuspendSale from './components/SalesComponents/SuspendSale';
 
 function App() {
   return (
@@ -16,6 +19,10 @@ function App() {
         <Route path='/user' element={<UserTable />} />
           <Route path="/home" element={<Homepage />} />
           <Route path='/sale' element={<SalesDachboad/>}/>
+          <Route path='/bill' element={<Bill/>}/>
+          <Route path='/addcus' element={<AddCustomer/>}/>
+          <Route path='/holdbill' element={<SuspendSale/>}/>
+          <Route path='/log' element={<Login/>}/>
       </Routes>
     </BrowserRouter>
   );

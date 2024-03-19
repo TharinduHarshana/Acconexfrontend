@@ -1,4 +1,4 @@
-import{useNavigate} from 'react-router-dom';
+import{Link, useNavigate} from 'react-router-dom';
 
 const Items =() =>{
     const navigate = useNavigate();
@@ -38,10 +38,11 @@ const Items =() =>{
         {
             name:'Actions',
             cell:(row)=>(
-                <div edbtn>
-                    
+                <div editbtn>
+                    <Link to={'/UpdateItem/${row._id'} style={edbtn}>Edit</Link>
+                    <Link onClick={(e)=>handleDelete(row._id)} style={delbtn}>Delete</Link> 
                 </div>
-            )
-        }
-    ]
+            ),
+        },
+    ];
 }

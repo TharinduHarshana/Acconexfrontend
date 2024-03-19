@@ -3,12 +3,7 @@ import { user } from "../../Utility/api/user.api";
 import { Button, DatePicker, Form, Input, Select } from "antd";
 import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
 
-const { RangePicker } = DatePicker;
 const { Option } = Select;
-
-
-
-
 
 const formItemLayout = {
   labelCol: {
@@ -30,8 +25,6 @@ const formItemLayout = {
 };
 
 function UserForm() {
-  
-
   //get the data from form
   const [formData, setFormData] = useState({
     userId: "",
@@ -50,8 +43,6 @@ function UserForm() {
   const [phoneError, setPhoneError] = useState("");
   const [idNumberError, setIdNumberError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-
-  
 
   const handleTogglePassword = () => {
     setShowPassword(!showPassword);
@@ -93,9 +84,6 @@ function UserForm() {
         gender: "",
         role: "",
       });
-    
-      
-    
     } catch (error) {
       console.log(error);
       alert("Error adding user: " + error.message);
@@ -371,10 +359,9 @@ function UserForm() {
             span: 16,
           }}
         >
-          <Button type="primary" htmlType="submit" onClick={handleSubmit} >
-          Submit
+          <Button type="primary" htmlType="submit" onClick={handleSubmit}>
+            Save
           </Button>
-          
         </Form.Item>
       </Form>
     </>
@@ -382,4 +369,3 @@ function UserForm() {
 }
 
 export default UserForm;
-

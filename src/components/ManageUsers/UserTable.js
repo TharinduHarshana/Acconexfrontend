@@ -1,17 +1,16 @@
 
 import React, { useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
-
-// import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import {  getUsers,deleteUser} from "../../Utility/api/user.api";
+import {  getUsers,deleteUser,getUserById} from "../../Utility/api/user.api";
+
 
 function UserTable() {
+
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);
 
   //load the users
-  
   useEffect(() => {
     fetchUsers();
   }, []);
@@ -37,7 +36,16 @@ function UserTable() {
       console.error("Error deleting user:", error);
     }
   };
-
+//
+  const handleEdit = async (_id) => {
+    try {
+      const response = await getUserById(_id);
+      const userData = response.data;
+      navigate("/admin/userform", { state: { userData } });
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
  
 
 
@@ -66,7 +74,7 @@ function UserTable() {
       name: "Actions",
       cell: (row) => (
         <div>
-          <button >Edit</button>
+          <button onClick={() => handleEdit(row._id)}>Edit</button>
           <button onClick={() => handleDelete(row._id)}>Delete</button>
         </div>
       ),

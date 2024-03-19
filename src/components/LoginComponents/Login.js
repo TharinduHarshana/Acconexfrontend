@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./login.css"; // Corrected import statement
+import "./login.css"; 
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Typography } from "antd";
 import { login } from "../../Utility/api/user.api";
@@ -7,7 +7,6 @@ import { useNavigate } from "react-router-dom";
 
 function Login() {
   const [loginData, setLoginData] = useState({ userName: "", password: "" });
-  // Initialize useNavigate hook
   const navigate = useNavigate();
 
   async function handleSubmit() {
@@ -36,8 +35,12 @@ function Login() {
           remember: true,
         }}
       >
-        <Typography className="login-form-title">CAZZORA SOFT SOLUTION</Typography>
-        <Typography className="customer-support">Customer Support: 071 913 72 98</Typography>
+        <Typography className="login-form-title">
+          CAZZORA SOFT SOLUTION
+        </Typography>
+        <Typography className="customer-support">
+          Customer Support: 071 913 72 98
+        </Typography>
 
         <Form.Item
           name="username"
@@ -48,9 +51,10 @@ function Login() {
             },
           ]}
         >
-          <Input className="userName"
-           prefix={<UserOutlined className="site-form-item-icon" />}
-          placeholder="Username"
+          <Input
+            className="userName"
+            prefix={<UserOutlined className="site-form-item-icon" />}
+            placeholder="Username"
             onChange={(e) =>
               e &&
               e.target &&
@@ -69,7 +73,7 @@ function Login() {
         >
           <Input.Password
             prefix={<LockOutlined className="site-form-item-icon" />}
-            type="password" // Modified this line to set the input type to "password"
+            type="password" 
             placeholder="Password"
             className="password"
             onChange={(e) =>

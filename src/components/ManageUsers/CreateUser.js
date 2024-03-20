@@ -1,7 +1,9 @@
-import React, { useState } from "react";
-import { user } from "../../Utility/api/user.api";
-import { Button, DatePicker, Form, Input, Select } from "antd";
+import React, { useState,useEffect } from "react";
+import axios from "axios";
+import { Navigate, useNavigate} from "react-router-dom";
+import { Button, DatePicker, Form, Input, Select, Typography } from "antd";
 import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
+import "../../styles/userform.css";
 
 const { Option } = Select;
 
@@ -24,7 +26,11 @@ const formItemLayout = {
   },
 };
 
-function UserForm() {
+function CreateUser() {
+
+  
+  const navigate=useNavigate();
+
   //get the data from form
   const [formData, setFormData] = useState({
     userId: "",
@@ -47,48 +53,38 @@ function UserForm() {
   const handleTogglePassword = () => {
     setShowPassword(!showPassword);
   };
-  {
-    phoneError && <div className="error">{phoneError}</div>;
-  }
+  
 
-  //call the user function
-  async function handleSubmit() {
-    try {
-      const res = await user(
-        formData.userId,
-        formData.userName,
-        formData.firstName,
-        formData.lastName,
-        formData.password,
-        formData.gmail,
-        formData.dob,
-        formData.phoneNumber,
-        formData.address,
-        formData.idNumber,
-        formData.gender,
-        formData.role
-      );
-      console.log(res);
-      alert("User added successfully!");
-      setFormData({
-        userId: "",
-        userName: "",
-        firstName: "",
-        lastName: "",
-        password: "",
-        gmail: "",
-        dob: "",
-        phoneNumber: "",
-        address: "",
-        idNumber: "",
-        gender: "",
-        role: "",
+ 
+  const handleSubmit = (e) => {
+    //e.preventDefault();
+
+    axios.post('http://localhost:8000/user/add', { 
+      userId: formData.userId,
+      userName: formData.userName,
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      password: formData.password,
+      gmail: formData.gmail,
+      dob: formData.dob,
+      phoneNumber: formData.phoneNumber,
+      address: formData.address,
+      idNumber: formData.idNumber,
+      gender: formData.gender,
+      role: formData.role 
+  })
+      .then(result => {
+        console.log(result);
+      alert("User create successfull!") 
+      navigate('/admin/usertable')
+      
+      })
+      .catch(err =>{
+        console.log(err);
+        alert("Error adding user: " + err.message);
       });
-    } catch (error) {
-      console.log(error);
-      alert("Error adding user: " + error.message);
-    }
-  }
+      
+  };
 
   //phone number validation
   const handlePhoneChange = (e) => {
@@ -119,13 +115,13 @@ function UserForm() {
       <Form
         {...formItemLayout}
         variant="filled"
-        style={{
-          maxWidth: 600,
-        }}
+        className="form-container"
       >
+        <Typography style={{ fontSize: "24px", marginBottom: "20px" }}>Add User</Typography>
         <Form.Item
           label="User Id"
           name="userId"
+          className="form-item"
           rules={[
             {
               required: true,
@@ -134,6 +130,7 @@ function UserForm() {
           ]}
         >
           <Input
+          value={formData.userId}
             onChange={(e) =>
               e &&
               e.target &&
@@ -214,6 +211,7 @@ function UserForm() {
         >
           <Input.Password
             value={formData.password}
+            
             onChange={(e) =>
               e &&
               e.target &&
@@ -221,9 +219,9 @@ function UserForm() {
             }
             iconRender={(visible) =>
               visible ? (
-                <EyeOutlined onClick={handleTogglePassword} />
+                <EyeOutlined  className="eye-icon" onClick={handleTogglePassword} />
               ) : (
-                <EyeInvisibleOutlined onClick={handleTogglePassword} />
+                <EyeInvisibleOutlined className="eye-icon" onClick={handleTogglePassword} />
               )
             }
           />
@@ -291,7 +289,7 @@ function UserForm() {
             },
           ]}
         >
-          <Input
+          <Input.TextArea
             onChange={(e) =>
               e &&
               e.target &&
@@ -368,4 +366,4 @@ function UserForm() {
   );
 }
 
-export default UserForm;
+export default CreateUser;

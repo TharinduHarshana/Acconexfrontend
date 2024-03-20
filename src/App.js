@@ -1,11 +1,14 @@
 
 import React from 'react';
-import UserTable from './components/ManageUsers/UserTable';
+
 import Dashboard from './components/Dashboard';
 import Login from './components/LoginComponents/Login';
 import { BrowserRouter,Route,Routes } from 'react-router-dom';
 import Homepage from './pages/Homepage';
-import UserForm from './components/ManageUsers/UserForm';
+import CreateUser from './components/ManageUsers/CreateUser';
+import Users from './components/ManageUsers/Users';
+import UpdateUser from './components/ManageUsers/UpdateUser';
+
 
 
 function App() {
@@ -19,8 +22,9 @@ function App() {
 
         {/* admin routes */}
         <Route path='/admin' element={<Login />} />
-        <Route path='/admin/userform' element={<UserForm/>} />
-        <Route path='/admin/userTable' element={<UserTable />} />
+        <Route path='/admin/userform' element={<CreateUser/>} />
+        <Route path="/admin/userform/update/:id" element={<UpdateUser/>} />
+        <Route path='/admin/userTable' element={<Users/>} />
         <Route path="/admin/home" element={<Homepage />} />
       </Routes>
     </BrowserRouter>

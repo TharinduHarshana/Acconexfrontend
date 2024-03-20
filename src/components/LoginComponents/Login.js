@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./login.css"; 
+import "../../styles/login.css"; 
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Typography } from "antd";
 import { login } from "../../Utility/api/user.api";

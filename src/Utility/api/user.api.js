@@ -42,7 +42,7 @@ async function getUsers() {
 }
 
 
-const updateUsers = async (_id, userData) => {
+const updateUser = async (_id, userData) => {
   try {
     const response = await axios.patch(`http://localhost:8000/user/update/${_id}`, userData);
     return response.data; // Return the updated user data
@@ -50,8 +50,8 @@ const updateUsers = async (_id, userData) => {
     throw error; // Throw the error for handling in the component
   }
 };
-async function getUserById(id) {
-  return await axios.get(`http://localhost:8000/user/${id}`);
+ async function getUserById(id) {
+   return await axios.get(`http://localhost:8000/user/${id}`);
 }
 
 
@@ -67,4 +67,4 @@ async function deleteUser(_id) {
 }
 
 
-export { user, login,getUsers, updateUsers, deleteUser,getUserById};
+export { user, login,getUsers, updateUser, deleteUser,getUserById};

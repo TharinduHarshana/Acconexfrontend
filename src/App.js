@@ -9,6 +9,7 @@ import SalesDachboad from './components/SalesComponents/SalesDachboad';
 import Bill from './components/SalesComponents/Bill';
 import AddCustomer from './components/SalesComponents/AddCustomer';
 import SuspendSale from './components/SalesComponents/SuspendSale';
+import ViewCutomer from './pages/ViewCutomer';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
           <Route path='/addcus' element={<AddCustomer/>}/>
           <Route path='/holdbill' element={<SuspendSale/>}/>
           <Route path='/log' element={<Login/>}/>
+          <Route path='/viewcustomer' element={<ViewCutomer/>}/>
       </Routes>
     </BrowserRouter>
   );

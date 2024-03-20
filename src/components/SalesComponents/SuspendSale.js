@@ -1,6 +1,5 @@
 import React from 'react';
-import { Input, Button, Flex, Table } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
+import {  Table } from 'antd';
 import DefaultHandleSales from './DefaultHandleSales';
 import '../../styles/sales.css';
 

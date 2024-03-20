@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import DefaultHandleSales from './DefaultHandleSales'
 import { Button, DatePicker, Form, Input,Radio,}from 'antd';
 import '../../styles/sales.css';
+import { Link } from 'react-router-dom';
 
 
 // const { RangePicker } = DatePicker;
@@ -31,7 +32,7 @@ const AddCustomer = ({children}) => {
       >
        
     <div className='content'>
-        <Form.Item className='input' label="NIC NO : ">
+        <Form.Item className='input' label="Cutomer ID : ">
           <Input className='inbox' placeholder='Enter NIC' />
         </Form.Item>
 
@@ -39,7 +40,7 @@ const AddCustomer = ({children}) => {
           <Input className='inbox' placeholder='Enter Name'/>
         </Form.Item>
 
-        <Form.Item className='input' label="Customer Address : ">
+        <Form.Item className='input' label="Customer Address: ">
           <TextArea rows={4} className='inbox' placeholder='Enter Address' />
         </Form.Item>
 
@@ -58,10 +59,16 @@ const AddCustomer = ({children}) => {
           <DatePicker className='inbox' />
         </Form.Item>
 
-        <Form.Item  className='btn' >
-          <Button>Submit</Button>
-        </Form.Item>
+        
+        <Button  className='btnadd' >Add Customer</Button>
+        <Link to ="/viewcustomer">
+        <Button  className='btnview'>View Customer</Button>
+        </Link>
+        
+        <Button  className='btnreset' >Clear</Button>
+        
         </div>
+        
       </Form>
       
     {children}

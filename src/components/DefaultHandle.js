@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 const { Header, Sider, Content } = Layout;
 
 const DefaultHandle = ({ children }) => {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed] = useState(false);
   const [selectedKey, setSelectedKey] = useState(window.location.pathname);
 
   const {

@@ -2,9 +2,7 @@ import React, { useState } from 'react';
 import {FileDoneOutlined ,HomeOutlined,LogoutOutlined,UserAddOutlined ,ReconciliationOutlined,} from '@ant-design/icons';
 import { Layout, Menu, theme } from 'antd';
 import { Link } from 'react-router-dom';
-import "./../../styles/sidebar.css";
-import { SearchOutlined } from '@ant-design/icons';
-import { Button, Flex} from 'antd';
+import "./../../styles/sidebar.css"; 
 import { Space,} from 'antd';
 import { SettingFilled, SyncOutlined } from '@ant-design/icons';
 
@@ -23,11 +21,11 @@ const DefaultHandleSales= ({children}) => {
     setSelectedKey(e.key);
   };
 
-  return (
+  return ( 
     <Layout>
       <Sider trigger={null} collapsible collapsed={collapsed}>
         <div className="demo-logo-vertical" />
-        <h3 className="text-center text-light font-wight-bold">ACONEX COMPUTER</h3>
+        <h3 className="title">ACONEX COMPUTER</h3>
         <Menu
           theme="dark"
           mode="inline"

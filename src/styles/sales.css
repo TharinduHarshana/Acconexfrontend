@@ -5,6 +5,10 @@
     background-color: rgba(195, 192, 192, 0.177);
     vertical-align: center;
     margin-left: 30%;
+    height: 700px;
+    margin-top: 1%;
+    width: 750px;
+
 
 
 
@@ -18,7 +22,8 @@
 }
 .inbox{
     padding: 10px;
-    margin-left: 10%;
+    margin-left: 45%;
+    margin-right: 0%;
    
 }
 .topbar{
@@ -47,4 +52,29 @@
 }
 .dashCard{
     margin-left: 30px;
+}
+
+.btnadd{
+    background-color: aqua;
+    border-radius: 3;
+    border-color: rgba(0, 166, 255, 0.726);
+    font-weight: 600;
+    margin-left: 80%;
+    margin-top: 0%;
+}
+.btnview{
+    background-color: rgba(66, 138, 247, 0.836);
+    border-radius: 3;
+    border-color: blue;
+    font-weight: 600;
+    margin-left: 80%;
+    margin-top: 5%;
+
+}
+.btnreset{
+    background-color: rgba(244, 79, 79, 0.801);
+    border-radius: 3;
+    border-color: red;
+    font-weight: 600;
+    
 }

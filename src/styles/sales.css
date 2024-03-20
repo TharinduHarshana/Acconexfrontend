@@ -4,14 +4,10 @@
     padding: 10%;
     background-color: rgba(195, 192, 192, 0.177);
     vertical-align: center;
-    margin-left: 30%;
+    margin-left: 20%;
     height: 700px;
     margin-top: 1%;
     width: 750px;
-
-
-
-
 }
 .input{
     padding: 0;
@@ -59,16 +55,14 @@
     border-radius: 3;
     border-color: rgba(0, 166, 255, 0.726);
     font-weight: 600;
-    margin-left: 80%;
-    margin-top: 0%;
+   
 }
 .btnview{
     background-color: rgba(66, 138, 247, 0.836);
     border-radius: 3;
     border-color: blue;
     font-weight: 600;
-    margin-left: 80%;
-    margin-top: 5%;
+   
 
 }
 .btnreset{
@@ -77,4 +71,60 @@
     border-color: red;
     font-weight: 600;
     
+    
 }
+.viewtable{
+    margin-left: 30px;
+    margin-top: 40px;
+    table-layout: auto;
+    
+}
+.table_content{
+    height: 600px;
+    width: 600;
+    margin-left: 20px;
+    margin-top: 10px;
+    margin-right: 30px;
+    
+}
+
+.Handlercontent{
+    background-color: rgb(223, 223, 223);
+}
+@media (max-width: 768px) {
+    .viewtable {
+      overflow-x: auto; /* Add horizontal scroll for smaller screens */
+    }
+  }
+  
+  /* Set specific styles for larger screens */
+  @media (min-width: 1024px) {
+    .viewtable {
+      /* Add styles for larger screens */
+    }
+  }
+  .button-container {
+    display: flex; /* Use flexbox to align items in a row */
+    justify-content: space-between; 
+    margin-top: 20%;
+   /* Align items with space between them */
+  }
+  .viewbutton-container{
+    display: flex; 
+    justify-content:space-around; 
+  }
+  .ok-btn{
+    background-color: rgba(66, 138, 247, 0.836);
+    border-radius: 3;
+    border-color: blue;
+    font-weight: 600;
+    margin-right: 40px;
+  }
+
+  .update-btn{
+    background-color: rgba(244, 95, 138, 0.951);
+    border-radius: 3;
+    border-color: rgb(255, 0, 93);
+    font-weight: 600;
+    margin-left: 200px;
+  }

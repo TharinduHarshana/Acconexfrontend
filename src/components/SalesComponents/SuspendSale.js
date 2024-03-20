@@ -1,24 +1,23 @@
 import React from 'react';
-import {  Table } from 'antd';
+import { Button, Table } from 'antd';
 import DefaultHandleSales from './DefaultHandleSales';
 import '../../styles/sales.css';
 
-
 const columns = [
   {
-    title: 'Customer_ID',
+    title: 'Customer ID',
     dataIndex: 'CusID',
     key: 'CusID',
     render: (text) => <a>{text}</a>,
   },
   {
-    title: 'Customer_Name',
+    title: 'Customer Name',
     dataIndex: 'cusname',
     key: 'cusname',
     render: (text) => <a>{text}</a>,
   },
   {
-    title: 'Item_Id',
+    title: 'Item ID',
     dataIndex: 'ITID',
     key: 'ITID',
     render: (text) => <a>{text}</a>,
@@ -29,7 +28,7 @@ const columns = [
     key: 'Qnt',
   },
   {
-    title: 'price',
+    title: 'Price',
     dataIndex: 'itprice',
     key: 'itprice',
   },
@@ -38,17 +37,23 @@ const columns = [
 const data = [
   {
     key: '1',
-    CusID:'Cus002',
-    cusname:'Hiru',
+    CusID: 'Cus002',
+    cusname: 'Hiru',
     ITID: 'Item001',
     Qnt: 2,
     itprice: 'RS: 1200/=',
   },
+  // Add more data objects if needed
 ];
 
 const SuspendSale = () => (
   <DefaultHandleSales>
-    <Table className ='table'columns={columns} dataSource={data} />
+    
+    <Table className='table' columns={columns} dataSource={data} />
+    <div className="button-container">
+      <Button className="update-btn">Update</Button>
+      <Button className="ok-btn">Ok</Button>
+    </div>
   </DefaultHandleSales>
 );
 

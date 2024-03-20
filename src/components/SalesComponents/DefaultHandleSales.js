@@ -68,9 +68,7 @@ const DefaultHandleSales= ({children}) => {
             </Space>
 
         </Header>
-        <Content
-        
->
+        <Content className='Handlercontent'>
           {children}
         </Content>
       </Layout>

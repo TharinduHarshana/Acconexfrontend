@@ -36,8 +36,8 @@ const DefaultHandle = ({ children }) => {
             <Link to="/">Home</Link>
           </Menu.Item>
 
-          <Menu.Item key="/items" icon={<ProductOutlined />}>
-            <Link to="/items">Inventory</Link>
+          <Menu.Item key="/Inventory" icon={<ProductOutlined />}>
+            <Link to="/Inventory">Inventory</Link>
           </Menu.Item>
 
           <Menu.Item key="/customers" icon={<ContactsOutlined />}>

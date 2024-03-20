@@ -46,3 +46,16 @@ const Items =() =>{
         },
     ];
 }
+
+const edbtn = {
+    textAlign :'right',
+    color: 'green',
+    align: 'right',
+}
+
+const delbtn ={
+    padding: '6px 10px',
+    textAlign :'right',
+    color: 'red',
+    align: 'right',
+}

@@ -1,6 +1,6 @@
 import { Layout, theme } from "antd";
 import { useState } from "react";
-import {FileDoneOutlined ,HomeOutlined,LogoutOutlined,UserAddOutlined ,ReconciliationOutlined,} from '@ant-design/icons';
+import {PercentageOutlined,DatabaseOutlined ,HomeOutlined,LogoutOutlined,UserAddOutlined ,ReconciliationOutlined,} from '@ant-design/icons';
 import { Link } from "react-router-dom";
 
 
@@ -31,6 +31,18 @@ const DefaultHandleInventory = (children) => {
                 <menu.item key = "/home" icon={<HomeOutlined/>}>
                 <Link to ="/home">Home</Link>
                 </menu.item>
+
+                <menu.item key = "/inventory" icon={<DatabaseOutlined/>}>
+                <Link to ="/inventory">Inventory</Link>
+                </menu.item>
+
+                <menu.item key = "/discountcalc" icon={<PercentageOutlined/>}>
+                <Link to ="/discountcalc">Discount</Link>
+                </menu.item>
+                <Menu.Item key="/log" icon={<LogoutOutlined  />}>
+                <Link to="/log">LOGOUT</Link>
+                </Menu.Item>
+                
             </menu>
         </Layout>
     );

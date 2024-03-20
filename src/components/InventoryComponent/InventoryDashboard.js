@@ -1,10 +1,9 @@
 import React from 'react'
+import DefaultHandleInventory from './DefaultHandlerInventory'
 
 function InventoryDashboard() {
   return (
-    <div>
-      inventory
-    </div>
+    <DefaultHandleInventory></DefaultHandleInventory>
   )
 }
 

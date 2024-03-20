@@ -22,7 +22,7 @@ const DefaultHandleInventory = ({children}) => {
         <Layout>
             <Sider trigger={null} collapsible collapsed={collapsed}>
             <div className="demo-logo-vertical"/>
-            <h3 className="AccTitle">ACONEX COMPUTER</h3>
+            <h3 className="AccTitle">ACCONEX COMPUTER</h3>
             <Menu theme="dark"
                 mode ="inline"
                 defaultSelectedKeys={[selectedKey]}

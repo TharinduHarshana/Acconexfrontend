@@ -10,7 +10,7 @@ function InventoryDashboard() {
     <DefaultHandleInventory>
       <div className='dashBoard'>
         <Space size={20} direction='vertical'>
-        <Typography.Title level={4}>Dashboard</Typography.Title>
+        <Typography.Title level={4}>Inventory Dashboard</Typography.Title>
         <Space direction='horizontal'>
           <DashboardCard
           icon ={

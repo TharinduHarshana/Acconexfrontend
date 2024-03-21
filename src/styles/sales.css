@@ -8,6 +8,7 @@
     height: 700px;
     margin-top: 1%;
     width: 750px;
+    margin: auto;
 }
 .input{
     padding: 0;
@@ -90,6 +91,9 @@
 
 .Handlercontent{
     background-color: rgb(223, 223, 223);
+    margin: auto;
+    height: 100%;
+    width: 100%;
 }
 @media (max-width: 768px) {
     .viewtable {
@@ -119,6 +123,7 @@
     border-color: blue;
     font-weight: 600;
     margin-right: 40px;
+    margin: auto;
   }
 
   .update-btn{
@@ -128,3 +133,4 @@
     font-weight: 600;
     margin-left: 200px;
   }
+  

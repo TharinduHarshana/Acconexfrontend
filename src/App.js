@@ -7,24 +7,26 @@ import Login from './components/LoginComponents/Login';
 import Homepage from './pages/Homepage';
 import SalesDachboad from './components/SalesComponents/SalesDachboad';
 import Bill from './components/SalesComponents/Bill';
-import AddCustomer from './components/SalesComponents/AddCustomer';
+import Customer from './components/SalesComponents/Customer';
 import SuspendSale from './components/SalesComponents/SuspendSale';
 import ViewCutomer from './pages/ViewCutomer';
+
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/' element={<Login />} />
+        
         <Route path='/userform' element={<UserForm />} />
         <Route path='/user' element={<UserTable />} />
-          <Route path="/home" element={<Homepage />} />
+          <Route path="/" element={<Homepage />} />
           <Route path='/sale' element={<SalesDachboad/>}/>
           <Route path='/bill' element={<Bill/>}/>
-          <Route path='/addcus' element={<AddCustomer/>}/>
+          <Route path='/addcus' element={<Customer/>}/>
           <Route path='/holdbill' element={<SuspendSale/>}/>
           <Route path='/log' element={<Login/>}/>
           <Route path='/viewcustomer' element={<ViewCutomer/>}/>
+          <Route path='/home' element={<Homepage/>}/>
       </Routes>
     </BrowserRouter>
   );

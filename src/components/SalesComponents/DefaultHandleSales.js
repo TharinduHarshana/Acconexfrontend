@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {FileDoneOutlined ,HomeOutlined,LogoutOutlined,UserAddOutlined ,ReconciliationOutlined,} from '@ant-design/icons';
+import {FileDoneOutlined ,RollbackOutlined,HomeOutlined,LogoutOutlined,UserAddOutlined ,ReconciliationOutlined,} from '@ant-design/icons';
 import { Layout, Menu, theme } from 'antd';
 import { Link } from 'react-router-dom';
 import "./../../styles/sidebar.css"; 
@@ -33,9 +33,10 @@ const DefaultHandleSales= ({children}) => {
           selectedKeys={selectedKey}
           onClick={handleMenuClick}
           >
-            <Menu.Item key="/home" icon={<HomeOutlined/>}>
-            <Link to="/home">Home</Link>
+            <Menu.Item key="/home" icon={<RollbackOutlined />}>
+            <Link to="/home">Back</Link>
             </Menu.Item>
+
 
             <Menu.Item key="/bill" icon={<FileDoneOutlined />}>
             <Link to="/bill">Bill</Link>

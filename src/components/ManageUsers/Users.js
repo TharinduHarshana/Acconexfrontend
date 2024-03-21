@@ -24,16 +24,7 @@ function Users() {
     loadUsers();
   }, []);
 
-  //delete user
-  //   const handleDelete = async (_id) => {
-  //     try {
-  //       await axios.delete( `http://localhost:8000/user/delete/`+_id);
-  //       // Update users state after deletion
-  //       setUsers(users.filter((user) => user._id !== _id));
-  //     } catch (error) {
-  //       console.error("Error deleting user:", error);
-  //     }
-  //   };
+  
   const handleDelete = async (_id) => {
     // Show confirmation dialog
     const confirmDelete = window.confirm(

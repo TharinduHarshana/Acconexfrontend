@@ -42,28 +42,31 @@ function UpdateUser() {
     axios
       .get(`http://localhost:8000/user/${id}`)
       .then((response) => {
-        console.log(response);
+        setUser(response.data);
       })
       .catch((error) => {
         console.log(error);
       });
   }, [id]);
 
-    const handleSubmit = async (e) => {
-      e.preventDefault(); // Prevent default form submission behavior
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-      try {
-        //const response = await axios.put(`http://localhost:8000/user/${id}`, user);
-        const response=axios.put(`http://localhost:8000/user/update/${id}`, user);
-        console.log("User updated successfully:", response.data);
-        alert("User update successfully!");
+    try {
+      //const response = await axios.put(`http://localhost:8000/user/${id}`, user);
+      const response = axios.patch(
+        `http://localhost:8000/user/update/${id}`,
+        user
+      );
+      console.log("User updated successfully:", response.data);
+      alert("User update successfully!");
 
-        // Navigate to a different page after successful update
-        navigate("/admin/usertable");
-      } catch (error) {
-        console.error("Error updating user:", error); 
-      }
-    };
+      // Navigate to a different page after successful update
+      navigate("/admin/usertable");
+    } catch (error) {
+      console.error("Error updating user:", error);
+    }
+  };
 
   // Phone number validation
   const handlePhoneChange = (e) => {
@@ -79,80 +82,91 @@ function UpdateUser() {
 
   return (
     <>
-    <DefaultHandle>
-      <Form {...formItemLayout} variant="filled" className="form-container">
-        <Typography style={{ fontSize: "20px", fontFamily: "sans-serif" ,textAlign:"center",marginTop:"5px",marginBottom:"5px",fontWeight:"bold"}}>Update User</Typography>
-        <Form.Item
-          label="User Id"
-          name="userId"
-          className="form-item"
-          rules={[
-            {
-              message: "Please input user id!",
-            },
-          ]}
-        >
-          <Input
-            value={user.userId}
-            onChange={(e) => setUser({ ...user, userId: e.target.value })}
-          />
-        </Form.Item>
-
-        <Form.Item
-          label="First Name"
-          name="firstName"
-          rules={[
-            {
-              message: "Please input first name!",
-            },
-          ]}
-        >
-          <Input
-            value={user.firstName}
-            onChange={(e) => setUser({ ...user, firstName: e.target.value })}
-          />
-        </Form.Item>
-
-        <Form.Item
-          label="Phone Number"
-          name="phoneNumber"
-          rules={[
-            {
-              message: "Please input phone number!",
-            },
-          ]}
-          validateStatus={phoneError ? "error" : ""}
-          help={phoneError}
-        >
-          <Input value={user.phoneNumber} onChange={handlePhoneChange} />
-        </Form.Item>
-
-        <Form.Item
-          label="User Role"
-          name="role"
-          rules={[
-            {
-              message: "Please select user role!",
-            },
-          ]}
-        >
-          <Select
-            value={user.role}
-            onChange={(value) => setUser({ ...user, role: value })}
+      <DefaultHandle>
+        <Form {...formItemLayout} variant="filled" className="form-container">
+          <Typography
+            style={{
+              fontSize: "20px",
+              fontFamily: "sans-serif",
+              textAlign: "center",
+              marginTop: "5px",
+              marginBottom: "5px",
+              fontWeight: "bold",
+            }}
           >
-            <Option value="admin">Admin</Option>
-            <Option value="inventory manager">Inventory Manager</Option>
-            <Option value="cashier">Cashier</Option>
-            <Option value="sales staff">Sales Staff</Option>
-          </Select>
-        </Form.Item>
+            Update User
+          </Typography>
+          <Form.Item
+            label="User Id"
+            name="userId"
+            className="form-item"
+            rules={[
+              {
+                message: "Please input user id!",
+              },
+            ]}
+          >
+            <Input
+              value={user.userId}
+              onChange={(e) => setUser({ ...user, userId: e.target.value })}
+            />
+          </Form.Item>
 
-        <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
-          <Button type="primary" htmlType="submit" onClick={handleSubmit}>
-            Update
-          </Button>
-        </Form.Item>
-      </Form>
+          <Form.Item
+            label="First Name"
+            name="firstName"
+            rules={[
+              {
+                message: "Please input first name!",
+              },
+            ]}
+          >
+            <Input
+              value={user.firstName}
+              onChange={(e) => setUser({ ...user, firstName: e.target.value })}
+            />
+          </Form.Item>
+
+          <Form.Item
+            label="Phone Number"
+            name="phoneNumber"
+            rules={[
+              {
+                message: "Please input phone number!",
+              },
+            ]}
+            validateStatus={phoneError ? "error" : ""}
+            help={phoneError}
+          >
+            <Input value={user.phoneNumber} onChange={handlePhoneChange} />
+          </Form.Item>
+
+          <Form.Item
+            label="User Role"
+            name="role"
+            rules={[
+              {
+                message: "Please select user role!",
+              },
+            ]}
+          >
+            <Select
+              value={user.role}
+              onChange={(value) => setUser({ ...user, role: value })}
+            >
+              <Option value="admin">Admin</Option>
+              <Option value="inventory manager">Inventory Manager</Option>
+              <Option value="cashier">Cashier</Option>
+              <Option value="sales staff">Sales Staff</Option>
+            </Select>
+          </Form.Item>
+
+          <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
+            <Button type="primary" htmlType="submit" onClick={handleSubmit}>
+              Update
+            </Button>
+          </Form.Item>
+        </Form>
       </DefaultHandle>
     </>
   );

@@ -42,6 +42,7 @@ const CreateUserForm = () => {
   const handleTogglePassword = () => {
     setShowPassword(!showPassword);
   };
+
   const handleSubmit = (e) => {
     //e.preventDefault();
 
@@ -70,6 +71,7 @@ const CreateUserForm = () => {
         alert("Error adding user: " + err.message);
       });
   };
+  
 
   //phone number validation
   const handlePhoneChange = (e) => {

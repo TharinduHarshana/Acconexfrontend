@@ -3,11 +3,13 @@ import DefaultHandleInventory from './DefaultHandlerInventory'
 import {Space, Typography, Card,Statistic} from 'antd'
 import{ShoppingCartOutlined,ShoppingOutlined, UserOutlined, DollarCircleOutlined,} from "@ant-design/icons";
 import '../../styles/sidebar.css';
+import Items from './Item';
 //import {Chart as ChartJS,CategoryScale,LinearScale,BarElement,Title,Tooltip,Legend,} from "chart.js";
 
 function InventoryDashboard() {
   return (
     <DefaultHandleInventory>
+      <Items></Items>
       <div className='dashBoard'>
         <Space size={20} direction='vertical'>
         <Typography.Title level={4}>Inventory Dashboard</Typography.Title>
@@ -25,8 +27,8 @@ function InventoryDashboard() {
           />
         }
         title={"Orders"}
-      
       />
+      
       <DashboardCard
         icon={
           <ShoppingOutlined

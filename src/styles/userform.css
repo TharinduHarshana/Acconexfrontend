@@ -1,19 +1,33 @@
 /* CreateUser.css */
 
 .form-container {
-  max-width: 600px;
+  max-width: 1000px;
   margin: auto;
+  margin-top: 5px;
   padding: 20px;
   border: 1px solid #ccc;
-
   border-radius: 16px;
   background-color: #fff;
   box-shadow: 0px 8px 32px rgba(0, 0, 0, 0.1);
+  
+}
+
+@media screen and (max-width: 768px) {
+  .form-container {
+    padding: 15px;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .form-container {
+    padding: 10px;
+  }
 }
 
 .form-item {
   margin-bottom: 15px;
 }
+
 
 .input-error {
   color: red;

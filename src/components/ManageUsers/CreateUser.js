@@ -1,37 +1,26 @@
-import React, { useState,useEffect } from "react";
-import axios from "axios";
-import { Navigate, useNavigate} from "react-router-dom";
-import { Button, DatePicker, Form, Input, Select, Typography } from "antd";
-import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
-import "../../styles/userform.css";
 
+import React, { useState, useEffect } from "react";
+import DefaultHandle from "../DefaultHandle";
+import axios from "axios";
+import { Navigate, useNavigate } from "react-router-dom";
+import "../../styles/userform.css";
+import { Row, Col } from "antd";
+import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
+import { Button, DatePicker, Form, Input, Select, Typography } from "antd";
 const { Option } = Select;
 
-const formItemLayout = {
-  labelCol: {
-    xs: {
-      span: 24,
+const CreateUserForm = () => {
+  const navigate = useNavigate();
+  const formItemLayout = {
+    labelCol: {
+      xs: { span: 24 },
+      sm: { span: 6 },
     },
-    sm: {
-      span: 6,
+    wrapperCol: {
+      xs: { span: 24 },
+      sm: { span: 18 },
     },
-  },
-  wrapperCol: {
-    xs: {
-      span: 24,
-    },
-    sm: {
-      span: 14,
-    },
-  },
-};
-
-function CreateUser() {
-
-  
-  const navigate=useNavigate();
-
-  //get the data from form
+  };
   const [formData, setFormData] = useState({
     userId: "",
     userName: "",
@@ -53,37 +42,33 @@ function CreateUser() {
   const handleTogglePassword = () => {
     setShowPassword(!showPassword);
   };
-  
-
- 
   const handleSubmit = (e) => {
     //e.preventDefault();
 
-    axios.post('http://localhost:8000/user/add', { 
-      userId: formData.userId,
-      userName: formData.userName,
-      firstName: formData.firstName,
-      lastName: formData.lastName,
-      password: formData.password,
-      gmail: formData.gmail,
-      dob: formData.dob,
-      phoneNumber: formData.phoneNumber,
-      address: formData.address,
-      idNumber: formData.idNumber,
-      gender: formData.gender,
-      role: formData.role 
-  })
-      .then(result => {
-        console.log(result);
-      alert("User create successfull!") 
-      navigate('/admin/usertable')
-      
+    axios
+      .post("http://localhost:8000/user/add", {
+        userId: formData.userId,
+        userName: formData.userName,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        password: formData.password,
+        gmail: formData.gmail,
+        dob: formData.dob,
+        phoneNumber: formData.phoneNumber,
+        address: formData.address,
+        idNumber: formData.idNumber,
+        gender: formData.gender,
+        role: formData.role,
       })
-      .catch(err =>{
+      .then((result) => {
+        console.log(result);
+        alert("User create successfull!");
+        navigate("/admin/usertable");
+      })
+      .catch((err) => {
         console.log(err);
         alert("Error adding user: " + err.message);
       });
-      
   };
 
   //phone number validation
@@ -112,258 +97,291 @@ function CreateUser() {
 
   return (
     <>
-      <Form
-        {...formItemLayout}
-        variant="filled"
-        className="form-container"
-      >
-        <Typography style={{ fontSize: "24px", marginBottom: "20px" }}>Add User</Typography>
-        <Form.Item
-          label="User Id"
-          name="userId"
-          className="form-item"
-          rules={[
-            {
-              required: true,
-              message: "Please input user id!",
-            },
-          ]}
-        >
-          <Input
-          value={formData.userId}
-            onChange={(e) =>
-              e &&
-              e.target &&
-              setFormData({ ...formData, userId: e.target.value })
-            }
-          />
-        </Form.Item>
+      <DefaultHandle>
+        <div style={{ padding: "20px" }}>
+          <Form {...formItemLayout} className="form-container">
+            <Typography.Title
+              level={4}
+              className="typography"
+              style={{ fontSize: "13px", fontFamily: "sans-serif" ,textAlign:"center",marginTop:"5px",marginBottom:"5px"}}
+            >
+              Create user
+            </Typography.Title>
+            <Row gutter={[16, 16]}>
+              <Col span={12}>
+                {/* User Id */}
+                <Form.Item
+                  label="User Id"
+                  name="userId"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input user id!",
+                    },
+                  ]}
+                >
+                  <Input
+                    value={formData.userId}
+                    onChange={(e) =>
+                      e &&
+                      e.target &&
+                      setFormData({ ...formData, userId: e.target.value })
+                    }
+                  />
+                </Form.Item>
 
-        <Form.Item
-          label="User Name"
-          name="userName"
-          rules={[
-            {
-              required: true,
-              message: "Please input user name!",
-            },
-          ]}
-        >
-          <Input
-            onChange={(e) =>
-              e &&
-              e.target &&
-              setFormData({ ...formData, userName: e.target.value })
-            }
-          />
-        </Form.Item>
+                {/* First Name */}
+                <Form.Item
+                  label="First Name"
+                  name="firstName"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input first name!",
+                    },
+                  ]}
+                >
+                  <Input
+                    onChange={(e) =>
+                      e &&
+                      e.target &&
+                      setFormData({ ...formData, firstName: e.target.value })
+                    }
+                  />
+                </Form.Item>
 
-        <Form.Item
-          label="First Name"
-          name="firstName"
-          rules={[
-            {
-              required: true,
-              message: "Please input first name!",
-            },
-          ]}
-        >
-          <Input
-            onChange={(e) =>
-              e &&
-              e.target &&
-              setFormData({ ...formData, firstName: e.target.value })
-            }
-          />
-        </Form.Item>
-        <Form.Item
-          label="Last Name"
-          name="lastName"
-          rules={[
-            {
-              required: true,
-              message: "Please input last name!",
-            },
-          ]}
-        >
-          <Input
-            onChange={(e) =>
-              e &&
-              e.target &&
-              setFormData({ ...formData, lastName: e.target.value })
-            }
-          />
-        </Form.Item>
+                {/* Password */}
+                <Form.Item
+                  label="Password"
+                  name="password"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input password!",
+                    },
+                    {
+                      min: 8,
+                      message: "Password must be at least 8 characters long!",
+                    },
+                  ]}
+                >
+                  <Input.Password
+                    value={formData.password}
+                    onChange={(e) =>
+                      e &&
+                      e.target &&
+                      setFormData({ ...formData, password: e.target.value })
+                    }
+                    iconRender={(visible) =>
+                      visible ? (
+                        <EyeOutlined
+                          className="eye-icon"
+                          onClick={handleTogglePassword}
+                        />
+                      ) : (
+                        <EyeInvisibleOutlined
+                          className="eye-icon"
+                          onClick={handleTogglePassword}
+                        />
+                      )
+                    }
+                  />
+                </Form.Item>
 
-        <Form.Item
-          label="Password"
-          name="Password"
-          rules={[
-            {
-              required: true,
-              message: "Please input password!",
-            },
-            {
-              min: 8,
-              message: "Password must be at least 8 characters long!",
-            },
-          ]}
-        >
-          <Input.Password
-            value={formData.password}
-            
-            onChange={(e) =>
-              e &&
-              e.target &&
-              setFormData({ ...formData, password: e.target.value })
-            }
-            iconRender={(visible) =>
-              visible ? (
-                <EyeOutlined  className="eye-icon" onClick={handleTogglePassword} />
-              ) : (
-                <EyeInvisibleOutlined className="eye-icon" onClick={handleTogglePassword} />
-              )
-            }
-          />
-        </Form.Item>
+                {/* Date of Birth */}
+                <Form.Item
+                  label="Date of Birth"
+                  name="dob"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input date of birth!",
+                    },
+                  ]}
+                >
+                  <DatePicker
+                    onChange={(date, dateString) =>
+                      date && setFormData({ ...formData, dob: dateString })
+                    }
+                    picker="date"
+                  />
+                </Form.Item>
 
-        <Form.Item
-          label="Email"
-          name="email"
-          rules={[
-            {
-              required: true,
-              message: "Please input email!",
-            },
-          ]}
-        >
-          <Input
-            onChange={(e) =>
-              e &&
-              e.target &&
-              setFormData({ ...formData, gmail: e.target.value })
-            }
-          />
-        </Form.Item>
+                {/* Address */}
+                <Form.Item
+                  label="Address"
+                  name="address"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input address!",
+                    },
+                  ]}
+                >
+                  <Input.TextArea
+                    onChange={(e) =>
+                      e &&
+                      e.target &&
+                      setFormData({ ...formData, address: e.target.value })
+                    }
+                  />
+                </Form.Item>
 
-        <Form.Item
-          label="Date of Birth"
-          name="DOB"
-          rules={[
-            {
-              required: true,
-              message: "Please input date of birth!",
-            },
-          ]}
-        >
-          <DatePicker
-            onChange={(date, dateString) =>
-              date && setFormData({ ...formData, dob: dateString })
-            }
-            picker="date"
-          />
-        </Form.Item>
+                {/* Gender */}
+                <Form.Item
+                  label="Gender"
+                  name="gender"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please select gender!",
+                    },
+                  ]}
+                >
+                  <Select
+                    onChange={(value) =>
+                      setFormData({ ...formData, gender: value })
+                    }
+                  >
+                    <Option value="male">Male</Option>
+                    <Option value="female">Female</Option>
+                  </Select>
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                {/* User Name */}
+                <Form.Item
+                  label="User Name"
+                  name="userName"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input user name!",
+                    },
+                  ]}
+                >
+                  <Input
+                    onChange={(e) =>
+                      e &&
+                      e.target &&
+                      setFormData({ ...formData, userName: e.target.value })
+                    }
+                  />
+                </Form.Item>
 
-        <Form.Item
-          label="Phone Number"
-          name="phoneNumber"
-          rules={[
-            {
-              required: true,
-              message: "Please input phone number!",
-            },
-          ]}
-          validateStatus={phoneError ? "error" : ""}
-          help={phoneError}
-        >
-          <Input value={formData.phoneNumber} onChange={handlePhoneChange} />
-        </Form.Item>
+                {/* Last Name */}
+                <Form.Item
+                  label="Last Name"
+                  name="lastName"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input last name!",
+                    },
+                  ]}
+                >
+                  <Input
+                    onChange={(e) =>
+                      e &&
+                      e.target &&
+                      setFormData({ ...formData, lastName: e.target.value })
+                    }
+                  />
+                </Form.Item>
 
-        <Form.Item
-          label="Address"
-          name="address"
-          rules={[
-            {
-              required: true,
-              message: "Please input address!",
-            },
-          ]}
-        >
-          <Input.TextArea
-            onChange={(e) =>
-              e &&
-              e.target &&
-              setFormData({ ...formData, address: e.target.value })
-            }
-          />
-        </Form.Item>
-        <Form.Item
-          label="Id Number"
-          name="idNumber"
-          rules={[
-            {
-              required: true,
-              message: "Please input id number!",
-            },
-          ]}
-          hasFeedback
-          validateStatus={idNumberError ? "error" : " "}
-          help={idNumberError}
-        >
-          <Input value={formData.idNumber} onChange={handleIdNumberChange} />
-        </Form.Item>
+                {/* Email */}
+                <Form.Item
+                  label="Email"
+                  name="email"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input email!",
+                    },
+                  ]}
+                >
+                  <Input
+                    onChange={(e) =>
+                      e &&
+                      e.target &&
+                      setFormData({ ...formData, gmail: e.target.value })
+                    }
+                  />
+                </Form.Item>
 
-        <Form.Item
-          label="Gender"
-          name="gender"
-          rules={[
-            {
-              required: true,
-              message: "Please select gender!",
-            },
-          ]}
-        >
-          <Select
-            onChange={(value) => setFormData({ ...formData, gender: value })}
-          >
-            <Option value="male">Male</Option>
-            <Option value="female">Female</Option>
-          </Select>
-        </Form.Item>
+                {/* Phone Number */}
+                <Form.Item
+                  label="Phone Number"
+                  name="phoneNumber"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input phone number!",
+                    },
+                  ]}
+                  validateStatus={phoneError ? "error" : ""}
+                  help={phoneError}
+                >
+                  <Input
+                    value={formData.phoneNumber}
+                    onChange={handlePhoneChange}
+                  />
+                </Form.Item>
 
-        <Form.Item
-          label="User Role"
-          name="role"
-          rules={[
-            {
-              required: true,
-              message: "Please select user role!",
-            },
-          ]}
-        >
-          <Select
-            onChange={(value) => setFormData({ ...formData, role: value })}
-          >
-            <Option value="admin">Admin</Option>
-            <Option value="inventory manager">Inventory Manager</Option>
-            <Option value="cashier">Cashier</Option>
-            <Option value="sales staff">Sales Staff</Option>
-          </Select>
-        </Form.Item>
+                {/* Id Number */}
+                <Form.Item
+                  label="Id Number"
+                  name="idNumber"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input id number!",
+                    },
+                  ]}
+                  hasFeedback
+                  validateStatus={idNumberError ? "error" : " "}
+                  help={idNumberError}
+                >
+                  <Input
+                    value={formData.idNumber}
+                    onChange={handleIdNumberChange}
+                  />
+                </Form.Item>
 
-        <Form.Item
-          wrapperCol={{
-            offset: 6,
-            span: 16,
-          }}
-        >
-          <Button type="primary" htmlType="submit" onClick={handleSubmit}>
-            Save
-          </Button>
-        </Form.Item>
-      </Form>
+                {/* User Role */}
+                <Form.Item
+                  label="User Role"
+                  name="role"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please select user role!",
+                    },
+                  ]}
+                >
+                  <Select
+                    onChange={(value) =>
+                      setFormData({ ...formData, role: value })
+                    }
+                  >
+                    <Option value="admin">Admin</Option>
+                    <Option value="inventory manager">Inventory Manager</Option>
+                    <Option value="cashier">Cashier</Option>
+                    <Option value="sales staff">Sales Staff</Option>
+                  </Select>
+                </Form.Item>
+              </Col>
+            </Row>
+            <div style={{ marginTop: "20px", textAlign: "center" }}>
+              <Button type="primary" htmlType="submit" onClick={handleSubmit}>
+                Save
+              </Button>
+            </div>
+          </Form>
+        </div>
+      </DefaultHandle>
     </>
   );
-}
+};
 
-export default CreateUser;
+export default CreateUserForm;

@@ -2,8 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { Button, Form, Input, Select, Typography } from "antd";
-
-import "../../styles/userform.css";
+import DefaultHandle from "../DefaultHandle";
 
 const { Option } = Select;
 
@@ -50,23 +49,21 @@ function UpdateUser() {
       });
   }, [id]);
 
-  //   const handleSubmit = async (e) => {
-  //     e.preventDefault(); // Prevent default form submission behavior
+    const handleSubmit = async (e) => {
+      e.preventDefault(); // Prevent default form submission behavior
 
-  //     try {
-  //       // Send a PUT request to update the user information
-  //       const response = await axios.put(`http://localhost:8000/user/${id}`, user);
+      try {
+        //const response = await axios.put(`http://localhost:8000/user/${id}`, user);
+        const response=axios.put(`http://localhost:8000/user/update/${id}`, user);
+        console.log("User updated successfully:", response.data);
+        alert("User update successfully!");
 
-  //       // Handle successful response, you might want to navigate to a different page or show a success message
-  //       console.log("User updated successfully:", response.data);
-  //       // Navigate to a different page after successful update
-  //       navigate("/admin/userlist");
-  //     } catch (error) {
-  //       // Handle errors from the API
-  //       console.error("Error updating user:", error);
-  //       // You might want to show an error message to the user
-  //     }
-  //   };
+        // Navigate to a different page after successful update
+        navigate("/admin/usertable");
+      } catch (error) {
+        console.error("Error updating user:", error); 
+      }
+    };
 
   // Phone number validation
   const handlePhoneChange = (e) => {
@@ -82,8 +79,9 @@ function UpdateUser() {
 
   return (
     <>
+    <DefaultHandle>
       <Form {...formItemLayout} variant="filled" className="form-container">
-        <Typography>Update User</Typography>
+        <Typography style={{ fontSize: "20px", fontFamily: "sans-serif" ,textAlign:"center",marginTop:"5px",marginBottom:"5px",fontWeight:"bold"}}>Update User</Typography>
         <Form.Item
           label="User Id"
           name="userId"
@@ -150,11 +148,12 @@ function UpdateUser() {
         </Form.Item>
 
         <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
-          <Button type="primary" htmlType="submit">
+          <Button type="primary" htmlType="submit" onClick={handleSubmit}>
             Update
           </Button>
         </Form.Item>
       </Form>
+      </DefaultHandle>
     </>
   );
 }

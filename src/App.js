@@ -8,6 +8,7 @@ import Homepage from './pages/Homepage';
 import CreateUser from './components/ManageUsers/CreateUser';
 import Users from './components/ManageUsers/Users';
 import UpdateUser from './components/ManageUsers/UpdateUser';
+import AdminDashboard from './components/AdminDashboard';
 
 
 
@@ -25,7 +26,8 @@ function App() {
         <Route path='/admin/userform' element={<CreateUser/>} />
         <Route path="/admin/userform/update/:id" element={<UpdateUser/>} />
         <Route path='/admin/userTable' element={<Users/>} />
-        <Route path="/admin/home" element={<Homepage />} />
+        <Route path="/admin/home" element={<AdminDashboard />} />
+
       </Routes>
     </BrowserRouter>
   );

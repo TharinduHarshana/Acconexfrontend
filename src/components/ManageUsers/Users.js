@@ -4,7 +4,34 @@ import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import DefaultHandle from "../DefaultHandle";
+import { Space } from "antd";
 
+const tableCustomStyles = {
+  headCells: {
+    style: {
+      fontSize: '20px',
+      fontWeight: 'bold',
+      paddingLeft: '0 8px',
+    },
+  },
+  rows: {
+    style: {
+      fontSize: '16px',
+    },
+  },
+  cells: {
+    style: {
+      paddingLeft: '8px',
+      paddingRight: '8px',
+      borderBottom: '1px solid #ddd',
+    },
+  },
+  pagination: {
+    style: {
+      fontSize: '14px',
+    },
+  },
+};
 
 
 function Users() {
@@ -81,16 +108,24 @@ function Users() {
 
   return (
     <>
-      <DefaultHandle>
-        <Link to={"/admin/userform"}>Add User</Link>
-        <DataTable
-          columns={columns}
-          data={users}
-          selectableRows
-          fixedHeader
-          pagination
-        />
-      </DefaultHandle>
+    <DefaultHandle>
+  <Space size={12} style={{ marginBottom: '25px', textAlign: 'right' }}>
+    <Link to={"/admin/userform"} style={{ marginTop: "20px" }}>Add User</Link>
+  </Space>
+  <DataTable
+    columns={columns}
+    data={users}
+    selectableRows
+    fixedHeader
+    pagination
+    customStyles={tableCustomStyles}
+  />
+</DefaultHandle>
+
+
+      
+
+      
 
       {/* <table>
                 <thead>

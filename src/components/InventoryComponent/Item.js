@@ -123,7 +123,7 @@ const Items = () => {
       </div>
 
       <div className='text-end'>
-        <Link to="/addItem" className='btn-primary'>New Item</Link>
+        <Link to='/add-new-item' className='btn-primary'>New Item</Link>
       </div>
 
       <DataTable

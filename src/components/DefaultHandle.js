@@ -105,7 +105,7 @@ const DefaultHandle = ({ children }) => {
         </Menu>
       </Sider>
       <Layout>
-        <Header className="adminHeader">
+        <Header className="adminHeader" style={{backgroundColor:"#B9D9EB"}}>
           <Typography.Title level={3} style={{fontSize:"13px",fontFamily:"sans-serif"}}>Dashboard</Typography.Title>
           <Space>
             <div className="header-action" style={{ marginRight: "8px" }}>

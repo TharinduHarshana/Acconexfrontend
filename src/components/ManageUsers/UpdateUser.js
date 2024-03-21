@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
-import { Button, Form, Input, Select, Typography } from "antd";
+import { Button, Form, Input, Select, Typography,message } from "antd";
 import DefaultHandle from "../DefaultHandle";
 
 const { Option } = Select;
@@ -59,19 +59,19 @@ function UpdateUser() {
         user
       );
       console.log("User updated successfully:", response.data);
-      alert("User update successfully!");
+      message.success("User update successfully!");
 
       // Navigate to a different page after successful update
       navigate("/admin/usertable");
     } catch (error) {
-      console.error("Error updating user:", error);
+      message.error("Error updating user:", error);
     }
   };
 
   // Phone number validation
   const handlePhoneChange = (e) => {
     const { value } = e.target;
-    const containsOnlyDigits = /^\d+$/.test(value);
+    const containsOnlyDigits = /^[0-9]+$/.test(value);
     if (containsOnlyDigits || value === "") {
       setUser({ ...user, phoneNumber: value });
       setPhoneError(""); // Clear any previous error message
@@ -83,7 +83,7 @@ function UpdateUser() {
   return (
     <>
       <DefaultHandle>
-        <Form {...formItemLayout} variant="filled" className="form-container">
+        <Form {...formItemLayout} variant="filled" className="form-container" autoComplete="off">
           <Typography
             style={{
               fontSize: "20px",
@@ -135,6 +135,7 @@ function UpdateUser() {
                 message: "Please input phone number!",
               },
             ]}
+            hasFeedback
             validateStatus={phoneError ? "error" : ""}
             help={phoneError}
           >

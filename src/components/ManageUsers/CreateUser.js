@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import DefaultHandle from "../DefaultHandle";
 import axios from "axios";
@@ -6,7 +5,15 @@ import { Navigate, useNavigate } from "react-router-dom";
 import "../../styles/userform.css";
 import { Row, Col } from "antd";
 import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
-import { Button, DatePicker, Form, Input, Select, Typography } from "antd";
+import {
+  Button,
+  DatePicker,
+  Form,
+  Input,
+  Select,
+  Typography,
+  message,
+} from "antd";
 const { Option } = Select;
 
 const CreateUserForm = () => {
@@ -63,20 +70,19 @@ const CreateUserForm = () => {
       })
       .then((result) => {
         console.log(result);
-        alert("User create successfull!");
+        message.success("User create successfull!");
         navigate("/admin/usertable");
       })
       .catch((err) => {
         console.log(err);
-        alert("Error adding user: " + err.message);
+        message.error("Error adding user: " + err.message);
       });
   };
-  
 
   //phone number validation
   const handlePhoneChange = (e) => {
     const { value } = e.target;
-    const containsOnlyDigits = /^\d+$/.test(value);
+    const containsOnlyDigits = /^[0-9]+$/.test(value);
     if (containsOnlyDigits || value === "") {
       setFormData({ ...formData, phoneNumber: value });
       setPhoneError(""); // Clear any previous error message
@@ -101,11 +107,21 @@ const CreateUserForm = () => {
     <>
       <DefaultHandle>
         <div style={{ padding: "20px" }}>
-          <Form {...formItemLayout} className="form-container">
+          <Form
+            {...formItemLayout}
+            className="form-container"
+            autoComplete="off"
+          >
             <Typography.Title
               level={4}
               className="typography"
-              style={{ fontSize: "13px", fontFamily: "sans-serif" ,textAlign:"center",marginTop:"5px",marginBottom:"5px"}}
+              style={{
+                fontSize: "13px",
+                fontFamily: "sans-serif",
+                textAlign: "center",
+                marginTop: "5px",
+                marginBottom: "5px",
+              }}
             >
               Create user
             </Typography.Title>
@@ -120,7 +136,14 @@ const CreateUserForm = () => {
                       required: true,
                       message: "Please input user id!",
                     },
+                    {
+                      whitespace: true,
+                    },
+                    {
+                      min: 3,
+                    },
                   ]}
+                  hasFeedback
                 >
                   <Input
                     value={formData.userId}
@@ -166,6 +189,7 @@ const CreateUserForm = () => {
                       message: "Password must be at least 8 characters long!",
                     },
                   ]}
+                  hasFeedback
                 >
                   <Input.Password
                     value={formData.password}
@@ -300,7 +324,12 @@ const CreateUserForm = () => {
                       required: true,
                       message: "Please input email!",
                     },
+                    {
+                      type: "email",
+                      message: "Please enter a valid email",
+                    },
                   ]}
+                  hasFeedback
                 >
                   <Input
                     onChange={(e) =>
@@ -321,6 +350,7 @@ const CreateUserForm = () => {
                       message: "Please input phone number!",
                     },
                   ]}
+                  hasFeedback
                   validateStatus={phoneError ? "error" : ""}
                   help={phoneError}
                 >

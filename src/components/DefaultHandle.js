@@ -79,10 +79,10 @@ const DefaultHandle = ({ children }) => {
 
           <Menu.SubMenu key="contactsSubMenu" title="Contacts" icon={<ContactsOutlined />}>
               <Menu.Item key="supplierSubMenu" title="Supplier">
-                Supplier
+               <Link to="/admin/supplier">Supplier</Link>
               </Menu.Item>
               <Menu.Item key="customerSubMenu" title="Customer">
-                Customer
+                <Link to="/admin/customer">Customer</Link>
               </Menu.Item>
             </Menu.SubMenu>
 

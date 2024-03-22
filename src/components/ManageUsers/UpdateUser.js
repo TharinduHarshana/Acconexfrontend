@@ -83,10 +83,20 @@ function UpdateUser() {
   return (
     <>
       <DefaultHandle>
-        <Form {...formItemLayout} variant="filled" className="form-container" autoComplete="off">
+        <Form {...formItemLayout} variant="filled" className="form-container" autoComplete="off" 
+        style={{
+          maxWidth: "500px",
+          margin: "auto",
+          marginTop: "5px",
+          padding: "20px",
+          border: "1px solid #ccc",
+          borderRadius: "16px",
+          backgroundColor: "#fff",
+          boxShadow: "0px 8px 32px rgba(0, 0, 0, 0.1)"
+        }}>
           <Typography
             style={{
-              fontSize: "20px",
+              fontSize: "13px",
               fontFamily: "sans-serif",
               textAlign: "center",
               marginTop: "5px",

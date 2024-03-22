@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import "../../styles/login.css"; 
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
-import { Button, Form, Input, Typography } from "antd";
+import { Button, Form, Input, Typography,message } from "antd";
 import { login } from "../../Utility/api/user.api";
 import { useNavigate } from "react-router-dom";
+
 
 function Login() {
   const [loginData, setLoginData] = useState({ userName: "", password: "" });
@@ -15,13 +16,14 @@ function Login() {
       console.log(res);
       if (res && res.data) {
         // Navigate to dashboard route upon successful login
+        message.success("Login is successfull")
         navigate("/admin/home");
       }
     } catch (error) {
       if (error.response && error.response.status === 401) {
-        alert("Username or password is incorrect. Please try again.");
+        message.error("Username or password is incorrect. Please try again.");
       } else {
-        alert("Error Occurred. Please login again.");
+        message.error("Error Occurred. Please login again.");
       }
     }
   }
@@ -31,16 +33,13 @@ function Login() {
       <Form
         name="normal_login"
         className="login-form"
-        initialValues={{
-          remember: true,
-        }}
+        autoComplete="off"
+        
       >
         <Typography className="login-form-title">
-          CAZZORA SOFT SOLUTION
+         Sign In
         </Typography>
-        <Typography className="customer-support">
-          Customer Support: 071 913 72 98
-        </Typography>
+        
 
         <Form.Item
           name="username"

@@ -4,26 +4,26 @@ import { Space } from 'antd'; // Assuming you are using Ant Design
 import DataTable from 'react-data-table-component'; // Assuming you are using react-data-table-component
 import DefaultHandle from '../DefaultHandle';
 
-function ManageInventory() {
+function ManageSupplier() {
   // Mock data
   const users = [
     {
-     
-      itemId: 'I001',
-      name: 'HIKVISION WEB CAMERA DS-U02 (6 MONTHS WARRANTY)',
-      category: 'DESKTOP ACCESSORIES',
-      costprice: "Rs.6200,00",
-      sellingprice: "Rs.7900.00",
-      quantity: 2
+      
+      supplierId: 'S001',
+      firstName: 'Saman ',
+      lastName:"Silva",
+      companyName: 'DIGITAL PHONE MARKET',
+      phoneNumber: '0753216541',
+      email:'saman@gmail.com'
     },
     {
+        supplierId: 'S002',
+        firstName: 'Thushara ',
+        lastName:"perera",
+        companyName: 'DIALOG',
+        phoneNumber: '0753216542',
+        email:'thushara@gmail.com'
      
-      itemId: 'I002',
-      name: 'BASEUS GRAIN PRO CAE CHARGER ( 6 MONTHS WARRANTY)',
-      category: 'MOBILE ACCESSORIES',
-      costprice: "Rs.1200,00",
-      sellingprice: "Rs.1500.00",
-      quantity: 10
     },
     
   ];
@@ -61,34 +61,35 @@ function ManageInventory() {
 
   const columns = [
     {
-      name: 'Item Id',
-      selector: (row) => row.itemId,
+      name: 'Supplier Id',
+      selector: (row) => row.supplierId,
       sortable: true,
     },
     {
-      name: 'Name',
-      selector: (row) => row.name,
+      name: 'First Name',
+      selector: (row) => row.firstName,
       sortable: true,
     },
     {
-      name: 'Category',
-      selector: (row) => row.category,
+      name: 'Last Name',
+      selector: (row) => row.lastName,
     },
     {
-      name: 'Cost Price',
-      selector: (row) => row.costprice,
+      name: 'Company Name',
+      selector: (row) => row.companyName,
       sortable: true,
     },
     {
-      name: 'Selling Price',
-      selector: (row) => row.sellingprice,
-      sortable: true,
-    },
-    {
-      name: 'Quantity',
-      selector: (row) => row.quantity,
-      sortable: true,
-    },
+        name: 'Phone Number',
+        selector: (row) => row.phoneNumber,
+        sortable: true,
+      },
+      {
+        name: 'Email',
+        selector: (row) => row.email,
+        sortable: true,
+      },
+   
     {
       name: 'Actions',
       cell: (row) => (
@@ -96,6 +97,7 @@ function ManageInventory() {
           <Link to={`${row._id}`}>Edit</Link>
           <span style={{ margin: '0 8px' }}>|</span>
           <Link to={``}>Delete</Link>
+          
         </div>
       ),
     },
@@ -105,8 +107,8 @@ function ManageInventory() {
     <div>
       <DefaultHandle>
         <Space size={12} style={{ marginBottom: '25px', textAlign: 'right' }}>
-          <Link to={'/admin/userform'} style={{ marginTop: '20px', fontSize: '16px' }}>
-            Add Inventory
+        <Link to={'/admin/userform'} style={{ marginTop: '20px', fontSize: '16px' }}>
+            Add supplier
           </Link>
         </Space>
         <DataTable
@@ -122,4 +124,4 @@ function ManageInventory() {
   );
 }
 
-export default ManageInventory;
+export default ManageSupplier;

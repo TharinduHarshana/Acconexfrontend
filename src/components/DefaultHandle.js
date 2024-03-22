@@ -45,8 +45,10 @@ const DefaultHandle = ({ children }) => {
   const actionItems = [
     {
       key: "support",
-      title: "Support/Documentation",
+      title: "Support/Documentation" ,
       icon: <ContactsOutlined />,
+      linkTo:"https://www.globalteckz.com/9-documentation-for-implementing-any-erp-system/",
+     
     },
     { key: "switch_user", title: "Switch User", icon: <UserSwitchOutlined /> },
     {
@@ -112,9 +114,17 @@ const DefaultHandle = ({ children }) => {
               <Dropdown
                 overlay={
                   <Menu>
-                    {menuItems.map((item) => (
-                      <Menu.Item key={item.key}>{item.title}</Menu.Item>
-                    ))}
+                    {/* {menuItems.map((item) => (
+                      <Menu.Item key={item.key}>
+                    
+                    <a href={item.linkTo}>{item.title}</a>
+                      </Menu.Item>
+                    ))} */}
+                    {actionItems.map((item) => (
+        <Menu.Item key={item.key} icon={item.icon}>
+          <a href={item.linkTo}>{item.title}</a>
+        </Menu.Item>
+      ))}
                   </Menu>
                 }
               >

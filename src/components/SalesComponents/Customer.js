@@ -1,3 +1,4 @@
+// Customer.js
 import React, { useState, useEffect } from 'react';
 import '../../styles/customer.css';
 import { EditFilled, DeleteFilled } from '@ant-design/icons';
@@ -33,6 +34,7 @@ function Customer() {
         }));
     };
 
+    //submit
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -62,6 +64,7 @@ function Customer() {
         getFetchData();
     }, []);
 
+    //delete
     const handleDelete = async (id) => {
         const confirmed = window.confirm('Are you sure you want to delete this customer?');
         if (confirmed) {
@@ -76,6 +79,7 @@ function Customer() {
             }
         }
     };
+    //update 
 
     const handleUpdate = async () => {
         try {
@@ -106,48 +110,48 @@ function Customer() {
 
     return (
         <DefaultHandleSales>
-        <div className="container">
-            <button className='btn btn_add' onClick={() => setAddSection(true)}>Add Customer</button>
-            {addSection && <CustomerForm 
-                    handleSubmit={handleSubmit} 
-                    handleOnChange={handleOnChange} 
-                    handleClose={() => setAddSection(false)}
-                    rest={formData} 
-                    />}
-            {editSection && <CustomerForm
-                     handleSubmit={handleUpdate} 
-                     handleOnChange={handleEditOnChange} 
-                     handleClose={() => setEditSection(false)}
-                     rest={formDataEdit}
-                     />}
-            <div className='tableContainer'>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Customer_ID</th>
-                            <th>Customer_Name</th>
-                            <th>Customer_Address</th>
-                            <th>Contact_NO</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {dataList.map((el) => (
-                            <tr key={el.cusid}>
-                                <td>{el.cusid}</td>
-                                <td>{el.name}</td>
-                                <td>{el.address}</td>
-                                <td>{el.mobile}</td>
-                                <td>
-                                    <button className='btn btn-edit' onClick={() => handleEdit(el)}><EditFilled /></button>
-                                    <button className='btn btn-delete' onClick={() => handleDelete(el.cusid)}><DeleteFilled /></button>
-                                </td>
+            <div className="container">
+                <button className='btn btn_add' onClick={() => setAddSection(true)}>Add Customer</button>
+                {addSection && <CustomerForm 
+                        handleSubmit={handleSubmit} 
+                        handleOnChange={handleOnChange} 
+                        handleClose={() => setAddSection(false)}
+                        formData={formData} 
+                        />}
+                {editSection && <CustomerForm
+                        handleSubmit={handleUpdate} 
+                        handleOnChange={handleEditOnChange} 
+                        handleClose={() => setEditSection(false)}
+                        formData={formDataEdit}
+                        />}
+                <div className='tableContainer'>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Customer_ID</th>
+                                <th>Customer_Name</th>
+                                <th>Customer_Address</th>
+                                <th>Contact_NO</th>
+                                <th></th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {dataList.map((el) => (
+                                <tr key={el.cusid}>
+                                    <td>{el.cusid}</td>
+                                    <td>{el.name}</td>
+                                    <td>{el.address}</td>
+                                    <td>{el.mobile}</td>
+                                    <td>
+                                        <button className='btn btn-edit' onClick={() => handleEdit(el)}><EditFilled /></button>
+                                        <button className='btn btn-delete' onClick={() => handleDelete(el.cusid)}><DeleteFilled /></button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </div>
         </DefaultHandleSales>
     );
 }

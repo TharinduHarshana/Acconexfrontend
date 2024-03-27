@@ -1,4 +1,3 @@
-// CustomerForm.js
 import React from 'react';
 import '../../styles/customer.css';
 import { CloseOutlined } from '@ant-design/icons';
@@ -10,11 +9,23 @@ const CustomerForm = ({ handleSubmit, handleOnChange, handleClose, formData }) =
     let { value } = e.target;
     // Remove non-numeric characters
     value = value.replace(/\D/g, '');
+    
+    // If non-numeric characters were found
+    if (value !== e.target.value) {
+        alert('Only numbers are allowed');
+        return;
+    }
+    
     // Truncate the value if it exceeds 10 digits
-    value = value.slice(0, 10);
+    if (value.length > 10) {
+        value = value.slice(0, 10);
+        alert('Limit to 10');
+    }
+    
     // Update the form data
     handleOnChange({ target: { name: 'mobile', value } });
-  };
+};
+
 
   // Function to handle form submission
   const onSubmit = (e) => {

@@ -1,4 +1,3 @@
-// Customer.js
 import React, { useState, useEffect } from 'react';
 import '../../styles/customer.css';
 import { EditFilled, DeleteFilled } from '@ant-design/icons';
@@ -26,6 +25,7 @@ function Customer() {
     });
     const [dataList, setDataList] = useState([]);
 
+    // Function to handle changes in the add customer form fields
     const handleOnChange = (e) => {
         const { value, name } = e.target;
         setFormData(prevState => ({
@@ -34,21 +34,32 @@ function Customer() {
         }));
     };
 
-    //submit
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            const response = await axios.post('/add', formData);
-            if (response.data.success) {
-                setAddSection(false);
-                getFetchData(); 
-                alert(response.data.message);
-            }
-        } catch (error) {
-            console.error('Error adding customer:', error);
+    // Function to handle form submission for adding a new customer
+   // Function to handle form submission for adding a new customer
+const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+        // Check if cusid already exists
+        const existingCustomer = dataList.find(customer => customer.cusid === formData.cusid);
+        if (existingCustomer) {
+            alert('Customer with this ID already exists');
+            return; // Stop further execution
         }
-    };
 
+        // If cusid doesn't exist, proceed with adding the customer
+        const response = await axios.post('/add', formData);
+        if (response.data.success) {
+            setAddSection(false);
+            getFetchData(); 
+            alert(response.data.message);
+        }
+    } catch (error) {
+        console.error('Error adding customer:', error);
+    }
+};
+
+
+    // Function to fetch customer data
     const getFetchData = async () => {
         try {
             const response = await axios.get('/');
@@ -64,7 +75,7 @@ function Customer() {
         getFetchData();
     }, []);
 
-    //delete
+    // Function to handle deletion of a customer
     const handleDelete = async (id) => {
         const confirmed = window.confirm('Are you sure you want to delete this customer?');
         if (confirmed) {
@@ -79,10 +90,15 @@ function Customer() {
             }
         }
     };
-    //update 
-
+    
+    // Function to handle updating a customer
     const handleUpdate = async () => {
         try {
+            const existingCustomer = dataList.find(customer => customer.cusid === formDataEdit.cusid);
+            if (existingCustomer) {
+                alert('Customer with this ID already exists');
+                return; // Stop further execution
+            }
             const response = await axios.patch('/update/' + formDataEdit.cusid, formDataEdit);
             if (response.data.success) {
                 getFetchData();
@@ -95,6 +111,7 @@ function Customer() {
     };
     
 
+    // Function to handle changes in the edit customer form fields
     const handleEditOnChange = (e) => {
         const { value, name } = e.target;
         setFormDataEdit(prevState => ({
@@ -103,6 +120,7 @@ function Customer() {
         }));
     };
 
+    // Function to handle editing a customer
     const handleEdit = (el) => {
         setFormDataEdit(el);
         setEditSection(true);
@@ -111,19 +129,23 @@ function Customer() {
     return (
         <DefaultHandleSales>
             <div className="container">
+                {/* Button to toggle add customer form */}
                 <button className='btn btn_add' onClick={() => setAddSection(true)}>Add Customer</button>
+                {/* Render add customer form if addSection is true */}
                 {addSection && <CustomerForm 
                         handleSubmit={handleSubmit} 
                         handleOnChange={handleOnChange} 
                         handleClose={() => setAddSection(false)}
                         formData={formData} 
                         />}
+                {/* Render edit customer form if editSection is true */}
                 {editSection && <CustomerForm
                         handleSubmit={handleUpdate} 
                         handleOnChange={handleEditOnChange} 
                         handleClose={() => setEditSection(false)}
                         formData={formDataEdit}
                         />}
+                {/* Table to display customer data */}
                 <div className='tableContainer'>
                     <table>
                         <thead>
@@ -136,6 +158,7 @@ function Customer() {
                             </tr>
                         </thead>
                         <tbody>
+                            {/* Map over dataList to render each customer */}
                             {dataList.map((el) => (
                                 <tr key={el.cusid}>
                                     <td>{el.cusid}</td>
@@ -143,7 +166,9 @@ function Customer() {
                                     <td>{el.address}</td>
                                     <td>{el.mobile}</td>
                                     <td>
+                                        {/* Button to edit customer */}
                                         <button className='btn btn-edit' onClick={() => handleEdit(el)}><EditFilled /></button>
+                                        {/* Button to delete customer */}
                                         <button className='btn btn-delete' onClick={() => handleDelete(el.cusid)}><DeleteFilled /></button>
                                     </td>
                                 </tr>

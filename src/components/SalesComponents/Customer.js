@@ -49,6 +49,12 @@ const handleSubmit = async (e) => {
         // If cusid doesn't exist, proceed with adding the customer
         const response = await axios.post('/add', formData);
         if (response.data.success) {
+            setFormData({
+                cusid: "",
+                name: "",
+                address: "",
+                mobile: ""
+            });
             setAddSection(false);
             getFetchData(); 
             alert(response.data.message);
@@ -132,23 +138,26 @@ const handleSubmit = async (e) => {
                 {/* Button to toggle add customer form */}
                 <button className='btn btn_add' onClick={() => setAddSection(true)}>Add Customer</button>
                 {/* Render add customer form if addSection is true */}
-                {addSection && <CustomerForm 
+                {addSection && 
+                <CustomerForm 
                         handleSubmit={handleSubmit} 
                         handleOnChange={handleOnChange} 
                         handleClose={() => setAddSection(false)}
                         formData={formData} 
                         />}
                 {/* Render edit customer form if editSection is true */}
-                {editSection && <CustomerForm
+                {editSection && 
+                <CustomerForm
                         handleSubmit={handleUpdate} 
                         handleOnChange={handleEditOnChange} 
                         handleClose={() => setEditSection(false)}
                         formData={formDataEdit}
-                        />}
+                        />
+                        }
                 {/* Table to display customer data */}
-                <div className='tableContainer'>
-                    <table>
-                        <thead>
+                <div className='tableContainer' style={{ maxHeight: '400px', overflowY: 'auto',position:'relative' }}>
+                    <table >
+                        <thead style={{position:'sticky',top:0}}>
                             <tr>
                                 <th>Customer_ID</th>
                                 <th>Customer_Name</th>
@@ -157,7 +166,7 @@ const handleSubmit = async (e) => {
                                 <th></th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody style={{overflowY:'auto',maxHeight:'calc(100%-40px)'}}>
                             {/* Map over dataList to render each customer */}
                             {dataList.map((el) => (
                                 <tr key={el.cusid}>

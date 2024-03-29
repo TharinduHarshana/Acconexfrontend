@@ -5,6 +5,8 @@ import "../styles/sidebar.css";
 import { Link } from 'react-router-dom';
 
 
+
+
 const { Header, Sider, Content } = Layout;
 
 const DefaultHandle = ({ children }) => {
@@ -32,17 +34,18 @@ const DefaultHandle = ({ children }) => {
           selectedKeys={[selectedKey]}
           onClick={handleMenuClick}
         >
-          <Menu.Item key="/" icon={<DashboardOutlined />}>
-            <Link to="/">Home</Link>
+          <Menu.Item key="/admin/dashboard" icon={<DashboardOutlined />}>
+            <Link to="/admin/dashboard">Home</Link>
           </Menu.Item>
 
-          <Menu.Item key="/items" icon={<ProductOutlined />}>
-            <Link to="/items">Inventory</Link>
+          <Menu.Item key="/admin/items" icon={<ProductOutlined />}>
+            <Link to="/admin/items">Inventory</Link>
           </Menu.Item>
 
-          <Menu.Item key="/customers" icon={<ContactsOutlined />}>
-            <Link to="/customer">Customers</Link>
+          <Menu.Item key="/admin/customers" icon={<ContactsOutlined />}>
+            <Link to="/admin/customer">Customers</Link>
           </Menu.Item>
+
 
           <Menu.Item key="/user" icon={<UserOutlined />}>
             <Link to="/user">Users</Link>
@@ -50,14 +53,22 @@ const DefaultHandle = ({ children }) => {
 
           <Menu.Item key="/sale" icon={<ShoppingCartOutlined />}>
             <Link to="/sale">Sales</Link>
+
+          <Menu.Item key="/admin/users" icon={<UserOutlined />}>
+            <Link to="/admin/users">Users</Link>
           </Menu.Item>
 
-          <Menu.Item key="/reports" icon={<LineChartOutlined />}>
-            <Link to="/reports">Reports</Link>
+          <Menu.Item key="/admin/sales" icon={<ShoppingCartOutlined />}>
+            <Link to="/admin/sales">Sales</Link>
+
           </Menu.Item>
 
-          <Menu.Item key="/logout" icon={<LogoutOutlined />}>
-            <Link to="/logout">Logout</Link>
+          <Menu.Item key="/admin/reports" icon={<LineChartOutlined />}>
+            <Link to="/admin/reports">Reports</Link>
+          </Menu.Item>
+
+          <Menu.Item key="/admin/logout" icon={<LogoutOutlined />}>
+            <Link to="/admin/logout">Logout</Link>
           </Menu.Item>
         </Menu>
       </Sider>
@@ -83,4 +94,4 @@ const DefaultHandle = ({ children }) => {
   );
 };
 
-export default DefaultHandle;
+export default DefaultHandle;

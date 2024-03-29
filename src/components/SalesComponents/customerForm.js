@@ -22,10 +22,23 @@ const CustomerForm = ({ handleSubmit, handleOnChange, handleClose, formData }) =
         alert('Limit to 10');
     }
     
+    
     // Update the form data
     handleOnChange({ target: { name: 'mobile', value } });
 };
 
+//function for only allow letters for name
+const handleNameAddressChange =(e)=>{
+  let{value}=e.target;
+  //remove number
+  value = value.replace(/[^A-Za-z]/g, '');
+   if (value !== e.target.value) {
+    alert('Only letter are allowed');
+    return;
+}
+handleOnChange({target:{name:e.target.name,value}});
+
+};
 
   // Function to handle form submission
   const onSubmit = (e) => {
@@ -46,17 +59,17 @@ const CustomerForm = ({ handleSubmit, handleOnChange, handleClose, formData }) =
           <CloseOutlined />
         </div>
         <label htmlFor='cusid'>Customer ID :</label>
-        <input type='text' id='cusid' name='cusid' onChange={handleOnChange} value={formData.cusid} />
+        <input type='text' id='cusid' name='cusid' onChange={handleOnChange} value={formData.cusid}  />
 
         <label htmlFor='name'>Customer Name :</label>
-        <input type='text' id='name' name='name' onChange={handleOnChange} value={formData.name} />
+        <input type='text' id='name' name='name' onChange={handleNameAddressChange} value={formData.name} />
 
         <label htmlFor='address'>Customer Address :</label>
-        <input type='text' id='address' name='address' onChange={handleOnChange} value={formData.address} />
+        <input type='text' id='address' name='address' onChange={handleOnChange} value={formData.address} alert='can only enter character'/>
 
         <label htmlFor='mobile'>Contact NO :</label>
         {/* Use input type "tel" to bring up numeric keypad on mobile devices */}
-        <input type='tel' id='mobile' name='mobile' onChange={handleMobileChange} value={formData.mobile} maxLength={10} />
+        <input type='tel' id='mobile' name='mobile' onChange={handleMobileChange} value={formData.mobile} maxLength={10} minLength={10} />
 
         <button className='btn'>Submit</button>
       </form>

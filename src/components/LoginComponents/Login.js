@@ -1,50 +1,98 @@
-
-import React, { useState } from 'react'
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
-import { Typography } from '@mui/material';
-import Button from '@mui/material/Button';
-import { login } from '../../Utility/api/user.api';
-import { useNavigate } from 'react-router-dom';
-
-
-
+import React, { useState } from "react";
+import "./login.css"; // Corrected import statement
+import { LockOutlined, UserOutlined } from "@ant-design/icons";
+import { Button, Form, Input, Typography } from "antd";
+import { login } from "../../Utility/api/user.api";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
-    const [loginData,setLoginData]=useState({userName:"",password:""})
-    // Initialize useNavigate hook
-    const navigate = useNavigate(); 
+  const [loginData, setLoginData] = useState({ userName: "", password: "" });
+  // Initialize useNavigate hook
+  const navigate = useNavigate();
 
-    async function handleSubmit(){
-        try {
-          const res= await login(loginData);
-          console.log(res);
-          if (res && res.data) {
-            // Navigate to dashboard route upon successful login
-            navigate('/dashboard');
-        }
-        } catch (error) {
-          alert("Error Occured");
-        }
+  async function handleSubmit() {
+    try {
+      const res = await login(loginData);
+      console.log(res);
+      if (res && res.data) {
+        // Navigate to dashboard route upon successful login
+        navigate("/admin/home");
       }
-  return (
-    <Box
-      component="form"
-      sx={{
-        '& > :not(style)': { m: 1, width: '25ch' },
-      }}
-      noValidate
-      autoComplete="off"
-    >
-      <Typography>Login</Typography>
-      <TextField id="filled-basic" label="User Name" variant="filled" onChange={e=>e && e.target && setLoginData({...loginData,userName:e.target.value})}/>
-      <TextField id="filled-basic" label="Password" variant="filled" onChange={e=>e && e.target && setLoginData({...loginData,password:e.target.value})}/>
-      <Button variant="text" onClick={handleSubmit}>Sign In</Button>
-      
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        alert("Username or password is incorrect. Please try again.");
+      } else {
+        alert("Error Occurred. Please login again.");
+      }
+    }
+  }
 
-      
-    </Box>
-  )
+  return (
+    <div className="login-container">
+      <Form
+        name="normal_login"
+        className="login-form"
+        initialValues={{
+          remember: true,
+        }}
+      >
+        <Typography className="login-form-title">CAZZORA SOFT SOLUTION</Typography>
+        <Typography className="customer-support">Customer Support: 071 913 72 98</Typography>
+
+        <Form.Item
+          name="username"
+          rules={[
+            {
+              required: true,
+              message: "Please input your Username!",
+            },
+          ]}
+        >
+          <Input className="userName"
+           prefix={<UserOutlined className="site-form-item-icon" />}
+          placeholder="Username"
+            onChange={(e) =>
+              e &&
+              e.target &&
+              setLoginData({ ...loginData, userName: e.target.value })
+            }
+          />
+        </Form.Item>
+        <Form.Item
+          name="password"
+          rules={[
+            {
+              required: true,
+              message: "Please input your Password!",
+            },
+          ]}
+        >
+          <Input.Password
+            prefix={<LockOutlined className="site-form-item-icon" />}
+            type="password" // Modified this line to set the input type to "password"
+            placeholder="Password"
+            className="password"
+            onChange={(e) =>
+              e &&
+              e.target &&
+              setLoginData({ ...loginData, password: e.target.value })
+            }
+          />
+        </Form.Item>
+
+        <Form.Item>
+          <Button
+            type="primary"
+            htmlType="submit"
+            className="login-form-button"
+            onClick={handleSubmit}
+          >
+            LOGIN
+          </Button>
+        </Form.Item>
+      </Form>
+    </div>
+  );
 }
 
-export default Login
+export default Login;

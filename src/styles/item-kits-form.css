@@ -1,0 +1,62 @@
+.item-kits-container {
+  max-width: 700px;
+  margin: auto;
+  margin-top: 20px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 16px;
+  background-color: #fff;
+  box-shadow: 0px 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.item-kits-container-header {
+  height: 50px; /* Adjust as needed */
+  background-color: #f0f0f0;
+  border-bottom: 1px solid #ccc;
+  font-size: 20px;
+  margin-right: 10px;
+}
+
+.form-item-kit-container {
+  max-width: 500px;
+  margin-top: 20px;
+  font-family: Arial, sans-serif; /* Example font family */
+}
+
+.form-item-kit-container label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.form-item-kit-container input,
+.form-item-kit-container select {
+  width: calc(50% - 5px); /* Adjust width as needed */
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.form-item-kit-container select {
+  margin-left: 10px; /* Add margin between input and select */
+  -webkit-appearance: menulist; /* Reset select appearance for Chrome */
+  min-width: 150px; /* Set minimum width for select box */
+}
+
+.form-item-kit-container button {
+  background-color: #1890ff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.form-item-kit-container button:hover {
+  background-color: #40a9ff;
+}
+
+/* Corrected bill-split class */
+.bill-split {
+  display: flex;
+}

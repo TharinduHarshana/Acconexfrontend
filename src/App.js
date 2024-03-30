@@ -13,6 +13,8 @@ import CreateSupplierForm from "./components/ManageUsers/CreateSupplier";
 import Supplier from "./components/ManageUsers/Supplier";
 import UpdateSupplier from "./components/ManageUsers/UpdateSupplier";
 import ItemKits from "./components/ManageInventory/ItemKits";
+import ItemKitsTable from "./components/ManageInventory/ItemKitsTable";
+
 
 
 function App() {
@@ -26,14 +28,15 @@ function App() {
         {/* admin routes */}
         <Route path="/admin" element={<Login/>} />
         <Route path="/admin/userform" element={<CreateUser />} />
-        <Route path="/admin/userform/update/:id" element={<UpdateUser />} />
+        <Route path="/admin/userform/update/:id" element={<UpdateUser/>} />
         <Route path="/admin/userTable" element={<Users />} />
         <Route path="/admin/home" element={<AdminDashboard />} />
         <Route path="/admin/customer" element={<ManageCustomer/>}/>
         <Route path="/admin/supplier" element={<Supplier/>}/>
         <Route path="/admin/supplier/create" element={<CreateSupplierForm/>}/>
         <Route path="/admin/supplier/update/:id" element={<UpdateSupplier />} />
-        <Route path="admin/inventory/itemkits" element={<ItemKits/>}/>
+        <Route path="admin/inventory/item-kits" element={<ItemKits/>}/>
+        <Route path="admin/inventory/item-kits/table" element={<ItemKitsTable/>}/>
 
 
 

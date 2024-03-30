@@ -7,53 +7,11 @@ import DefaultHandle from '../DefaultHandle';
 function ManageCustomer() {
   // Mock data
   const users = [
-    {
-      
-      customerId: 'C001',
-      name: 'Saman silva',
-      address: 'Galle',
-      phoneNumber: '0753216541',
-    },
-    {
-      
-      customerId: 'C002',
-      name: 'Tharuka perera',
-      address: 'Colombo',
-      phoneNumber: '0765413215',
-    },
+    
     
   ];
 
-  const tableCustomStyles = {
-    headCells: {
-      style: {
-        fontSize: '15px',
-        fontWeight: 'bold',
-        color: 'white',
-        paddingLeft: '0 8px',
-        backgroundColor: '#00416A',
-      },
-    },
-    rows: {
-      style: {
-        fontSize: '16px',
-      },
-    },
-    cells: {
-      style: {
-        paddingLeft: '8px',
-        paddingRight: '8px',
-        borderBottom: '1px solid #ddd',
-      },
-    },
-    pagination: {
-      style: {
-        fontSize: '14px',
-        color: 'black',
-        backgroundColor: '#76ABDF',
-      },
-    },
-  };
+  
 
   const columns = [
     {
@@ -100,7 +58,7 @@ function ManageCustomer() {
           selectableRows
           fixedHeader
           pagination
-          customStyles={tableCustomStyles}
+          
         />
       </DefaultHandle>
     </div>

@@ -1,72 +1,61 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
-import { Button, Form, Input, Select, Typography,message } from "antd";
 import DefaultHandle from "../DefaultHandle";
-
-const { Option } = Select;
-
-const formItemLayout = {
-  labelCol: {
-    xs: {
-      span: 24,
-    },
-    sm: {
-      span: 6,
-    },
-  },
-  wrapperCol: {
-    xs: {
-      span: 24,
-    },
-    sm: {
-      span: 14,
-    },
-  },
-};
+import { message } from "antd";
 
 function UpdateUser() {
-  const users = {
+  // Get the id parameter from the URL
+  const { id } = useParams();
+  // State to store user data
+  const [user, setUser] = useState({
     userId: "",
     firstName: "",
     phoneNumber: "",
     role: "",
-  };
-
-  const { id } = useParams();
-  const [user, setUser] = useState(users);
-  const [phoneError, setPhoneError] = useState();
+  });
+  // State to handle phone number input validation
+  const [phoneError, setPhoneError] = useState("");
+  // Hook to navigate to different pages
   const navigate = useNavigate();
-
+  // Effect hook to fetch user data when the component mounts or id changes
   useEffect(() => {
     axios
       .get(`http://localhost:8000/user/${id}`)
       .then((response) => {
-      console.log(response.data)
-        setUser(response.data);
+        const userData = response.data.data;
+        // Update the user state with data from the response
+        setUser({
+          userId: userData.userId,
+          firstName: userData.firstName,
+          phoneNumber: userData.phoneNumber,
+          role: userData.role,
+        });
       })
       .catch((error) => {
         console.log(error);
       });
-  }, [id]);
+  }, [id]); // Dependency array ensures this effect runs when id changes
 
+  // Function to handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      //const response = await axios.put(`http://localhost:8000/user/${id}`, user);
-      const response = axios.patch(
-        `http://localhost:8000/user/update/${id}`,
-        user
-      );
-      console.log("User updated successfully:", response.data);
-      message.success("User update successfully!");
-
+      await axios.patch(`http://localhost:8000/user/update/${id}`, user);
+      console.log("User updated successfully:", user);
+      message.success("User Updated successfully!");
       // Navigate to a different page after successful update
       navigate("/admin/usertable");
     } catch (error) {
-      message.error("Error updating user:", error);
+      console.error("Error updating user:", error);
     }
+  };
+  // Function to handle input change
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    // Update the user state with the new input value
+    setUser({ ...user, [name]: value });
   };
 
   // Phone number validation
@@ -74,9 +63,11 @@ function UpdateUser() {
     const { value } = e.target;
     const containsOnlyDigits = /^[0-9]+$/.test(value);
     if ((containsOnlyDigits && value.length <= 10) || value === "") {
+      // Update the user state with the new phone number
       setUser({ ...user, phoneNumber: value });
       setPhoneError(""); // Clear any previous error message
     } else {
+      // Set error message for invalid phone number input
       setPhoneError("Please enter only numbers and a maximum of 10 digits");
     }
   };
@@ -84,101 +75,136 @@ function UpdateUser() {
   return (
     <>
       <DefaultHandle>
-        <Form {...formItemLayout} variant="filled" className="form-container" autoComplete="off" 
-        style={{
-          maxWidth: "500px",
-          margin: "auto",
-          marginTop: "5px",
-          padding: "20px",
-          border: "1px solid #ccc",
-          borderRadius: "16px",
-          backgroundColor: "#fff",
-          boxShadow: "0px 8px 32px rgba(0, 0, 0, 0.1)"
-        }}>
-          <Typography
+        <form
+          onSubmit={handleSubmit}
+          style={{
+            maxWidth: "400px",
+            margin: "auto",
+            marginTop: "20px",
+            padding: "20px",
+            border: "1px solid #ccc",
+            borderRadius: "16px",
+            backgroundColor: "#fff",
+            boxShadow: "0px 8px 32px rgba(0, 0, 0, 0.1)",
+          }}
+        >
+          <h2
             style={{
-              fontSize: "13px",
-              fontFamily: "sans-serif",
+              fontSize: "20px",
+              fontFamily: "Arial, sans-serif",
               textAlign: "center",
-              marginTop: "5px",
-              marginBottom: "20px",
+              margin: "0 0 20px",
               fontWeight: "bold",
+              color: "#333",
             }}
           >
             Update User
-          </Typography>
-          <Form.Item
-            label="User Id"
-            name="userId"
-            
-            rules={[
-              {
-                message: "Please input user id!",
-              },
-            ]}
-          >
-            <Input
+          </h2>
+
+          <div style={{ marginBottom: "20px" }} className="form-group">
+            <label style={{ marginBottom: "5px", display: "block" }}>
+              User Id:
+            </label>
+            <input
+              type="text"
+              className="form-control"
+              name="userId"
               value={user.userId}
-              onChange={(e) => setUser({ ...user, userId: e.target.value })}
+              onChange={handleInputChange}
+              style={{
+                width: "100%",
+                padding: "10px",
+                borderRadius: "5px",
+                border: "1px solid #ccc",
+              }}
             />
-          </Form.Item>
+          </div>
 
-          <Form.Item
-            label="First Name"
-            name="firstName"
-            rules={[
-              {
-                message: "Please input first name!",
-              },
-            ]}
-          >
-            <Input
+          <div style={{ marginBottom: "20px" }} className="form-group">
+            <label style={{ marginBottom: "5px", display: "block" }}>
+              First Name:
+            </label>
+            <input
+              type="text"
+              className="form-control"
+              name="firstName"
               value={user.firstName}
-              onChange={(e) => setUser({ ...user, firstName: e.target.value })}
+              onChange={handleInputChange}
+              style={{
+                width: "100%",
+                padding: "10px",
+                borderRadius: "5px",
+                border: "1px solid #ccc",
+              }}
             />
-          </Form.Item>
+          </div>
 
-          <Form.Item
-            label="Phone Number"
-            name="phoneNumber"
-            rules={[
-              {
-                message: "Please input phone number!",
-              },
-            ]}
-            hasFeedback
-            validateStatus={phoneError ? "error" : ""}
-            help={phoneError}
-          >
-            <Input value={user.phoneNumber} onChange={handlePhoneChange} />
-          </Form.Item>
+          <div style={{ marginBottom: "20px" }} className="form-group">
+            <label style={{ marginBottom: "5px", display: "block" }}>
+              Phone Number:
+            </label>
+            <input
+              type="text"
+              className="form-control"
+              name="phoneNumber"
+              value={user.phoneNumber}
+              onChange={handlePhoneChange}
+              style={{
+                width: "100%",
+                padding: "10px",
+                borderRadius: "5px",
+                border: "1px solid #ccc",
+              }}
+            />
+            {phoneError && (
+              <div
+                className="text-danger"
+                style={{ marginTop: "5px", fontSize: "14px" }}
+              >
+                {phoneError}
+              </div>
+            )}
+          </div>
 
-          <Form.Item
-            label="User Role"
-            name="role"
-            rules={[
-              {
-                message: "Please select user role!",
-              },
-            ]}
-          >
-            <Select
+          <div style={{ marginBottom: "20px" }} className="form-group">
+            <label style={{ marginBottom: "5px", display: "block" }}>
+              User Role:
+            </label>
+            <select
+              className="form-control"
+              name="role"
               value={user.role}
-              onChange={(value) => setUser({ ...user, role: value })}
+              onChange={handleInputChange}
+              style={{
+                width: "100%",
+                padding: "10px",
+                borderRadius: "5px",
+                border: "1px solid #ccc",
+              }}
             >
-              <Option value="admin">Admin</Option>
-              <Option value="inventory manager">Inventory Manager</Option>
-              <Option value="cashier">Cashier</Option>
-              <Option value="sales staff">Sales Staff</Option>
-            </Select>
-          </Form.Item>
+              <option value="admin">Admin</option>
+              <option value="inventory manager">Inventory Manager</option>
+              <option value="cashier">Cashier</option>
+              <option value="sales staff">Sales Staff</option>
+            </select>
+          </div>
 
-          <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
-            <Button type="primary" htmlType="submit" onClick={handleSubmit}>
-              Update
-            </Button>
-          </Form.Item>
-        </Form>
+          <button
+            type="submit"
+            className="btn btn-primary"
+            style={{
+              width: "100%",
+              padding: "10px",
+              borderRadius: "5px",
+              border: "none",
+              backgroundColor: "#007bff",
+              color: "#fff",
+              cursor: "pointer",
+            }}
+          >
+            Update
+          </button>
+        </form>
       </DefaultHandle>
     </>
   );

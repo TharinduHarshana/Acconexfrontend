@@ -7,9 +7,12 @@ import CreateUser from "./components/ManageUsers/CreateUser";
 import Users from "./components/ManageUsers/Users";
 import AdminDashboard from "./components/AdminDashboard";
 import UpdateUser from "./components/ManageUsers/UpdateUser";
-import ManageInventory from "./components/ManageUsers/ManageInventory";
+
 import ManageCustomer from "./components/ManageUsers/ManageCustomer";
-import ManageSupplier from "./components/ManageUsers/ManageSupplier";
+import CreateSupplierForm from "./components/ManageUsers/CreateSupplier";
+import Supplier from "./components/ManageUsers/Supplier";
+import UpdateSupplier from "./components/ManageUsers/UpdateSupplier";
+import ItemKits from "./components/ManageInventory/ItemKits";
 
 
 function App() {
@@ -26,9 +29,12 @@ function App() {
         <Route path="/admin/userform/update/:id" element={<UpdateUser />} />
         <Route path="/admin/userTable" element={<Users />} />
         <Route path="/admin/home" element={<AdminDashboard />} />
-        <Route path="/admin/items" element={<ManageInventory/>}/>
         <Route path="/admin/customer" element={<ManageCustomer/>}/>
-        <Route path="/admin/supplier" element={<ManageSupplier/>}/>
+        <Route path="/admin/supplier" element={<Supplier/>}/>
+        <Route path="/admin/supplier/create" element={<CreateSupplierForm/>}/>
+        <Route path="/admin/supplier/update/:id" element={<UpdateSupplier />} />
+        <Route path="admin/inventory/itemkits" element={<ItemKits/>}/>
+
 
 
       </Routes>

@@ -1,0 +1,35 @@
+.form-container{
+    max-width: 600px;
+    margin: auto;
+    margin-top: 5px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 16px;
+    background-color: #fff;
+    box-shadow: 0px 8px 32px rgba(0, 0, 0, 0.1);
+    
+    
+}
+.form-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px; /* Adjust the margin between form items */
+  }
+  
+  .form-item label {
+    width: 120px; /* Set a fixed width for the labels */
+    text-align: right;
+    margin-right: 20px; /* Adjust spacing between label and input */
+  }
+  
+  .form-item .ant-form-item-control-input {
+    flex: 1; /* Allow inputs to take up remaining space */
+  }
+  
+  .form-item .ant-input {
+    width: 250px;
+    margin-right: 20px; /* Apply margin to the right of the input */
+  }
+  
+  
+  

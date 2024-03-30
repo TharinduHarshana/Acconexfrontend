@@ -42,6 +42,7 @@ function UpdateUser() {
     axios
       .get(`http://localhost:8000/user/${id}`)
       .then((response) => {
+      console.log(response.data)
         setUser(response.data);
       })
       .catch((error) => {
@@ -72,11 +73,11 @@ function UpdateUser() {
   const handlePhoneChange = (e) => {
     const { value } = e.target;
     const containsOnlyDigits = /^[0-9]+$/.test(value);
-    if (containsOnlyDigits || value === "") {
+    if ((containsOnlyDigits && value.length <= 10) || value === "") {
       setUser({ ...user, phoneNumber: value });
       setPhoneError(""); // Clear any previous error message
     } else {
-      setPhoneError("Please enter only numbers");
+      setPhoneError("Please enter only numbers and a maximum of 10 digits");
     }
   };
 
@@ -100,7 +101,7 @@ function UpdateUser() {
               fontFamily: "sans-serif",
               textAlign: "center",
               marginTop: "5px",
-              marginBottom: "5px",
+              marginBottom: "20px",
               fontWeight: "bold",
             }}
           >
@@ -109,7 +110,7 @@ function UpdateUser() {
           <Form.Item
             label="User Id"
             name="userId"
-            className="form-item"
+            
             rules={[
               {
                 message: "Please input user id!",

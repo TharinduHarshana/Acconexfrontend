@@ -16,8 +16,11 @@ import {
 } from "antd";
 const { Option } = Select;
 
+//Function to create a user
 const CreateUserForm = () => {
+  //Hook for navigation
   const navigate = useNavigate();
+
   const formItemLayout = {
     labelCol: {
       xs: { span: 24 },
@@ -28,6 +31,8 @@ const CreateUserForm = () => {
       sm: { span: 18 },
     },
   };
+
+  //State variable to manage form data and validation errors
   const [formData, setFormData] = useState({
     userId: "",
     userName: "",
@@ -46,60 +51,55 @@ const CreateUserForm = () => {
   const [idNumberError, setIdNumberError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
+  //Function to toggle password visibility
   const handleTogglePassword = () => {
     setShowPassword(!showPassword);
   };
 
   const handleSubmit = (e) => {
-    //e.preventDefault();
-
+    // Submit the form data to create a new user
     axios
-      .post("http://localhost:8000/user/add", {
-        userId: formData.userId,
-        userName: formData.userName,
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        password: formData.password,
-        gmail: formData.gmail,
-        dob: formData.dob,
-        phoneNumber: formData.phoneNumber,
-        address: formData.address,
-        idNumber: formData.idNumber,
-        gender: formData.gender,
-        role: formData.role,
-      })
+      .post("http://localhost:8000/user/add", formData)
       .then((result) => {
         console.log(result);
-        message.success("User create successfull!");
+        message.success("User created successfully!");
+        // Redirect to user table after successful creation
         navigate("/admin/usertable");
       })
       .catch((err) => {
-        console.log(err);
-        message.error("Error adding user: " + err.message);
+        if (err.response && err.response.status === 401) {
+          message.error("User with this userID already exists!");
+        } else {
+          // For other errors, display a generic error message
+          console.error("Error adding user:", err);
+          message.error("An error occurred while adding user.");
+        }
       });
   };
 
-  //phone number validation
+  //Phone number validation
   const handlePhoneChange = (e) => {
     const { value } = e.target;
     const containsOnlyDigits = /^[0-9]+$/.test(value);
-    if (containsOnlyDigits || value === "") {
+    if ((containsOnlyDigits && value.length <= 10) || value === "") {
       setFormData({ ...formData, phoneNumber: value });
       setPhoneError(""); // Clear any previous error message
     } else {
-      setPhoneError("Please enter only numbers");
+      setPhoneError("Please enter only numbers and a maximum of 10 digits");
     }
   };
 
-  //id number validation
+  //Id number validation
   const handleIdNumberChange = (e) => {
     const { value } = e.target;
-    const containsValidCharacters = /^[a-zA-Z0-9]+$/.test(value);
-    if (containsValidCharacters || value === "") {
+    const isValid = /^[a-zA-Z0-9]{1,12}$/.test(value); // Validate alphanumeric characters and maximum length of 12
+    if (isValid || value === "") {
       setFormData({ ...formData, idNumber: value });
       setIdNumberError(""); // Clear any previous error message
     } else {
-      setIdNumberError("Please enter only numbers and letters");
+      setIdNumberError(
+        "Please enter only letters and numbers, and ensure the ID number has a maximum length of 12 characters"
+      );
     }
   };
 
@@ -109,7 +109,7 @@ const CreateUserForm = () => {
         <div style={{ padding: "20px" }}>
           <Form
             {...formItemLayout}
-            className="form-container"
+            className="form-containerr"
             autoComplete="off"
           >
             <Typography.Title
@@ -284,7 +284,12 @@ const CreateUserForm = () => {
                       required: true,
                       message: "Please input user name!",
                     },
+                    {
+                      max: 8,
+                      message: "UserName must be at least 8 characters long!",
+                    },
                   ]}
+                  hasFeedback
                 >
                   <Input
                     onChange={(e) =>

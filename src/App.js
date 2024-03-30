@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import UserForm from './components/UserData/UserForm';
 import UserTable from './components/UserData/UserTable';
 import Login from './components/LoginComponents/Login';
@@ -10,12 +9,14 @@ import Bill from './components/SalesComponents/Bill';
 import Customer from './components/SalesComponents/Customer';
 import SuspendSale from './components/SalesComponents/SuspendSale';
 import ViewCutomer from './pages/ViewCutomer';
+import Daily_sales from './components/SalesComponents/Daily_sales';
 
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
+
         
         <Route path='/userform' element={<UserForm />} />
         <Route path='/user' element={<UserTable />} />
@@ -27,6 +28,22 @@ function App() {
           <Route path='/log' element={<Login/>}/>
           <Route path='/viewcustomer' element={<ViewCutomer/>}/>
           <Route path='/home' element={<Homepage/>}/>
+<<<<<<< HEAD
+          <Route path='/dailysales' element={<Daily_sales/>}/>
+=======
+
+        {/* User Routes */}
+
+        <Route path='/' element={<Dashboard />} />
+        
+
+        {/* admin routes */}
+        <Route path='/admin' element={<Login />} />
+        <Route path='/admin/userform' element={<UserForm />} />
+        <Route path='/admin/userTable' element={<UserTable />} />
+        <Route path="/admin/home" element={<Homepage />} />
+
+>>>>>>> 483b732ed408dedd1d4df61c5d9d038dc9b10c53
       </Routes>
     </BrowserRouter>
   );

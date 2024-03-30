@@ -51,6 +51,11 @@ const DefaultHandleSales= ({children}) => {
             </Menu.Item>
             <br></br>
 
+            <Menu.Item key="/dailysales" icon={<ReconciliationOutlined />}>
+            <Link to="/dailysales">Daily Sale</Link>
+            </Menu.Item>
+            <br></br>
+
             <Menu.Item key="/log" icon={<LogoutOutlined  />}>
             <Link to="/log">LOGOUT</Link>
             </Menu.Item>
@@ -62,10 +67,10 @@ const DefaultHandleSales= ({children}) => {
         <Header style={{ background: colorBgContainer}}>
 
             <Space className='topbar'>
-                <HomeOutlined />
+              <Link to ="/home" ><HomeOutlined /></Link>
                 <SettingFilled />
                 <SyncOutlined spin />
-                <LogoutOutlined />
+               <Link to ='/log'> <LogoutOutlined /></Link>
             </Space>
 
         </Header>

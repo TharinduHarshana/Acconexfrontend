@@ -124,7 +124,7 @@ const DefaultHandle = ({ children }) => {
 
           <Menu.Item key="/sale" icon={<ShoppingCartOutlined />}>
             <Link to="/sale">Sales</Link>
-
+          </Menu.Item>
           <Menu.Item key="/admin/users" icon={<UserOutlined />}>
             <Link to="/admin/userTable">Users</Link>
           </Menu.Item>

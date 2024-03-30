@@ -7,12 +7,20 @@ import CreateUser from "./components/ManageUsers/CreateUser";
 import Users from "./components/ManageUsers/Users";
 import AdminDashboard from "./components/AdminDashboard";
 import UpdateUser from "./components/ManageUsers/UpdateUser";
-
 import ManageCustomer from "./components/ManageUsers/ManageCustomer";
 import CreateSupplierForm from "./components/ManageUsers/CreateSupplier";
 import Supplier from "./components/ManageUsers/Supplier";
 import UpdateSupplier from "./components/ManageUsers/UpdateSupplier";
 import ItemKits from "./components/ManageInventory/ItemKits";
+
+// import SalesDachboad from './components/SalesComponents/SalesDachboad';
+
+import SalesDachboad from './components/SalesComponents/SalesDachboad';
+import Bill from './components/SalesComponents/Bill';
+import Customer from './components/SalesComponents/Customer';
+import SuspendSale from './components/SalesComponents/SuspendSale';
+import ViewCutomer from './pages/ViewCutomer';
+
 
 
 function App() {
@@ -21,18 +29,16 @@ function App() {
       <Routes>
 
         
-        <Route path='/userform' element={<UserForm />} />
-        <Route path='/user' element={<UserTable />} />
-          <Route path="/" element={<Homepage />} />
-          <Route path='/sale' element={<SalesDachboad/>}/>
-          <Route path='/bill' element={<Bill/>}/>
-          <Route path='/addcus' element={<Customer/>}/>
-          <Route path='/holdbill' element={<SuspendSale/>}/>
-          <Route path='/log' element={<Login/>}/>
-          <Route path='/viewcustomer' element={<ViewCutomer/>}/>
-          <Route path='/home' element={<Homepage/>}/>
 
-        {/* User Routes */}
+          <Route path="/" element={<Homepage />} />
+          <Route path='admin/sale' element={<SalesDachboad/>}/>
+          <Route path='admin/bill' element={<Bill/>}/>
+          <Route path='admin/addcus' element={<Customer/>}/>
+          <Route path='admin/holdbill' element={<SuspendSale/>}/>
+          <Route path='admin/viewcustomer' element={<ViewCutomer/>}/>
+         
+
+        {/* User Routes
 
         <Route path="/" element={<Dashboard />} />
 

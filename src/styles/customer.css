@@ -127,12 +127,8 @@ body {
 
 /* Table container styles */
 .tableContainer,
-<<<<<<< HEAD
 .bill_tableContainer,
 .daily_sale_tableContainer {
-=======
-.bill_tableContainer {
->>>>>>> 483b732ed408dedd1d4df61c5d9d038dc9b10c53
     margin-top: 50px;
     border: 1px solid #c9c5c2;
     box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
@@ -142,7 +138,6 @@ body {
 }
 
 /* Bill table container styles */
-<<<<<<< HEAD
 .bill_tableContainer,
 .daily_sale_tableContainer{
     height: 300px;
@@ -164,25 +159,13 @@ body {
 .tableContainer table thead tr,
 .bill_tableContainer table thead tr,
 .daily_sale_tableContainer table thead tr {
-=======
-.bill_tableContainer {
-    height: 300px;
-}
-
-/* Table header row styles */
-.tableContainer table thead tr,
-.bill_tableContainer table thead tr {
->>>>>>> 483b732ed408dedd1d4df61c5d9d038dc9b10c53
     background-color: beige;
 }
 
 /* Table header cell styles */
 .tableContainer table thead tr th,
-<<<<<<< HEAD
 .daily_sale_tableContainer table thead tr th,
 .daily_sale_tableContainer table thead tr dt,
-=======
->>>>>>> 483b732ed408dedd1d4df61c5d9d038dc9b10c53
 .tableContainer table thead tbody td {
     min-width: 200px;
     padding: 7px;
@@ -191,10 +174,7 @@ body {
 
 /* Bill table header cell styles */
 .bill_tableContainer table thead tr th,
-<<<<<<< HEAD
 .daily_sale_tableContainer table tbody tr td,
-=======
->>>>>>> 483b732ed408dedd1d4df61c5d9d038dc9b10c53
 .bill_tableContainer table tbody tr td {
     min-width: 125px;
     padding: 7px;
@@ -203,10 +183,7 @@ body {
 
 /* Table body cell styles */
 .tableContainer table tbody tr td,
-<<<<<<< HEAD
 .daily_sale_tableContainer table tbody tr td,
-=======
->>>>>>> 483b732ed408dedd1d4df61c5d9d038dc9b10c53
 .bill_tableContainer table tbody tr td {
     border-bottom: 1px solid #c9c5c2;
 }
@@ -237,7 +214,6 @@ body {
     padding: 10px;
     max-width: fit-content;
     margin: 15px auto;
-<<<<<<< HEAD
 }
 
 /*serch button of bill*/
@@ -245,6 +221,4 @@ body {
     text-align: center;
     padding: 10px auto;
     margin-top: 5px;
-=======
->>>>>>> 483b732ed408dedd1d4df61c5d9d038dc9b10c53
 }

@@ -53,14 +53,25 @@ const DefaultHandle = ({ children }) => {
 
           <Menu.Item key="/sale" icon={<ShoppingCartOutlined />}>
             <Link to="/sale">Sales</Link>
-<<<<<<< HEAD
+
             </Menu.Item>
 
           <Menu.Item key="/admin/reports" icon={<LineChartOutlined />}>
             <Link to="/admin/reports">Reports</Link>
           </Menu.Item>
 
-=======
+
+
+          <Menu.Item key="/admin/users" icon={<UserOutlined />}>
+            <Link to="/admin/users">Users</Link>
+          </Menu.Item>
+
+          <Menu.Item key="/admin/sales" icon={<ShoppingCartOutlined />}>
+            <Link to="/admin/sales">Sales</Link>
+
+          </Menu.Item>
+
+
 
           <Menu.Item key="/admin/users" icon={<UserOutlined />}>
             <Link to="/admin/users">Users</Link>
@@ -75,7 +86,6 @@ const DefaultHandle = ({ children }) => {
             <Link to="/admin/reports">Reports</Link>
           </Menu.Item>
 
->>>>>>> 483b732ed408dedd1d4df61c5d9d038dc9b10c53
           <Menu.Item key="/admin/logout" icon={<LogoutOutlined />}>
             <Link to="/admin/logout">Logout</Link>
           </Menu.Item>
@@ -103,8 +113,7 @@ const DefaultHandle = ({ children }) => {
   );
 };
 
-<<<<<<< HEAD
+
+
 export default DefaultHandle;
-=======
-export default DefaultHandle;
->>>>>>> 483b732ed408dedd1d4df61c5d9d038dc9b10c53
+

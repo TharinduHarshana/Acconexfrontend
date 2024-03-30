@@ -1,10 +1,11 @@
 
 import React, { useEffect, useState } from "react";
-<<<<<<< HEAD
 import DataTable from 'react-data-table-component';
-=======
+
 import DataTable from "react-data-table-component";
->>>>>>> 483b732ed408dedd1d4df61c5d9d038dc9b10c53
+
+import DataTable from "react-data-table-component";
+
 
 // import axios from "axios";
 import { useNavigate } from "react-router-dom";

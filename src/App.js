@@ -28,9 +28,9 @@ function App() {
           <Route path='/log' element={<Login/>}/>
           <Route path='/viewcustomer' element={<ViewCutomer/>}/>
           <Route path='/home' element={<Homepage/>}/>
-<<<<<<< HEAD
+
           <Route path='/dailysales' element={<Daily_sales/>}/>
-=======
+
 
         {/* User Routes */}
 
@@ -43,7 +43,6 @@ function App() {
         <Route path='/admin/userTable' element={<UserTable />} />
         <Route path="/admin/home" element={<Homepage />} />
 
->>>>>>> 483b732ed408dedd1d4df61c5d9d038dc9b10c53
       </Routes>
     </BrowserRouter>
   );

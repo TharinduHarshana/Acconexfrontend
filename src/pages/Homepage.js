@@ -1,5 +1,5 @@
 import React from 'react'
-import DefaultHandle from '../components/DefaultHandle'
+import DefaultHandle from '../components/SideBarComponent/DefaultHandle'
 
 
 const Homepage = () => {

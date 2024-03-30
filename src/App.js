@@ -1,21 +1,27 @@
-
 import React from 'react';
 import UserForm from './components/UserData/UserForm';
 import UserTable from './components/UserData/UserTable';
-import Dashboard from './components/Dashboard';
 import Login from './components/LoginComponents/Login';
 import { DatePicker } from 'antd';
 import { BrowserRouter,Route,Routes } from 'react-router-dom';
 import Homepage from './pages/Homepage';
+import './styles/sidebar.css';
+import WebHomepage from './pages/WebHomepage';
+
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/' element={<Login />} />
-        <Route path='/userform' element={<UserForm />} />
-        <Route path='/userTable' element={<UserTable />} />
-        <Route path="/home" element={<Homepage />} />
+        {/* User Routes */}
+        <Route path='/' element={<WebHomepage/>} />
+         
+
+        {/* admin routes */}
+        <Route path='/admin' element={<Login />} />
+        <Route path='/admin/userform' element={<UserForm />} />
+        <Route path='/admin/userTable' element={<UserTable />} />
+        <Route path="/admin/home" element={<Homepage />} />
       </Routes>
     </BrowserRouter>
   );

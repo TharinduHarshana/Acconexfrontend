@@ -139,7 +139,7 @@ body {
 
 /* Bill table container styles */
 .bill_tableContainer,
-.daily_sale_tableContainer{
+.D{
     height: 300px;
 }
 /*Daily sale table container styles*/

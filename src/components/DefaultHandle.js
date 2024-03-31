@@ -16,10 +16,9 @@ import {
   ShoppingFilled,
   MailOutlined,
 } from "@ant-design/icons";
-// import "../styles/sidebar.css";
-// import "../styles/adminheader.css";
+import "../styles/sidebar.css";
+import "../styles/adminheader.css";
 import { Link } from "react-router-dom";
-
 
 const { Header, Sider, Content } = Layout;
 const { Search } = Input;
@@ -79,7 +78,7 @@ const DefaultHandle = ({ children }) => {
     <Layout>
       <Sider trigger={null} collapsible collapsed={collapsed}>
         <div className="demo-logo-vertical">
-          <h3 >ACONEX COMPUTER</h3>
+          <h3>ACONEX COMPUTER</h3>
         </div>
         <Menu
           theme="dark"
@@ -118,21 +117,12 @@ const DefaultHandle = ({ children }) => {
             </Menu.Item>
           </Menu.SubMenu>
 
-
-          <Menu.Item key="/user" icon={<UserOutlined />}>
-            <Link to="/user">Users</Link>
-          </Menu.Item>
-
-          <Menu.Item key="/sale" icon={<ShoppingCartOutlined />}>
-            <Link to="/sale">Sales</Link>
-          </Menu.Item>
           <Menu.Item key="/admin/users" icon={<UserOutlined />}>
             <Link to="/admin/userTable">Users</Link>
           </Menu.Item>
 
           <Menu.Item key="/admin/sales" icon={<ShoppingCartOutlined />}>
             <Link to="/admin/sales">Sales</Link>
-
           </Menu.Item>
 
           <Menu.Item key="/admin/reports" icon={<LineChartOutlined />}>
@@ -228,4 +218,4 @@ const DefaultHandle = ({ children }) => {
   );
 };
 
-export default DefaultHandle;
+export default DefaultHandle;

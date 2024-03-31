@@ -1,5 +1,5 @@
 import React from "react";
-import Dashboard from "./components/Dashboard";
+// import Dashboard from "./components/Dashboard";
 import Login from "./components/LoginComponents/Login";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Homepage from "./pages/Homepage";
@@ -21,28 +21,23 @@ import Customer from './components/SalesComponents/Customer';
 import SuspendSale from './components/SalesComponents/SuspendSale';
 import ViewCutomer from './pages/ViewCutomer';
 
+// web imports
+import WebHomepage from "./pages/WebHomepage";
+
 
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-
+    {/* user routing path */}
+    <Route path="/" element={<WebHomepage />} />
         
 
-          <Route path="/" element={<Homepage />} />
-          <Route path='admin/sale' element={<SalesDachboad/>}/>
-          <Route path='admin/bill' element={<Bill/>}/>
-          <Route path='admin/addcus' element={<Customer/>}/>
-          <Route path='admin/holdbill' element={<SuspendSale/>}/>
-          <Route path='admin/viewcustomer' element={<ViewCutomer/>}/>
+          
          
 
-        {/* User Routes
-
-        <Route path="/" element={<Dashboard />} />
-
-        {/* admin routes */}
+       {/* admin routing path */}
         <Route path="/admin" element={<Login/>} />
         <Route path="/admin/userform" element={<CreateUser />} />
         <Route path="/admin/userform/update/:id" element={<UpdateUser />} />
@@ -54,6 +49,12 @@ function App() {
         <Route path="/admin/supplier/update/:id" element={<UpdateSupplier />} />
         <Route path="admin/inventory/itemkits" element={<ItemKits/>}/>
 
+        <Route path='admin/sale' element={<SalesDachboad/>}/>
+        <Route path='admin/bill' element={<Bill/>}/>
+        <Route path='admin/addcus' element={<Customer/>}/>
+        <Route path='admin/holdbill' element={<SuspendSale/>}/>
+        <Route path='admin/viewcustomer' element={<ViewCutomer/>}/>
+         
 
 
       </Routes>

@@ -60,32 +60,6 @@ const DefaultHandle = ({ children }) => {
             <Link to="/admin/reports">Reports</Link>
           </Menu.Item>
 
-
-
-          <Menu.Item key="/admin/users" icon={<UserOutlined />}>
-            <Link to="/admin/users">Users</Link>
-          </Menu.Item>
-
-          <Menu.Item key="/admin/sales" icon={<ShoppingCartOutlined />}>
-            <Link to="/admin/sales">Sales</Link>
-
-          </Menu.Item>
-
-
-
-          <Menu.Item key="/admin/users" icon={<UserOutlined />}>
-            <Link to="/admin/users">Users</Link>
-          </Menu.Item>
-
-          <Menu.Item key="/admin/sales" icon={<ShoppingCartOutlined />}>
-            <Link to="/admin/sales">Sales</Link>
-
-          </Menu.Item>
-
-          <Menu.Item key="/admin/reports" icon={<LineChartOutlined />}>
-            <Link to="/admin/reports">Reports</Link>
-          </Menu.Item>
-
           <Menu.Item key="/admin/logout" icon={<LogoutOutlined />}>
             <Link to="/admin/logout">Logout</Link>
           </Menu.Item>

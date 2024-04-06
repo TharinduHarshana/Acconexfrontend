@@ -4,7 +4,8 @@ import { SearchOutlined } from '@ant-design/icons';
 import DefaultHandleSales from './DefaultHandleSales';
 import '../../styles/sales.css';
 import '../../styles/customer.css';
-import { PauseOutlined,CloseOutlined ,UserAddOutlined} from '@ant-design/icons';
+import { PauseOutlined,CloseOutlined ,UserAddOutlined,ShoppingCartOutlined,MinusCircleOutlined} from '@ant-design/icons';
+import { Link } from 'react-router-dom';
 
 
 const Bill = () => (
@@ -16,9 +17,9 @@ const Bill = () => (
         </div>
        
         <div className='bill_view'>
-          <div className='bill_tableContainer'>
+          <div className='bill_tableContainer'style={{ maxHeight: '400px', overflowY: 'auto',position:'relative' }}>
             <table>
-              <thead>
+              <thead  style={{position:'sticky',top:0}}>
                 <tr>
                   <th>Item_ID</th>
                   <th>Item_name</th>
@@ -27,25 +28,27 @@ const Bill = () => (
                   <th></th>
                 </tr>
               </thead>
-              <tbody>        
+              <tbody style={{overflowY:'auto',maxHeight:'calc(100%-40px)'}}>        
                  <tr >
                     <td></td>
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td></td>
-                  </tr>
-                          
+                    <td>
+                      <Button><ShoppingCartOutlined /></Button>
+                      <Button><MinusCircleOutlined /></Button>
+                    </td>
+                  </tr>     
                 </tbody>
             </table>
           </div>
           <div  className='bill_FormContainer'>
               <form >
-              <div >
-              <button className='add_cus_btn'>Add_Customer<UserAddOutlined /></button>
+              <div className='bill_btn'>
+              <button className='add_cus_btn'><Link to ='/addcus'>Add_Customer<UserAddOutlined /></Link></button>
               <button className='puase_btn'>Suspend Sale<PauseOutlined /></button>
               <button className='cancel_btn'>Cancel Sale<CloseOutlined /></button>
-              <hr/>
+              <hr className='linebrake'/>
                 <h1>Thank You</h1>
                 </div>
                 <div className='bill_content'>

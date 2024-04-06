@@ -9,7 +9,9 @@ import Bill from './components/SalesComponents/Bill';
 import Customer from './components/SalesComponents/Customer';
 import SuspendSale from './components/SalesComponents/SuspendSale';
 import ViewCutomer from './pages/ViewCutomer';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Daily_sales from './components/SalesComponents/Daily_sales';
+
 
 
 function App() {
@@ -28,13 +30,12 @@ function App() {
           <Route path='/log' element={<Login/>}/>
           <Route path='/viewcustomer' element={<ViewCutomer/>}/>
           <Route path='/home' element={<Homepage/>}/>
-
           <Route path='/dailysales' element={<Daily_sales/>}/>
 
 
         {/* User Routes */}
-
-        <Route path='/' element={<Dashboard />} />
+{/* 
+         <Route path='/' element={<Dashboard/>} /> */}
         
 
         {/* admin routes */}

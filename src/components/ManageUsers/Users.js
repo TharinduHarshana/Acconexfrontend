@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import DataTable from "react-data-table-component";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { Modal, message, Space } from "antd";
+import { Modal, message, Space, Button, Tooltip } from "antd";
+import { SearchOutlined } from "@ant-design/icons";
 import DefaultHandle from "../DefaultHandle";
 
 function Users() {
@@ -15,7 +16,7 @@ function Users() {
         const response = await axios.get("http://localhost:8000/user/all");
         // Set the users state with the data from the response
         setUsers(response.data.data);
-        console.log(response.data);
+        //console.log(response.data);
       } catch (error) {
         console.error("Error fetching users:", error);
       }
@@ -88,18 +89,20 @@ function Users() {
       <div
         style={{
           display: "flex",
-          justifyContent: "flex-end",
+          justifyContent: "space-between",
+          alignItems: "center",
           marginBottom: "25px",
         }}
       >
         <Space size={12}>
-          <Link
-            to={"/admin/userform"}
-            style={{ marginTop: "20px", fontSize: "16px" }}
-          >
-            Add User
-          </Link>
+          <Button>
+            <SearchOutlined />
+            Search
+          </Button>
         </Space>
+        <Link to={"/admin/userform"} style={{ fontSize: "16px" }}>
+          Add User
+        </Link>
       </div>
 
       <DataTable

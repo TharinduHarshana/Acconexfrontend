@@ -16,6 +16,7 @@ const CreateSupplierForm = () => {
   });
   const [phoneError, setPhoneError] = useState("");
 
+  // Function to handle phone number input change and validation
   const handlePhoneChange = (e) => {
     const { value } = e.target;
     const containsOnlyDigits = /^[0-9]+$/.test(value);
@@ -26,7 +27,7 @@ const CreateSupplierForm = () => {
       setPhoneError("Please enter only numbers and a maximum of 10 digits");
     }
   };
-
+// Function to handle form submission
   const handleSubmit = (e) => {
     axios
       .post("http://localhost:8000/supplier/add", supplierData)
@@ -48,20 +49,13 @@ const CreateSupplierForm = () => {
   return (
     <>
       <DefaultHandle>
-        <Form className="form-container" autoComplete="off">
-          <Typography.Title
-            level={4}
-            className="typography"
-            style={{
-              fontSize: "15px",
-              fontFamily: "sans-serif",
-              textAlign: "center",
-              marginTop: "5px",
-              marginBottom: "20px",
-            }}
-          >
-            Create Supplier
-          </Typography.Title>
+        <Form className="form-container" >
+        <Typography.Text className="header">
+              Supplier Information{" "}
+              <span style={{ color: "red", fontSize: "12px"}}>
+                (Fields in red * are required)
+              </span>
+         </Typography.Text> 
           <Row gutter={[16, 16]}>
             <Col xs={24}>
               <Form.Item
@@ -79,7 +73,7 @@ const CreateSupplierForm = () => {
                   },
                 ]}
                 hasFeedback
-                style={{ marginBottom: "8px" }} // Added style to adjust margin bottom
+                style={{ marginBottom: "8px" }} 
               >
                 <Input
                   value={supplierData.supplierId}
@@ -104,7 +98,7 @@ const CreateSupplierForm = () => {
                     message: "Please input supplier name!",
                   },
                 ]}
-                style={{ marginBottom: "8px" }} // Added style to adjust margin bottom
+                style={{ marginBottom: "8px" }} 
               >
                 <Input
                   className="form-input"
@@ -129,7 +123,7 @@ const CreateSupplierForm = () => {
                     message: "Please input company name!",
                   },
                 ]}
-                style={{ marginBottom: "8px" }} // Added style to adjust margin bottom
+                style={{ marginBottom: "8px" }} 
               >
                 <Input
                   className="form-input"
@@ -183,7 +177,7 @@ const CreateSupplierForm = () => {
               </Form.Item>
             </Col>
           </Row>
-          <div style={{ display: "flex", justifyContent: "center" }}>
+          <div style={{ display: "flex", justifyContent: "left" }}>
             <Button
               type="primary"
               htmlType="submit"

@@ -1,22 +1,31 @@
+import React from 'react';
+
 import { DatePicker } from 'antd';
 import { BrowserRouter,Route,Routes } from 'react-router-dom';
 import Homepage from './pages/Homepage';
-//import InventoryDashboard from './components/InventoryComponent/InventoryDashboard';
-import AddNewItem from './components/InventoryComponent/AddNewItem';
-import Items from './components/InventoryComponent/Item';
+import AddNewItem from './components/InventoryComponent/Inventory.AddnewItem';
+import Inventory from './pages/Inventory'
+import UpdateItem from './components/InventoryComponent/inventory.UpdateItem';
+import './styles/sidebar.css';
+
+
+
 function App() {
   return (
-    <>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Homepage />} />
-          <Route path="/Inventory" element={<Items/>}/>
-          <Route path="/add-new-item" element={<AddNewItem />}/>
-          
-          
-        </Routes>
-      </BrowserRouter>
-    </>
+    <BrowserRouter>
+      <Routes>
+        {/* User Routes */}
+        
+         
+
+        {/* admin routes */}
+        <Route path="/admin/home" element={<Homepage />} />
+        <Route path="/admin/addnewitem" element={<AddNewItem/>}/>
+        <Route path="/admin/Inventory" element={<Inventory/>}/>
+        <Route path="/admin/updateitem" element={<UpdateItem/>}/>
+        
+      </Routes>
+    </BrowserRouter>
   );
 }
 

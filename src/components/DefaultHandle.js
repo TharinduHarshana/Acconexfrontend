@@ -37,7 +37,7 @@ const DefaultHandle = ({ children }) => {
           </Menu.Item>
 
           <Menu.Item key="/Inventory" icon={<ProductOutlined />}>
-            <Link to="/Inventory">Inventory</Link>
+            <Link to="/admin/Inventory">Inventory</Link>
           </Menu.Item>
 
           <Menu.Item key="/customers" icon={<ContactsOutlined />}>

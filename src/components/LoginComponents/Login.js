@@ -4,7 +4,7 @@ import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Typography,message } from "antd";
 import { login } from "../../Utility/api/user.api";
 import { useNavigate } from "react-router-dom";
-
+import aconexImage from'../../images/aconex.jpg';
 
 function Login() {
   const [loginData, setLoginData] = useState({ userName: "", password: "" });
@@ -30,14 +30,18 @@ function Login() {
 
   return (
     <div className="login-container">
+      
       <Form
         name="normal_login"
         className="login-form"
         autoComplete="off"
         
       >
+        <div className="header">
+        <img src={aconexImage} alt="Aconex Logo" className="header-image" />
+      </div>
         <Typography className="login-form-title">
-         Sign In
+         
         </Typography>
         
 

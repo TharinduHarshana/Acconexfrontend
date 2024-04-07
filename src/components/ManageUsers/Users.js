@@ -2,14 +2,15 @@ import React, { useState, useEffect } from "react";
 import DataTable from "react-data-table-component";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { Modal, message, Space, Button, Tooltip } from "antd";
+import { Modal, message, Space, Button, Tooltip,Input } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import DefaultHandle from "../DefaultHandle";
 
 function Users() {
   // State to store the list of users
   const [users, setUsers] = useState([]);
-  // Effect hook to fetch users data when the component mounts
+ 
+  //Effect hook to fetch users data when the component mounts
   useEffect(() => {
     const loadUsers = async () => {
       try {
@@ -24,6 +25,8 @@ function Users() {
 
     loadUsers();
   }, []);
+  
+
 
   // Function to handle user deletion
   const handleDelete = async (_id) => {
@@ -86,19 +89,18 @@ function Users() {
 
   return (
     <DefaultHandle>
+      
       <div
         style={{
           display: "flex",
-          justifyContent: "space-between",
+          justifyContent: "flex-end",
           alignItems: "center",
           marginBottom: "25px",
+          
         }}
       >
         <Space size={12}>
-          <Button>
-            <SearchOutlined />
-            Search
-          </Button>
+          
         </Space>
         <Link to={"/admin/userform"} style={{ fontSize: "16px" }}>
           Add User

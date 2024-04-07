@@ -1,32 +1,38 @@
-
 import React, { useState, useEffect } from "react";
 import DataTable from "react-data-table-component";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { Modal, message, Space } from "antd";
+import { Modal, message, Space, Button, Tooltip,Input } from "antd";
+import { SearchOutlined } from "@ant-design/icons";
 import DefaultHandle from "../DefaultHandle";
 
 function Users() {
+  // State to store the list of users
   const [users, setUsers] = useState([]);
-
+ 
+  //Effect hook to fetch users data when the component mounts
   useEffect(() => {
     const loadUsers = async () => {
       try {
         const response = await axios.get("http://localhost:8000/user/all");
+        // Set the users state with the data from the response
         setUsers(response.data.data);
-        console.log(response.data); // Add this line to check the fetched data
+        //console.log(response.data);
       } catch (error) {
         console.error("Error fetching users:", error);
       }
     };
-  
+
     loadUsers();
   }, []);
   
 
+
+  // Function to handle user deletion
   const handleDelete = async (_id) => {
     try {
       await axios.delete(`http://localhost:8000/user/delete/${_id}`);
+      // Filter out the deleted user from the users state
       setUsers(users.filter((user) => user._id !== _id));
       message.success("User deleted successfully!");
     } catch (error) {
@@ -34,7 +40,7 @@ function Users() {
       message.error("An error occurred while deleting the user.");
     }
   };
-
+  // Function to display a confirmation modal before deleting a user
   const showDeleteConfirmation = (_id) => {
     Modal.confirm({
       title: "Confirm Delete",
@@ -43,6 +49,7 @@ function Users() {
       okType: "danger",
       cancelText: "No",
       onOk() {
+        // Call handleDelete function if user confirms deletion
         handleDelete(_id);
       },
     });
@@ -72,7 +79,7 @@ function Users() {
       name: "Actions",
       cell: (row) => (
         <div>
-           <Link to={`/admin/userform/update/${row._id}`}>Edit</Link>
+          <Link to={`/admin/userform/update/${row._id}`}>Edit</Link>
           <span style={{ margin: "0 8px" }}>|</span>
           <Link onClick={() => showDeleteConfirmation(row._id)}>Delete</Link>
         </div>
@@ -82,14 +89,24 @@ function Users() {
 
   return (
     <DefaultHandle>
-      <Space size={12} style={{ marginBottom: "25px", textAlign: "right" }}>
-        <Link
-          to={"/admin/userform"}
-          style={{ marginTop: "20px", fontSize: "16px" }}
-        >
+      
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          alignItems: "center",
+          marginBottom: "25px",
+          
+        }}
+      >
+        <Space size={12}>
+          
+        </Space>
+        <Link to={"/admin/userform"} style={{ fontSize: "16px" }}>
           Add User
         </Link>
-      </Space>
+      </div>
+
       <DataTable
         columns={columns}
         data={users}
@@ -99,6 +116,6 @@ function Users() {
       />
     </DefaultHandle>
   );
-};
+}
 
 export default Users;

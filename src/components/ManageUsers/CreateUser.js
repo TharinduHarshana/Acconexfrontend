@@ -107,11 +107,14 @@ const CreateUserForm = () => {
     <>
       <DefaultHandle>
         <div style={{ padding: "20px" }}>
-          <Form
-            {...formItemLayout}
-            className="form-containerr"
-            autoComplete="off"
-          >
+          <Form {...formItemLayout} className="form-containeer">
+            <Typography.Text className="header">
+              User Information{" "}
+              <span style={{ color: "red", fontSize: "12px" }}>
+                (Fields in red * are required)
+              </span>
+            </Typography.Text>
+
             <Typography.Title
               level={4}
               className="typography"
@@ -122,15 +125,14 @@ const CreateUserForm = () => {
                 marginTop: "5px",
                 marginBottom: "5px",
               }}
-            >
-              Create user
-            </Typography.Title>
+            ></Typography.Title>
             <Row gutter={[16, 16]}>
               <Col span={12}>
                 {/* User Id */}
                 <Form.Item
                   label="User Id"
                   name="userId"
+                  className="required-label"
                   rules={[
                     {
                       required: true,
@@ -140,7 +142,7 @@ const CreateUserForm = () => {
                       whitespace: true,
                     },
                     {
-                      min: 3,
+                      min: 4,
                     },
                   ]}
                   hasFeedback
@@ -163,6 +165,10 @@ const CreateUserForm = () => {
                     {
                       required: true,
                       message: "Please input first name!",
+                    },
+                    {
+                      pattern: /^[A-Za-z]+$/,
+                      message: "First name should contain only alphabetic characters!",
                     },
                   ]}
                 >
@@ -309,6 +315,10 @@ const CreateUserForm = () => {
                       required: true,
                       message: "Please input last name!",
                     },
+                    {
+                      pattern: /^[A-Za-z]+$/,
+                      message: "Last name should contain only alphabetic characters!",
+                    },
                   ]}
                 >
                   <Input
@@ -409,7 +419,7 @@ const CreateUserForm = () => {
                 </Form.Item>
               </Col>
             </Row>
-            <div style={{ marginTop: "20px", textAlign: "center" }}>
+            <div style={{ marginTop: "20px", textAlign: "right" }}>
               <Button type="primary" htmlType="submit" onClick={handleSubmit}>
                 Save
               </Button>

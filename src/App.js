@@ -7,6 +7,7 @@ import { BrowserRouter,Route,Routes } from 'react-router-dom';
 import Homepage from './pages/Homepage';
 import './styles/sidebar.css';
 import WebHomepage from './pages/WebHomepage';
+import Category from './pages/WebCategory';
 
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
       <Routes>
         {/* User Routes */}
         <Route path='/' element={<WebHomepage/>} />
+        <Route path='/category/:slug' element={<Category/>} />
          
 
         {/* admin routes */}

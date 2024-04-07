@@ -29,10 +29,7 @@ function WebHomepage() {
                     <div key={item._id} style={{ border: '1px solid #ddd', padding: '10px' }}>
                         <img src={image} alt='item' style={{ width: '100%', height: '200px' }} />
                         <h5>{item.itemName}</h5>
-                        <p>Quantity: {item.quantity}</p>
-                        <p>Cost Price: ${item.costPrice}</p>
-                        <p>Selling Price: ${item.sellingPrice}</p>
-                        <p>Item Serial: {item.itemSerial}</p>
+                        <p>Rs: ${item.sellingPrice}</p>
                         <p>Warranty: {item.warranty}</p>
                         <p>Category: {item.category}</p>
                         <button className='btn btn-sm btn-warning' style={{ marginRight: '10px' }}>Add to Cart</button>

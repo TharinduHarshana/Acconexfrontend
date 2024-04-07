@@ -6,10 +6,17 @@ import {useNavigate} from 'react-router-dom'
 function WebHeader(){
     const navigate = useNavigate();
     const onMenuclick = (item) => {
-        navigate('/'+item.key)
+        //console.log(item)
+        navigate('/category/'+item.key)
     };
 
     return(
+        <div>
+
+        <div>
+            <h1>ACCONEX</h1>
+        </div>
+
         <div className='webHeader'>
            <Menu 
            mode='horizontal' 
@@ -69,7 +76,16 @@ function WebHeader(){
             label: 'CONTACT US',
             key: 'contact',
         },
+        {
+            label: 'LOGIN/REGISTER',
+            key: 'login',
+        },
+
+
+
+
            ]}/>
+        </div>
         </div>
     )
 }

@@ -3,9 +3,6 @@ import { DashboardOutlined, ContactsOutlined, ProductOutlined, LogoutOutlined, S
 import { Layout, Menu, theme } from 'antd';
 import { Link } from 'react-router-dom';
 
-
-
-
 const { Header, Sider, Content } = Layout;
 
 const DefaultHandle = ({ children }) => {

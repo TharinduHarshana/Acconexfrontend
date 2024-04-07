@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import "./login.css"; // Corrected import statement
+import "../../styles/login.css"; 
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
-import { Button, Form, Input, Typography } from "antd";
+import { Button, Form, Input, Typography,message } from "antd";
 import { login } from "../../Utility/api/user.api";
 import { useNavigate } from "react-router-dom";
+import aconexImage from'../../images/aconex.jpg';
 
 function Login() {
   const [loginData, setLoginData] = useState({ userName: "", password: "" });
-  // Initialize useNavigate hook
   const navigate = useNavigate();
 
   async function handleSubmit() {
@@ -16,28 +16,34 @@ function Login() {
       console.log(res);
       if (res && res.data) {
         // Navigate to dashboard route upon successful login
+        message.success("Login is successfull")
         navigate("/admin/home");
       }
     } catch (error) {
       if (error.response && error.response.status === 401) {
-        alert("Username or password is incorrect. Please try again.");
+        message.error("Username or password is incorrect. Please try again.");
       } else {
-        alert("Error Occurred. Please login again.");
+        message.error("Error Occurred. Please login again.");
       }
     }
   }
 
   return (
     <div className="login-container">
+      
       <Form
         name="normal_login"
         className="login-form"
-        initialValues={{
-          remember: true,
-        }}
+        autoComplete="off"
+        
       >
-        <Typography className="login-form-title">CAZZORA SOFT SOLUTION</Typography>
-        <Typography className="customer-support">Customer Support: 071 913 72 98</Typography>
+        <div className="header">
+        <img src={aconexImage} alt="Aconex Logo" className="header-image" />
+      </div>
+        <Typography className="login-form-title">
+         
+        </Typography>
+        
 
         <Form.Item
           name="username"
@@ -48,9 +54,10 @@ function Login() {
             },
           ]}
         >
-          <Input className="userName"
-           prefix={<UserOutlined className="site-form-item-icon" />}
-          placeholder="Username"
+          <Input
+            className="userName"
+            prefix={<UserOutlined className="site-form-item-icon" />}
+            placeholder="Username"
             onChange={(e) =>
               e &&
               e.target &&
@@ -69,7 +76,7 @@ function Login() {
         >
           <Input.Password
             prefix={<LockOutlined className="site-form-item-icon" />}
-            type="password" // Modified this line to set the input type to "password"
+            type="password" 
             placeholder="Password"
             className="password"
             onChange={(e) =>

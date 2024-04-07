@@ -39,6 +39,11 @@ function UpdateSupplier() {
   // Function to handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
+    // Check if userId remains the same
+    if (supplier.supplierId === supplier.supplierId) {
+      message.error("Supplier ID cannot be the same. Please modify the Supplier ID.");
+      return;
+    }
 
     try {
       await axios.patch(

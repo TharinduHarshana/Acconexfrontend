@@ -41,6 +41,12 @@ function UpdateUser() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Check if userId remains the same
+    if (user.userId === user.userId) {
+      message.error("User ID cannot be the same. Please modify the User ID.");
+      return;
+    }
+
     try {
       await axios.patch(`http://localhost:8000/user/update/${id}`, user);
       console.log("User updated successfully:", user);
@@ -51,6 +57,7 @@ function UpdateUser() {
       console.error("Error updating user:", error);
     }
   };
+
   // Function to handle input change
   const handleInputChange = (e) => {
     const { name, value } = e.target;

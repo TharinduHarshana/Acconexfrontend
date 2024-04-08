@@ -54,7 +54,8 @@ function App() {
         <Route path='admin/addcus' element={<Customer/>}/>
         <Route path='admin/holdbill' element={<SuspendSale/>}/>
         <Route path='admin/viewcustomer' element={<ViewCutomer/>}/>
-         
+        
+        
 
 
       </Routes>

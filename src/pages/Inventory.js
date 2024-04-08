@@ -46,7 +46,7 @@ const Items = () =>{
       cell: (row) => (
         <div>
           <Link
-            to={`admin/updateitem/${row._id}`}
+            to={`updateitem/${row._id}`}
             className='btn btn-warning btn-sm me-2'
           >
             Edit
@@ -72,7 +72,7 @@ const [FilterItems, setFilterItems] = useState([]);
   useEffect(()=>{
     
     const fetchData = async()=>{
-    axios.get('http://localhost:8000/inventory/')
+    axios.get('http://localhost:8000/item/')
     .then(res =>{
         setItems(res.data.data)
         console.log(items)
@@ -88,7 +88,7 @@ const [FilterItems, setFilterItems] = useState([]);
   
   const handleDelete = async (_id) => {
     try{
-    axios.delete('http://localhost:8000/inventory/delete/'+_id)
+    axios.delete('http://localhost:8000/item/delete/'+_id)
     .then(res =>{
       Swal.fire({
         icon: 'success',

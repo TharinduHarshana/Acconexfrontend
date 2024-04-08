@@ -36,9 +36,6 @@ function App() {
     <Route path="/" element={<WebHomepage />} />
         
 
-          
-         
-
        {/* admin routing path */}
         <Route path="/admin" element={<Login/>} />
         <Route path="/admin/userform" element={<CreateUser />} />

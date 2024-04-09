@@ -13,6 +13,9 @@ function ItemKits() {
             <h3>Inventory kits</h3>
           </div>
           <div className="form-item-kit-container">
+            <label htmlFor="id">Id:</label>
+            <input type="text" id="item-id"></input>
+
             <label htmlFor="name">Name:</label>
             <input type="text" id="name" />
 

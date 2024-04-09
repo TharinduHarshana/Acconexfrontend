@@ -8,8 +8,9 @@ import axios from "axios";
 function Supplier() {
   // State to store the list of suppliers
   const [suppliers, setSuppliers] = useState([]);
+  const [filterSupplier, setFilterSupplier] = useState([]);
 
-  //// Effect hook to fetch suppliers data when the component mounts
+  // Effect hook to fetch suppliers data when the component mounts
   useEffect(() => {
     const loadSuppliers = async () => {
       try {
@@ -54,6 +55,21 @@ function Supplier() {
     });
   };
 
+  //Search supplier
+  const filterSuppliers = (event) => {
+    // Convert search input to lowercase for case-insensitive comparison
+    const searchValue = event.target.value.toLowerCase();
+    // Filter suppliers based on search value
+    const supplierData = suppliers.filter(
+      (row) =>
+        // Check if supplier's firstName or supplierId includes the search value
+        row.firstName.toLowerCase().includes(searchValue) ||
+        row.supplierId.toLowerCase().includes(searchValue)
+    );
+
+    setFilterSupplier(supplierData); // Update filterSupplier state with filtered data
+  };
+
   // Columns configuration for DataTable
   const columns = [
     {
@@ -96,6 +112,14 @@ function Supplier() {
   return (
     <div>
       <DefaultHandle>
+        <div>
+          <input
+            type="text end"
+            className="input"
+            placeholder="Search..."
+            onChange={filterSuppliers}
+          />
+        </div>
         <div
           style={{
             display: "flex",
@@ -114,7 +138,7 @@ function Supplier() {
         </div>
         <DataTable
           columns={columns}
-          data={suppliers}
+          data={filterSupplier}
           selectableRows
           fixedHeader
           pagination

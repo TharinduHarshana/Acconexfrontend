@@ -2,14 +2,14 @@ import React, { useState, useEffect } from "react";
 import DataTable from "react-data-table-component";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { Modal, message, Space, Button, Tooltip,Input } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
+import { Modal, message, Space } from "antd";
 import DefaultHandle from "../DefaultHandle";
 
 function Users() {
   // State to store the list of users
   const [users, setUsers] = useState([]);
- 
+  const [filterUser, setFilterUser] = useState([]);
+
   //Effect hook to fetch users data when the component mounts
   useEffect(() => {
     const loadUsers = async () => {
@@ -18,6 +18,8 @@ function Users() {
         // Set the users state with the data from the response
         setUsers(response.data.data);
         //console.log(response.data);
+        setFilterUser(response.data.data);
+        console.log(response.data);
       } catch (error) {
         console.error("Error fetching users:", error);
       }
@@ -25,8 +27,6 @@ function Users() {
 
     loadUsers();
   }, []);
-  
-
 
   // Function to handle user deletion
   const handleDelete = async (_id) => {
@@ -53,6 +53,20 @@ function Users() {
         handleDelete(_id);
       },
     });
+  };
+
+  //search users
+  // Search users
+  const filterUsers = (event) => {
+    const searchValue = event.target.value.toLowerCase();
+
+    const userData = users.filter(
+      (row) =>
+        row.firstName.toLowerCase().includes(searchValue) ||
+        row.userId.toLowerCase().includes(searchValue)
+    );
+
+    setFilterUser(userData); // Update filterUser state with filtered data
   };
 
   const columns = [
@@ -89,19 +103,24 @@ function Users() {
 
   return (
     <DefaultHandle>
-      
+      <div>
+        <input
+          type="text end"
+          className="input"
+          placeholder="Search..."
+          onChange={filterUsers}
+        />
+      </div>
+
       <div
         style={{
           display: "flex",
           justifyContent: "flex-end",
           alignItems: "center",
           marginBottom: "25px",
-          
         }}
       >
-        <Space size={12}>
-          
-        </Space>
+        <Space size={12}></Space>
         <Link to={"/admin/userform"} style={{ fontSize: "16px" }}>
           Add User
         </Link>
@@ -109,7 +128,7 @@ function Users() {
 
       <DataTable
         columns={columns}
-        data={users}
+        data={filterUser}
         selectableRows
         fixedHeader
         pagination

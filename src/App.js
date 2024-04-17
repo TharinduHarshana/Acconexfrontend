@@ -8,6 +8,8 @@ import Homepage from './pages/Homepage';
 import './styles/sidebar.css';
 import WebHomepage from './pages/WebHomepage';
 import Category from './pages/WebCategory';
+import WebLogin from './pages/Weblogin';
+import WebRegister from './pages/WebRegister';
 
 
 function App() {
@@ -16,7 +18,10 @@ function App() {
       <Routes>
         {/* User Routes */}
         <Route path='/' element={<WebHomepage/>} />
-        <Route path='/category/:slug' element={<Category/>} />
+        <Route path='/web/:slug' element={<Category/>} />
+        <Route path='/web/login' element={<WebLogin/>} />
+        <Route path='/web/register' element={<WebRegister/>} />
+
          
 
         {/* admin routes */}

@@ -19,10 +19,9 @@ import ItemKitsTable from "./components/ManageInventory/ItemKitsTable";
 
 import SalesDachboad from './components/SalesComponents/SalesDachboad';
 import Bill from './components/SalesComponents/Bill';
-import Customer from './components/SalesComponents/Customer';
+import Customer from './components/CustomerComponents/Customer';
 import SuspendSale from './components/SalesComponents/SuspendSale';
 import ViewCutomer from './pages/ViewCutomer';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Daily_sales from './components/SalesComponents/Daily_sales';
 
 
@@ -48,18 +47,19 @@ function App() {
         <Route path="/admin/userform/update/:id" element={<UpdateUser/>} />
         <Route path="/admin/userTable" element={<Users />} />
         <Route path="/admin/home" element={<AdminDashboard />} />
-        <Route path="/admin/customer" element={<ManageCustomer/>}/>
+        <Route path="/admin/customer" element={<Customer/>}/>
         <Route path="/admin/supplier" element={<Supplier/>}/>
         <Route path="/admin/supplier/create" element={<CreateSupplierForm/>}/>
         <Route path="/admin/supplier/update/:id" element={<UpdateSupplier />} />
         <Route path="admin/inventory/item-kits" element={<ItemKits/>}/>
         <Route path="admin/inventory/item-kits/table" element={<ItemKitsTable/>}/>
 
-        <Route path='admin/sale' element={<SalesDachboad/>}/>
-        <Route path='admin/bill' element={<Bill/>}/>
-        <Route path='admin/addcus' element={<Customer/>}/>
-        <Route path='admin/holdbill' element={<SuspendSale/>}/>
-        <Route path='admin/viewcustomer' element={<ViewCutomer/>}/>
+        <Route path='sales' element={<SalesDachboad/>}/>
+        <Route path='bill' element={<Bill/>}/>
+        <Route path='addcus' element={<Customer/>}/>
+        <Route path='holdbill' element={<SuspendSale/>}/>
+        <Route path="dailysales" element={<Daily_sales/>}/>
+       
          
 
 

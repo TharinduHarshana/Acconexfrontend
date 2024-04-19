@@ -1,10 +1,11 @@
 import React from 'react'
-import DefaultHandleSales from './DefaultHandleSales';
+
 import '../../styles/customer.css';
+import DefaultHandleSales from './DefaultHandleSales';
 
 function Daily_sales() {
   return (
-    <DefaultHandleSales>
+  <DefaultHandleSales>
     <div className="container">
     <div className='daily_sale_tableContainer'>
             <table>
@@ -29,7 +30,7 @@ function Daily_sales() {
             </table>
         </div>
         </div>
-    </DefaultHandleSales>
+        </DefaultHandleSales>
   )
 }
 

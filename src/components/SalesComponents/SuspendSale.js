@@ -1,9 +1,9 @@
 import React from 'react';
-import DefaultHandleSales from './DefaultHandleSales';
 import '../../styles/customer.css';
+import DefaultHandleSales from './DefaultHandleSales';
 
 const SuspendSale = () => (
-  <DefaultHandleSales>
+<DefaultHandleSales>
     <div className="container">
       <div className='tableContainer'>
         <table>
@@ -30,7 +30,7 @@ const SuspendSale = () => (
         </table>
       </div>
     </div>
-  </DefaultHandleSales>
+    </DefaultHandleSales>
 );
 
 export default SuspendSale;

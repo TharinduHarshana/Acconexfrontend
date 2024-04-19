@@ -12,9 +12,27 @@ body {
 .container {
     padding: 10px;
     max-width: fit-content;
-    margin: 50px auto;
+    margin: 10px auto;
+    
 }
-
+  .tableContainer
+  {
+    max-height: fit-content;
+    overflow-x: auto;
+    position: relative;
+      
+  }
+  th, td {
+    padding: 8px;
+    border: 1px solid #ddd;
+  }
+  
+  @media screen and (max-width: 600px) {
+    th, td {
+      font-size: 12px;
+    }
+  }
+  
 /* Button styles */
 .btn {
     border: none;
@@ -27,6 +45,7 @@ body {
 .btn.btn_add{
    position: fixed;
    right: 150px;
+   margin-top: 20px;
   
 }
 
@@ -131,6 +150,7 @@ body {
     align-items: center;
     cursor: pointer;
 }
+
 
 /* Table container styles */
 .tableContainer,

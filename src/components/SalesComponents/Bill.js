@@ -1,11 +1,11 @@
 import React from 'react';
-import { Input, Button, Flex} from 'antd';
+import { Input, Button} from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
-import DefaultHandleSales from './DefaultHandleSales';
 import '../../styles/sales.css';
 import '../../styles/customer.css';
 import { PauseOutlined,CloseOutlined ,UserAddOutlined,ShoppingCartOutlined,MinusCircleOutlined} from '@ant-design/icons';
 import { Link } from 'react-router-dom';
+import DefaultHandleSales from './DefaultHandleSales';
 
 
 const Bill = () => (
@@ -46,7 +46,7 @@ const Bill = () => (
               <form >
               <div className='bill_btn'>
               <button className='add_cus_btn'><Link to ='/addcus'>Add_Customer<UserAddOutlined /></Link></button>
-              <button className='puase_btn'>Suspend Sale<PauseOutlined /></button>
+              <button className='puase_btn'><Link to ='/holdbill'>Suspend Sale<PauseOutlined /></Link></button>
               <button className='cancel_btn'>Cancel Sale<CloseOutlined /></button>
               <hr className='linebrake'/>
                 <h1>Thank You</h1>
@@ -78,7 +78,7 @@ const Bill = () => (
         
 
        
-  </DefaultHandleSales>
+          </DefaultHandleSales>
   </div>
 );
 

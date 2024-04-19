@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import '../../styles/customer.css';
-import { EditFilled, DeleteFilled, SearchOutlined } from '@ant-design/icons';
+import { EditFilled, DeleteFilled } from '@ant-design/icons';
 import axios from 'axios';
 import CustomerForm from './customerForm'; // Assuming the file is named CustomerForm.js
-import DefaultHandleSales from './DefaultHandleSales';
-import { Input, Button } from 'antd';
+import { Input } from 'antd';
+import DefaultHandle from '../DefaultHandle';
 
 axios.defaults.baseURL = "http://localhost:8000/customer";
 
@@ -24,8 +24,7 @@ function Customer() {
         mobile: ""
     });
     const [dataList, setDataList] = useState([]);
-    const [searchQuery, setSearchQuery] = useState('');
-    const [searchCriteria, setSearchCriteria] = useState('id');
+    const [searchValue, setSearchValue] = useState('');
 
     const handleOnChange = (e) => {
         const { value, name } = e.target;
@@ -35,6 +34,7 @@ function Customer() {
         }));
     };
 
+    // Fetch data from the backend
     const getFetchData = async () => {
         try {
             const response = await axios.get('/');
@@ -50,6 +50,7 @@ function Customer() {
         getFetchData();
     }, []);
 
+    // Delete customer
     const handleDelete = async (id) => {
         const confirmed = window.confirm('Are you sure you want to delete this customer?');
         if (confirmed) {
@@ -65,6 +66,7 @@ function Customer() {
         }
     };
 
+    // Update customer details
     const handleUpdate = async () => {
         try {
             const response = await axios.patch('/update/' + formDataEdit.cusid, formDataEdit);
@@ -91,36 +93,11 @@ function Customer() {
         setEditSection(true);
     };
 
-    const handleSearchInputChange = (e) => {
-        setSearchQuery(e.target.value.trim());
-    };
-
-    const handleSearch = async () => {
-        try {
-            if (searchQuery) {
-                let response;
-                if (searchCriteria === 'id') {
-                    response = await axios.get('/get/' + searchQuery);
-                } else if (searchCriteria === 'name') {
-                    response = await axios.get('/getByName/' + searchQuery);
-                }
-                if (response.data.success) {
-                    setDataList([response.data.data]);
-                } else {
-                    setDataList([]);
-                    alert(response.data.message);
-                }
-            } else {
-                getFetchData();
-            }
-        } catch (error) {
-            console.error('Error searching customer:', error);
-        }
-    };
-
+    // Add new customer 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
+            // Check if customer ID already exists
             const existingCustomer = dataList.find(customer => customer.cusid === formData.cusid);
             if (existingCustomer) {
                 alert('Customer with this ID already exists');
@@ -144,11 +121,15 @@ function Customer() {
         }
     };
 
+    // Filter customer details
+    const filteredDataList = dataList.filter(
+        (row) => row.name.toLowerCase().includes(searchValue.toLowerCase()) || row.cusid.toLowerCase().includes(searchValue.toLowerCase())
+    );
+
     return (
-        <DefaultHandleSales>
+        <DefaultHandle>
             <div className="container">
-                <Input className='inboxserch' placeholder={'Enter the Customer ID or Name'} onChange={handleSearchInputChange} />
-                <Button className='seachbtn' type="primary" shape="square" icon={<SearchOutlined />} onClick={handleSearch}></Button>
+                <Input className='inboxserch' placeholder={'Enter the Customer ID or Name'} value={searchValue} onChange={(e) => setSearchValue(e.target.value)} />
                 <button className='btn btn_add' onClick={() => setAddSection(true)}>Add Customer</button>
                 {addSection && <CustomerForm
                     handleSubmit={handleSubmit}
@@ -161,10 +142,11 @@ function Customer() {
                     handleOnChange={handleEditOnChange}
                     handleClose={() => setEditSection(false)}
                     formData={formDataEdit}
+                    editing={true}
                 />}
-                <div className='tableContainer' style={{ maxHeight: '600px', overflowY: 'auto', position: 'relative' }}>
+                <div className='tableContainer' style={{ maxHeight: '400px', overflowY: 'auto', position: 'relative' }}>
                     <table>
-                        <thead style={{ position: 'sticky', top: 0 }}>
+                        <thead style={{ position: 'sticky', top: -1 }}>
                             <tr>
                                 <th>Customer_ID</th>
                                 <th>Customer_Name</th>
@@ -173,8 +155,8 @@ function Customer() {
                                 <th></th>
                             </tr>
                         </thead>
-                        <tbody style={{ overflowY: 'auto', maxHeight: 'calc(100%-40px)' }}>
-                            {dataList.map((el) => (
+                        <tbody style={{ overflowY: 'auto', maxHeight: 'calc(100% - 40px)' }}>
+                            {filteredDataList.map((el) => (
                                 <tr key={el.cusid}>
                                     <td>{el.cusid}</td>
                                     <td>{el.name}</td>
@@ -190,7 +172,7 @@ function Customer() {
                     </table>
                 </div>
             </div>
-        </DefaultHandleSales>
+        </DefaultHandle>
     );
 }
 

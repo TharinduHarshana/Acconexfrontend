@@ -16,8 +16,6 @@ import {
   ShoppingFilled,
   MailOutlined,
 } from "@ant-design/icons";
-// import "../styles/sidebar.css";
-// import "../styles/adminheader.css";
 import { Link } from "react-router-dom";
 
 
@@ -113,8 +111,8 @@ const DefaultHandle = ({ children }) => {
             <Menu.Item key="supplier" title="Supplier">
               <Link to="/admin/supplier">Supplier</Link>
             </Menu.Item>
-            <Menu.Item key="customer" title="Customer">
-              <Link to="/admin/customer">Customer</Link>
+            <Menu.Item key="/addcus" title="Customer">
+              <Link to="/admin//addcus">Customer</Link>
             </Menu.Item>
           </Menu.SubMenu>
           

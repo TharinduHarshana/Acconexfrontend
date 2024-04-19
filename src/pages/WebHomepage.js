@@ -7,7 +7,7 @@ function WebHomepage() {
     const [items, setItems] = useState([]);
 
     useEffect(() => {
-        axios.get('http://localhost:8000/item/')
+        axios.get('http://localhost:8000/webitem/')
             .then(res => {
                 setItems(res.data.data);
             })

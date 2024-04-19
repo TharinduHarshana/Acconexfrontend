@@ -121,8 +121,8 @@ const DefaultHandle = ({ children }) => {
             <Link to="/admin/userTable">Users</Link>
           </Menu.Item>
 
-          <Menu.Item key="/admin/sales" icon={<ShoppingCartOutlined />}>
-            <Link to="/admin/sales">Sales</Link>
+          <Menu.Item key="/sales" icon={<ShoppingCartOutlined />}>
+            <Link to="/sales">Sales</Link>
           </Menu.Item>
 
           <Menu.Item key="/admin/reports" icon={<LineChartOutlined />}>
@@ -218,4 +218,7 @@ const DefaultHandle = ({ children }) => {
   );
 };
 
-export default DefaultHandle;
+
+
+export default DefaultHandle;
+

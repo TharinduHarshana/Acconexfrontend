@@ -3,10 +3,10 @@ import '../../styles/customer.css';
 import { EditFilled, DeleteFilled } from '@ant-design/icons';
 import axios from 'axios';
 import CustomerForm from './customerForm'; // Assuming the file is named CustomerForm.js
-import DefaultHandleSales from './DefaultHandleSales';
-import '../../styles/sidebar.css';
+import { Input } from 'antd';
+import DefaultHandle from '../DefaultHandle';
 
-axios.defaults.baseURL = "http://localhost:8000/sales";
+axios.defaults.baseURL = "http://localhost:8000/customer";
 
 function Customer() {
     const [addSection, setAddSection] = useState(false);
@@ -24,8 +24,8 @@ function Customer() {
         mobile: ""
     });
     const [dataList, setDataList] = useState([]);
+    const [searchValue, setSearchValue] = useState('');
 
-    // Function to handle changes in the add customer form fields
     const handleOnChange = (e) => {
         const { value, name } = e.target;
         setFormData(prevState => ({
@@ -34,38 +34,7 @@ function Customer() {
         }));
     };
 
-    // Function to handle form submission for adding a new customer
-   // Function to handle form submission for adding a new customer
-const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-        // Check if cusid already exists
-        const existingCustomer = dataList.find(customer => customer.cusid === formData.cusid);
-        if (existingCustomer) {
-            alert('Customer with this ID already exists');
-            return; // Stop further execution
-        }
-
-        // If cusid doesn't exist, proceed with adding the customer
-        const response = await axios.post('/add', formData);
-        if (response.data.success) {
-            setFormData({
-                cusid: "",
-                name: "",
-                address: "",
-                mobile: ""
-            });
-            setAddSection(false);
-            getFetchData(); 
-            alert(response.data.message);
-        }
-    } catch (error) {
-        console.error('Error adding customer:', error);
-    }
-};
-
-
-    // Function to fetch customer data
+    // Fetch data from the backend
     const getFetchData = async () => {
         try {
             const response = await axios.get('/');
@@ -81,7 +50,7 @@ const handleSubmit = async (e) => {
         getFetchData();
     }, []);
 
-    // Function to handle deletion of a customer
+    // Delete customer
     const handleDelete = async (id) => {
         const confirmed = window.confirm('Are you sure you want to delete this customer?');
         if (confirmed) {
@@ -96,28 +65,21 @@ const handleSubmit = async (e) => {
             }
         }
     };
-    
-    // Function to handle updating a customer
+
+    // Update customer details
     const handleUpdate = async () => {
         try {
-            const existingCustomer = dataList.find(customer => customer.cusid === formDataEdit.cusid);
-            if (existingCustomer) {
-                alert('Customer with this ID already exists');
-                return; // Stop further execution
-            }
             const response = await axios.patch('/update/' + formDataEdit.cusid, formDataEdit);
             if (response.data.success) {
                 getFetchData();
                 alert(response.data.message);
-                setEditSection(false); // Close the edit section after successful update
+                setEditSection(false);
             }
         } catch (error) {
             console.error('Error updating customer:', error);
         }
     };
-    
 
-    // Function to handle changes in the edit customer form fields
     const handleEditOnChange = (e) => {
         const { value, name } = e.target;
         setFormDataEdit(prevState => ({
@@ -126,38 +88,65 @@ const handleSubmit = async (e) => {
         }));
     };
 
-    // Function to handle editing a customer
     const handleEdit = (el) => {
         setFormDataEdit(el);
         setEditSection(true);
     };
 
+    // Add new customer 
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            // Check if customer ID already exists
+            const existingCustomer = dataList.find(customer => customer.cusid === formData.cusid);
+            if (existingCustomer) {
+                alert('Customer with this ID already exists');
+                return;
+            }
+
+            const response = await axios.post('/add', formData);
+            if (response.data.success) {
+                setFormData({
+                    cusid: "",
+                    name: "",
+                    address: "",
+                    mobile: ""
+                });
+                setAddSection(false);
+                getFetchData();
+                alert(response.data.message);
+            }
+        } catch (error) {
+            console.error('Error adding customer:', error);
+        }
+    };
+
+    // Filter customer details
+    const filteredDataList = dataList.filter(
+        (row) => row.name.toLowerCase().includes(searchValue.toLowerCase()) || row.cusid.toLowerCase().includes(searchValue.toLowerCase())
+    );
+
     return (
-        <DefaultHandleSales>
+        <DefaultHandle>
             <div className="container">
-                {/* Button to toggle add customer form */}
+                <Input className='inboxserch' placeholder={'Enter the Customer ID or Name'} value={searchValue} onChange={(e) => setSearchValue(e.target.value)} />
                 <button className='btn btn_add' onClick={() => setAddSection(true)}>Add Customer</button>
-                {/* Render add customer form if addSection is true */}
-                {addSection && 
-                <CustomerForm 
-                        handleSubmit={handleSubmit} 
-                        handleOnChange={handleOnChange} 
-                        handleClose={() => setAddSection(false)}
-                        formData={formData} 
-                        />}
-                {/* Render edit customer form if editSection is true */}
-                {editSection && 
-                <CustomerForm
-                        handleSubmit={handleUpdate} 
-                        handleOnChange={handleEditOnChange} 
-                        handleClose={() => setEditSection(false)}
-                        formData={formDataEdit}
-                        />
-                        }
-                {/* Table to display customer data */}
-                <div className='tableContainer' style={{ maxHeight: '400px', overflowY: 'auto',position:'relative' }}>
-                    <table >
-                        <thead style={{position:'sticky',top:0}}>
+                {addSection && <CustomerForm
+                    handleSubmit={handleSubmit}
+                    handleOnChange={handleOnChange}
+                    handleClose={() => setAddSection(false)}
+                    formData={formData}
+                />}
+                {editSection && <CustomerForm
+                    handleSubmit={handleUpdate}
+                    handleOnChange={handleEditOnChange}
+                    handleClose={() => setEditSection(false)}
+                    formData={formDataEdit}
+                    editing={true}
+                />}
+                <div className='tableContainer' style={{ maxHeight: '400px', overflowY: 'auto', position: 'relative' }}>
+                    <table>
+                        <thead style={{ position: 'sticky', top: -1 }}>
                             <tr>
                                 <th>Customer_ID</th>
                                 <th>Customer_Name</th>
@@ -166,18 +155,15 @@ const handleSubmit = async (e) => {
                                 <th></th>
                             </tr>
                         </thead>
-                        <tbody style={{overflowY:'auto',maxHeight:'calc(100%-40px)'}}>
-                            {/* Map over dataList to render each customer */}
-                            {dataList.map((el) => (
+                        <tbody style={{ overflowY: 'auto', maxHeight: 'calc(100% - 40px)' }}>
+                            {filteredDataList.map((el) => (
                                 <tr key={el.cusid}>
                                     <td>{el.cusid}</td>
                                     <td>{el.name}</td>
                                     <td>{el.address}</td>
                                     <td>{el.mobile}</td>
                                     <td>
-                                        {/* Button to edit customer */}
                                         <button className='btn btn-edit' onClick={() => handleEdit(el)}><EditFilled /></button>
-                                        {/* Button to delete customer */}
                                         <button className='btn btn-delete' onClick={() => handleDelete(el.cusid)}><DeleteFilled /></button>
                                     </td>
                                 </tr>
@@ -186,7 +172,7 @@ const handleSubmit = async (e) => {
                     </table>
                 </div>
             </div>
-        </DefaultHandleSales>
+        </DefaultHandle>
     );
 }
 

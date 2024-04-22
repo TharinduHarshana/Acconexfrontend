@@ -36,18 +36,32 @@ function UpdateUser() {
         console.log(error);
       });
   }, [id]); // Dependency array ensures this effect runs when id changes
+  const checkUserIdExists = async (userId) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8000/user/check/${userId}`
+      );
+      return response.data.exists;
+    } catch (error) {
+      console.error("Error checking if user ID exists:", error);
+      return false;
+    }
+  };
 
   // Function to handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Check if userId remains the same
-    if (user.userId === user.userId) {
-      message.error("User ID cannot be the same. Please modify the User ID.");
-      return;
-    }
+    
 
     try {
+      const userIdExists = await checkUserIdExists(user.userId);
+      if (userIdExists) {
+        message.error(
+          "User with this ID already exists!,Try another User Id.."
+        );
+        return;
+      }
+
       await axios.patch(`http://localhost:8000/user/update/${id}`, user);
       console.log("User updated successfully:", user);
       message.success("User Updated successfully!");
@@ -86,6 +100,8 @@ function UpdateUser() {
           onSubmit={handleSubmit}
           style={{
             maxWidth: "400px",
+            overflowY: "auto", /* Add scrollbar if content overflows */
+            maxHeight: "80vh",
             margin: "auto",
             marginTop: "20px",
             padding: "20px",

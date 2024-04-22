@@ -17,6 +17,7 @@ function Supplier() {
         const response = await axios.get("http://localhost:8000/supplier/get");
         // Update the suppliers state with the fetched data
         setSuppliers(response.data.data);
+        setFilterSupplier(response.data.data);
         console.log(response.data); // Add this line to check the fetched data
       } catch (error) {
         console.error("Error fetching suppliers:", error);
@@ -69,6 +70,8 @@ function Supplier() {
 
     setFilterSupplier(supplierData); // Update filterSupplier state with filtered data
   };
+
+
 
   // Columns configuration for DataTable
   const columns = [
@@ -138,7 +141,7 @@ function Supplier() {
         </div>
         <DataTable
           columns={columns}
-          data={filterSupplier}
+          data={filterSupplier} 
           selectableRows
           fixedHeader
           pagination

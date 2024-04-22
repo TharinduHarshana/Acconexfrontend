@@ -12,7 +12,7 @@ import CreateSupplierForm from "./components/ManageUsers/CreateSupplier";
 import Supplier from "./components/ManageUsers/Supplier";
 import UpdateSupplier from "./components/ManageUsers/UpdateSupplier";
 import ItemKits from "./components/ManageInventory/ItemKits";
-import ItemKitsTable from "./components/ManageInventory/ItemKitsTable";
+
 
 
 // import SalesDachboad from './components/SalesComponents/SalesDachboad';
@@ -47,7 +47,7 @@ function App() {
         <Route path="/admin/supplier/create" element={<CreateSupplierForm/>}/>
         <Route path="/admin/supplier/update/:id" element={<UpdateSupplier />} />
         <Route path="admin/inventory/item-kits" element={<ItemKits/>}/>
-        <Route path="admin/inventory/item-kits/table" element={<ItemKitsTable/>}/>
+       
 
         <Route path='admin/sale' element={<SalesDachboad/>}/>
         <Route path='admin/bill' element={<Bill/>}/>

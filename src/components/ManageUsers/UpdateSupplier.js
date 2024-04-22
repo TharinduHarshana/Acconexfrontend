@@ -36,16 +36,30 @@ function UpdateSupplier() {
         console.log(error);
       });
   }, [id]);
+
+  const checkSupplierIdExists = async (supplierId) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8000/supplier/check/${supplierId}`
+      );
+      return response.data.exists;
+    } catch (error) {
+      console.error("Error checking if supplier ID exists:", error);
+      return false; // Or handle the error appropriately
+    }
+  };
   // Function to handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Check if userId remains the same
-    if (supplier.supplierId === supplier.supplierId) {
-      message.error("Supplier ID cannot be the same. Please modify the Supplier ID.");
-      return;
-    }
 
     try {
+      const supplierIdExists = await checkSupplierIdExists(supplier.supplierId);
+      if (supplierIdExists) {
+        message.error(
+          "Supplier with this ID already exists!, Try another Supplier Id"
+        );
+        return;
+      }
       await axios.patch(
         `http://localhost:8000/supplier/update/${id}`,
         supplier
@@ -79,11 +93,14 @@ function UpdateSupplier() {
 
   return (
     <>
+     
       <DefaultHandle>
+     
         <form
           onSubmit={handleSubmit}
           style={{
             maxWidth: "400px",
+           
             margin: "auto",
             marginTop: "1px",
             padding: "20px",
@@ -251,6 +268,7 @@ function UpdateSupplier() {
           </button>
         </form>
       </DefaultHandle>
+    
     </>
   );
 }

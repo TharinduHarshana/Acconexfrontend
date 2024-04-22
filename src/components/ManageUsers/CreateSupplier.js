@@ -27,8 +27,25 @@ const CreateSupplierForm = () => {
       setPhoneError("Please enter only numbers and a maximum of 10 digits");
     }
   };
-// Function to handle form submission
-  const handleSubmit = (e) => {
+  const checkSupplierIdExists = async (supplierId) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8000/supplier/check/${supplierId}`
+      );
+      return response.data.exists;
+    } catch (error) {
+      console.error("Error checking if supplier ID exists:", error);
+      return false; // Or handle the error appropriately
+    }
+  };
+  // Function to handle form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const supplierIdExists = await checkSupplierIdExists(supplierData.supplierId);
+    if (supplierIdExists) {
+      message.error("Supplier with this ID already exists!, Try another Supplier Id");
+      return;
+    }
     axios
       .post("http://localhost:8000/supplier/add", supplierData)
       .then((result) => {
@@ -49,13 +66,13 @@ const CreateSupplierForm = () => {
   return (
     <>
       <DefaultHandle>
-        <Form className="form-container" >
-        <Typography.Text className="header">
-              Supplier Information{" "}
-              <span style={{ color: "red", fontSize: "12px"}}>
-                (Fields in red * are required)
-              </span>
-         </Typography.Text> 
+        <Form className="form-container">
+          <Typography.Text className="header">
+            Supplier Information{" "}
+            <span style={{ color: "red", fontSize: "12px" }}>
+              (Fields in red * are required)
+            </span>
+          </Typography.Text>
           <Row gutter={[16, 16]}>
             <Col xs={24}>
               <Form.Item
@@ -73,7 +90,7 @@ const CreateSupplierForm = () => {
                   },
                 ]}
                 hasFeedback
-                style={{ marginBottom: "8px" }} 
+                style={{ marginBottom: "8px" }}
               >
                 <Input
                   value={supplierData.supplierId}
@@ -98,7 +115,7 @@ const CreateSupplierForm = () => {
                     message: "Please input supplier name!",
                   },
                 ]}
-                style={{ marginBottom: "8px" }} 
+                style={{ marginBottom: "8px" }}
               >
                 <Input
                   className="form-input"
@@ -123,7 +140,7 @@ const CreateSupplierForm = () => {
                     message: "Please input company name!",
                   },
                 ]}
-                style={{ marginBottom: "8px" }} 
+                style={{ marginBottom: "8px" }}
               >
                 <Input
                   className="form-input"
@@ -197,5 +214,3 @@ const CreateSupplierForm = () => {
 };
 
 export default CreateSupplierForm;
-
-

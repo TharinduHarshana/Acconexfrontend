@@ -1,73 +1,66 @@
-.item-kits-container {
-  max-width: 700px;
-  margin: auto;
-  margin-top: 20px;
+/* ItemKitsForm.css */
+
+.item-kits-form {
+  display: flex;
+  background-color: gainsboro;
+  flex-direction: column;
+  max-width: 600px;
+  margin: 0 auto;
   padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 16px;
-  background-color: #fff;
-  box-shadow: 0px 8px 32px rgba(0, 0, 0, 0.1);
-  overflow-y: auto; /* Add scrollbar when content overflows vertically */
-  max-height: 500px;
-  position: relative;
-  /* header */
-}
-
-.item-kits-container-header {
-  /* height: 50px;
-  background-color: #f0f0f0;
-  border-bottom: 1px solid #ccc;
-  font-size: 20px;
-  margin-right: 10px; */
-  position: sticky; /* Make the header sticky */
-  top: 0; /* Stick the header to the top */
-  z-index: 1; /* Ensure the header stays above the content */
-  background-color: #f0f0f0;
-  border-bottom: 1px solid #ccc;
-  font-size: 20px;
-  margin-right: 10px;
-}
-
-.form-item-kit-container {
-  max-width: 500px;
-  margin-top: 20px;
-  font-family: Arial, sans-serif; /* Example font family */
-}
-
-.form-item-kit-container label {
-  display: block;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow-y: auto; /* Add scrollbar if content overflows */
+  max-height: 80vh; /* Limit the form's height to 80% of the viewport height */
+  margin-top: 30px; /* Add margin-top to the form */
+ }
+ 
+ .item-kits-form h2 {
+  margin-bottom: 20px;
+  font-size: 24px; /* Adjust font size for the header */
+  font-weight: bold; /* Make the header bold */
+ }
+ 
+ .item-kits-form form {
+  display: flex;
+  flex-direction: column;
+ }
+ 
+ .item-kits-form label {
   margin-bottom: 5px;
-}
-
-.form-item-kit-container input,
-.form-item-kit-container select {
-  width: calc(50% - 5px); /* Adjust width as needed */
-  padding: 8px;
-  margin-bottom: 10px;
-  border: 1px solid #ccc;
+ }
+ 
+ .item-kits-form input,
+ .item-kits-form select {
+  padding: 10px;
+  margin-bottom: 20px;
   border-radius: 4px;
-}
-
-.form-item-kit-container select {
-  margin-left: 10px; /* Add margin between input and select */
-  -webkit-appearance: menulist; /* Reset select appearance for Chrome */
-  min-width: 150px; /* Set minimum width for select box */
-}
-
-.form-item-kit-container button {
-  background-color: #1890ff;
-  color: #fff;
-  border: none;
+  border: 1px solid #ccc;
+  width: 100%; /* Ensure input fields take up the full width */
+  max-width: 300px; /* Reduce the maximum width of input fields */
+ }
+ 
+ .item-kits-form button {
   padding: 10px 20px;
+  background-color: black;
+  color: white;
+  border: none;
   border-radius: 4px;
   cursor: pointer;
-}
-
-.form-item-kit-container button:hover {
-  background-color: #40a9ff;
-}
-
-/* Corrected bill-split class */
-.bill-split {
-  display: flex;
-}
+  margin-top: 20px; /* Add margin-top to the button */
+ }
+ 
+ .item-kits-form select {
+  margin-top: 20px; /* Add margin-top to the select option */
+ }
+ 
+ .item-kits-form button:hover {
+  background-color: black;
+ }
+ 
+ /* Responsive styles */
+ @media (max-width: 600px) {
+  .item-kits-form {
+     padding: 10px;
+  }
+ }
+ 

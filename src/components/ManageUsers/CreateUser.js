@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import DefaultHandle from "../DefaultHandle";
 import axios from "axios";
 import { Navigate, useNavigate } from "react-router-dom";
@@ -16,9 +16,7 @@ import {
 } from "antd";
 const { Option } = Select;
 
-//Function to create a user
 const CreateUserForm = () => {
-  //Hook for navigation
   const navigate = useNavigate();
 
   const formItemLayout = {
@@ -32,7 +30,6 @@ const CreateUserForm = () => {
     },
   };
 
-  //State variable to manage form data and validation errors
   const [formData, setFormData] = useState({
     userId: "",
     userName: "",
@@ -51,51 +48,64 @@ const CreateUserForm = () => {
   const [idNumberError, setIdNumberError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  //Function to toggle password visibility
   const handleTogglePassword = () => {
     setShowPassword(!showPassword);
   };
 
-  const handleSubmit = (e) => {
-    // Submit the form data to create a new user
-    axios
-      .post("http://localhost:8000/user/add", formData)
-      .then((result) => {
-        console.log(result);
-        message.success("User created successfully!");
-        // Redirect to user table after successful creation
-        navigate("/admin/usertable");
-      })
-      .catch((err) => {
-        if (err.response && err.response.status === 401) {
-          message.error("User with this userID already exists!");
-        } else {
-          // For other errors, display a generic error message
-          console.error("Error adding user:", err);
-          message.error("An error occurred while adding user.");
-        }
-      });
+  const checkUserIdExists = async (userId) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8000/user/check/${userId}`
+      );
+      return response.data.exists;
+    } catch (error) {
+      console.error("Error checking if user ID exists:", error);
+      return false;
+    }
   };
 
-  //Phone number validation
+  const handleSubmit = async (e) => {
+    e.preventDefault(); // Prevent the default form submission
+    try {
+      const userIdExists = await checkUserIdExists(formData.userId);
+      if (userIdExists) {
+        message.error(
+          "User with this ID already exists!,Try another User Id.."
+        );
+        return;
+      }
+      const result = await axios.post(
+        "http://localhost:8000/user/add",
+        formData
+      );
+      console.log(result);
+      message.success("User created successfully!");
+      navigate("/admin/usertable");
+    } catch (err) {
+      console.error("Error adding user:", err);
+      message.error("An error occurred while adding user.");
+    }
+  };
+
+  // Phone number validation
   const handlePhoneChange = (e) => {
     const { value } = e.target;
     const containsOnlyDigits = /^[0-9]+$/.test(value);
     if ((containsOnlyDigits && value.length <= 10) || value === "") {
       setFormData({ ...formData, phoneNumber: value });
-      setPhoneError(""); // Clear any previous error message
+      setPhoneError("");
     } else {
       setPhoneError("Please enter only numbers and a maximum of 10 digits");
     }
   };
 
-  //Id number validation
+  // Id number validation
   const handleIdNumberChange = (e) => {
     const { value } = e.target;
-    const isValid = /^[a-zA-Z0-9]{1,12}$/.test(value); // Validate alphanumeric characters and maximum length of 12
+    const isValid = /^[a-zA-Z0-9]{1,12}$/.test(value);
     if (isValid || value === "") {
       setFormData({ ...formData, idNumber: value });
-      setIdNumberError(""); // Clear any previous error message
+      setIdNumberError("");
     } else {
       setIdNumberError(
         "Please enter only letters and numbers, and ensure the ID number has a maximum length of 12 characters"
@@ -142,7 +152,7 @@ const CreateUserForm = () => {
                       whitespace: true,
                     },
                     {
-                      min: 4,
+                      min: 3,
                     },
                   ]}
                   hasFeedback
@@ -168,7 +178,8 @@ const CreateUserForm = () => {
                     },
                     {
                       pattern: /^[A-Za-z]+$/,
-                      message: "First name should contain only alphabetic characters!",
+                      message:
+                        "First name should contain only alphabetic characters!",
                     },
                   ]}
                 >
@@ -317,7 +328,8 @@ const CreateUserForm = () => {
                     },
                     {
                       pattern: /^[A-Za-z]+$/,
-                      message: "Last name should contain only alphabetic characters!",
+                      message:
+                        "Last name should contain only alphabetic characters!",
                     },
                   ]}
                 >

@@ -1,15 +1,18 @@
 import React from 'react';
 import {Form, Input,Button,Typography,Divider } from 'antd';
 import { GoogleOutlined,FacebookOutlined,TwitterOutlined  } from '@ant-design/icons';
-import '../styles/webLoginRegister.css';
-import { SafetyDivider} from '@mui/icons-material';
+// import '../styles/webLoginRegister.css';
+import WebHeader from '../components/WebComponent/WebHeader';
 
 
 
 
 const Login = () => {
   return (
+    <div>
+      <WebHeader />
     <div className='maindiv'>
+      
         <Form className='loginform'>
             <Typography.Title level={2}>Login</Typography.Title>
             <Form.Item
@@ -39,7 +42,9 @@ const Login = () => {
               <a href='/web/register'>Register</a>
             </div>
             </div>
+            
         </Form>
+    </div>
     </div>
   )
 }

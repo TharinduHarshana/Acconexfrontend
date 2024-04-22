@@ -54,8 +54,6 @@ function App() {
         <Route path="/admin/userform" element={<CreateUser />} />
         <Route path="/admin/userform/update/:id" element={<UpdateUser/>} />
         <Route path="/admin/userTable" element={<Users />} />
-
-        <Route path="/admin/home" element={<AdminDashboard />} />
         <Route path="/admin/customer" element={<Customer/>}/>
 
         

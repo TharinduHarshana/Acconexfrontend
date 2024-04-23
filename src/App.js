@@ -26,12 +26,25 @@ import SalesDachboad from './components/SalesComponents/SalesDachboad';
 import Bill from './components/SalesComponents/Bill';
 import Customer from './components/CustomerComponents/Customer';
 import SuspendSale from './components/SalesComponents/SuspendSale';
-import ViewCutomer from './pages/ViewCutomer';
+
 import Daily_sales from './components/SalesComponents/Daily_sales';
 
 
+
+// web imports
+
 // import web components
+
+
+// import web components
+
 import WebHomepage from "./pages/WebHomepage";
+import CustomerForm from "./components/CustomerComponents/customerForm";
+
+//import inventory 
+import InventoryAdd from './components/InventoryComponent/Inventory.AddnewItem';
+import InventoryUpdate from './components/InventoryComponent/inventory.UpdateItem';
+import InventoryHome from './pages/Inventory';
 
 //import inventory 
 import InventoryAdd from './components/InventoryComponent/Inventory.AddnewItem';
@@ -56,6 +69,10 @@ function App() {
         <Route path="/admin/userTable" element={<Users />} />
         <Route path="/admin/customer" element={<Customer/>}/>
 
+       <Route path="/admin/customerform" element={<CustomerForm/>}/>
+
+
+
         
 
         <Route path="/admin/supplier" element={<Supplier/>}/>
@@ -64,6 +81,26 @@ function App() {
         <Route path="admin/inventory/item-kits" element={<ItemKits/>}/>
         <Route path="admin/inventory/item-kits/table" element={<ItemKitsTable/>}/>
 
+
+
+        <Route path='sales' element={<SalesDachboad/>}/>
+        <Route path='bill' element={<Bill/>}/>
+        <Route path='addcus' element={<Customer/>}/>
+        <Route path='holdbill' element={<SuspendSale/>}/>
+        <Route path="dailysales" element={<Daily_sales/>}/>
+       
+         
+
+        <Route path='admin/sale' element={<SalesDachboad/>}/>
+        <Route path='admin/bill' element={<Bill/>}/>
+        <Route path='admin/addcus' element={<Customer/>}/>
+        <Route path='admin/holdbill' element={<SuspendSale/>}/>
+
+
+        <Route path='admin/viewcustomer' element={<ViewCutomer/>}/>
+
+        <Route path='admin/inventory' element={<InventoryHome/>}/>
+        <Route path="admin/addnewitem" element={<InventoryAdd/>}/> 
 
         
         <Route path='/admin/sale' element={<SalesDachboad/>}/>
@@ -74,6 +111,7 @@ function App() {
 
         <Route path='/admin/inventory' element={<InventoryHome/>}/>
         <Route path="/admin/addnewitem" element={<InventoryAdd/>}/> 
+
         <Route path="/admin/inventory/updateitem/:id" element={<InventoryUpdate/>}/>
         
         

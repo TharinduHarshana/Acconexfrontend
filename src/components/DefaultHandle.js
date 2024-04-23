@@ -113,7 +113,7 @@ const DefaultHandle = ({ children }) => {
               <Link to="/admin/supplier">Supplier</Link>
             </Menu.Item>
             <Menu.Item key="customer" title="Customer">
-              <Link to="/admin//addcus">Customer</Link>
+              <Link to="/admin/addcus">Customer</Link>
             </Menu.Item>
           </Menu.SubMenu>
 

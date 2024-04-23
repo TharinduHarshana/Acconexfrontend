@@ -18,7 +18,6 @@ import {
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 
-
 const { Header, Sider, Content } = Layout;
 const { Search } = Input;
 
@@ -122,12 +121,10 @@ const DefaultHandle = ({ children }) => {
           
           <Menu.Item key="admin/sale" icon={<ShoppingCartOutlined />}>
             <Link to="admin/sale">Sales</Link>
-
           </Menu.Item>
-          <Menu.Item key ="/sales" title="Sales">
-            <Link to ="/sales">Sales</Link>
+          <Menu.Item key="/sales" title="Sales">
+            <Link to="/sales">Sales</Link>
           </Menu.Item>
-
 
           <Menu.Item key="/admin/reports" icon={<LineChartOutlined />}>
             <Link to="/admin/reports">Reports</Link>
@@ -144,7 +141,6 @@ const DefaultHandle = ({ children }) => {
             level={3}
             style={{ fontSize: "13px", fontFamily: "sans-serif" }}
           >
-            Dashboard
           </Typography.Title>
           <Space>
             <div className="header-action" style={{ marginRight: "8px" }}>
@@ -213,6 +209,7 @@ const DefaultHandle = ({ children }) => {
             margin: "24px 16px",
             padding: 24,
             minHeight: 280,
+            overflow: "auto", // Add overflow property here
           }}
         >
           {children}

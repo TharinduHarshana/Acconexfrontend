@@ -47,13 +47,10 @@ const Items = () =>{
         <div>
           <Link
             to={`updateitem/${row._id}`}
-            className='btn btn-warning btn-sm me-2'
           >
             Edit
           </Link>
           <Link
-            //to={`/DeleteItem/${row._id}`}
-            className='btn btn-info btn-sm'
             onClick={(e) => handleDelete(row._id)}
           >
             Delete
@@ -131,22 +128,20 @@ const [FilterItems, setFilterItems] = useState([]);
   return(
     <DefaultHandle>
     
-    <div className='container mt-5 '>
+    <div>
       <div>
-        <input type="text end" className='input' placeholder='Search...' style={search} onChange={filterItem} />
+        <input type="text end" className='input' placeholder='Search...' onChange={filterItem} />
       </div>
 
       <div className='text-end'>
-          <Link to="/admin/addnewitem" className='btn btn-primary'>
+          <Link to="/admin/addnewitem">
             New Item
           </Link>
       </div>
 
-
       <DataTable
         columns={column}
         data={items}
-        customStyles={tableCustomStyles}
         pagination
         selectableRows
         
@@ -156,43 +151,5 @@ const [FilterItems, setFilterItems] = useState([]);
     </DefaultHandle> 
   )
 }
-
-const search ={
-  padding: '6px 10px',
-  textAlign: 'left',
-  color: 'green',
-  align:'left'
-}
-
-const tableCustomStyles = {
-  headCells: {
-    style: {
-      fontSize: '20px',
-      fontWeight: 'bold',
-      paddingLeft: '0 8px',
-    },
-  },
-  rows: {
-    style: {
-      fontSize: '16px',
-      cursor: 'pointer',
-      '&:hover': {
-        backgroundColor: 'rgba(0, 0, 0, 0.05)',
-      },
-    },
-  },
-  cells: {
-    style: {
-      paddingLeft: '8px',
-      paddingRight: '8px',
-      borderBottom: '1px solid #ddd',
-    },
-  },
-  pagination: {
-    style: {
-      fontSize: '14px',
-    },
-  },
-};
 
  export default Items;

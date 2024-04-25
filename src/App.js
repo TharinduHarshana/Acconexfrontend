@@ -13,7 +13,7 @@ import Users from "./components/ManageUsers/Users";
 import UpdateUser from "./components/ManageUsers/UpdateUser";
 
 //import customer and supplier components
-import ManageCustomer from "./components/ManageUsers/ManageCustomer";
+
 import CreateSupplierForm from "./components/ManageUsers/CreateSupplier";
 import Supplier from "./components/ManageUsers/Supplier";
 import UpdateSupplier from "./components/ManageUsers/UpdateSupplier";
@@ -61,8 +61,6 @@ function App() {
         <Route path="/admin/userform" element={<CreateUser />} />
         <Route path="/admin/userform/update/:id" element={<UpdateUser/>} />
         <Route path="/admin/userTable" element={<Users />} />
-
-        <Route path="/admin/home" element={<AdminDashboard />} />
         <Route path="/admin/customer" element={<Customer/>}/>
 
        <Route path="/admin/customerform" element={<CustomerForm/>}/>
@@ -70,7 +68,6 @@ function App() {
 
 
         
-        <Route path="/admin/customer" element={<ManageCustomer/>}/>
 
         <Route path="/admin/supplier" element={<Supplier/>}/>
         <Route path="/admin/supplier/create" element={<CreateSupplierForm/>}/>
@@ -79,11 +76,20 @@ function App() {
         <Route path="admin/inventory/item-kits/table" element={<ItemKitsTable/>}/>
 
 
+<<<<<<< HEAD
         <Route path='/sales' element={<SalesDachboad/>}/>
         <Route path='/bill' element={<Bill/>}/>
         {/* <Route path='/addcus' element={<Customer/>}/> */}
         <Route path='/holdbill' element={<SuspendSale/>}/>
         <Route path="/dailysales" element={<Daily_sales/>}/>
+=======
+
+        <Route path='sales' element={<SalesDachboad/>}/>
+        <Route path='bill' element={<Bill/>}/>
+        <Route path='addcus' element={<Customer/>}/>
+        <Route path='holdbill' element={<SuspendSale/>}/>
+        <Route path="dailysales" element={<Daily_sales/>}/>
+>>>>>>> 313a2f63cb7cd0c6da72cdb8b40ec2089152226b
        
          
 
@@ -95,6 +101,17 @@ function App() {
 
         <Route path='admin/inventory' element={<InventoryHome/>}/>
         <Route path="admin/addnewitem" element={<InventoryAdd/>}/> 
+
+        
+        <Route path='/admin/sale' element={<SalesDachboad/>}/>
+        <Route path='/admin/bill' element={<Bill/>}/>
+        <Route path='/admin/addcus' element={<Customer/>}/>
+        <Route path='/admin/holdbill' element={<SuspendSale/>}/>
+        <Route path='/admin/viewcustomer' element={<ViewCutomer/>}/>
+
+        <Route path='/admin/inventory' element={<InventoryHome/>}/>
+        <Route path="/admin/addnewitem" element={<InventoryAdd/>}/> 
+
         <Route path="/admin/inventory/updateitem/:id" element={<InventoryUpdate/>}/>
         
         

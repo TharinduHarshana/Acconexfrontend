@@ -5,6 +5,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Login from "./components/LoginComponents/Login";
 import Dashboard from "./components/SideBarComponent/DefaultHandle";
 import Homepage from "./pages/Homepage";
+import AdminDashboard from "./components/AdminDashboard";
 
 //import user components
 import CreateUser from "./components/ManageUsers/CreateUser";
@@ -33,7 +34,6 @@ import Daily_sales from './components/SalesComponents/Daily_sales';
 
 // web imports
 
-// import web components
 
 
 // import web components
@@ -45,12 +45,6 @@ import CustomerForm from "./components/CustomerComponents/customerForm";
 import InventoryAdd from './components/InventoryComponent/Inventory.AddnewItem';
 import InventoryUpdate from './components/InventoryComponent/inventory.UpdateItem';
 import InventoryHome from './pages/Inventory';
-
-//import inventory 
-import InventoryAdd from './components/InventoryComponent/Inventory.AddnewItem';
-import InventoryUpdate from './components/InventoryComponent/inventory.UpdateItem';
-import InventoryHome from './pages/Inventory';
-
 
 
 function App() {
@@ -85,21 +79,19 @@ function App() {
         <Route path="admin/inventory/item-kits/table" element={<ItemKitsTable/>}/>
 
 
-        <Route path='sales' element={<SalesDachboad/>}/>
-        <Route path='bill' element={<Bill/>}/>
-        <Route path='addcus' element={<Customer/>}/>
-        <Route path='holdbill' element={<SuspendSale/>}/>
-        <Route path="dailysales" element={<Daily_sales/>}/>
+        <Route path='/sales' element={<SalesDachboad/>}/>
+        <Route path='/bill' element={<Bill/>}/>
+        {/* <Route path='/addcus' element={<Customer/>}/> */}
+        <Route path='/holdbill' element={<SuspendSale/>}/>
+        <Route path="/dailysales" element={<Daily_sales/>}/>
        
          
 
-        <Route path='admin/sale' element={<SalesDachboad/>}/>
-        <Route path='admin/bill' element={<Bill/>}/>
-        <Route path='admin/addcus' element={<Customer/>}/>
-        <Route path='admin/holdbill' element={<SuspendSale/>}/>
+        <Route path='/admin/sale' element={<SalesDachboad/>}/>
+        <Route path='/admin/bill' element={<Bill/>}/>
+        {/* <Route path='/admin/addcus' element={<Customer/>}/> */}
+        <Route path='/admin/holdbill' element={<SuspendSale/>}/>
 
-
-        <Route path='admin/viewcustomer' element={<ViewCutomer/>}/>
 
         <Route path='admin/inventory' element={<InventoryHome/>}/>
         <Route path="admin/addnewitem" element={<InventoryAdd/>}/> 

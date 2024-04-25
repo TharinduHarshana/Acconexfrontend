@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import DefaultHandle from "../DefaultHandle";
 import { message } from "antd";
 
@@ -18,8 +18,10 @@ function UpdateUser() {
   const [phoneError, setPhoneError] = useState("");
   // Hook to navigate to different pages
   const navigate = useNavigate();
+
   // Effect hook to fetch user data when the component mounts or id changes
   useEffect(() => {
+    // Fetch user data from the backend API
     axios
       .get(`http://localhost:8000/user/${id}`)
       .then((response) => {
@@ -36,12 +38,29 @@ function UpdateUser() {
         console.log(error);
       });
   }, [id]); // Dependency array ensures this effect runs when id changes
+
+  // Function to check if a user ID already exists in the database
   const checkUserIdExists = async (userId) => {
     try {
+      // Fetch user data from the backend API
       const response = await axios.get(
         `http://localhost:8000/user/check/${userId}`
       );
-      return response.data.exists;
+      const { exists } = response.data;
+      // If the user ID exists in the database
+      if (exists) {
+        // Fetch the user data by ID
+        const userData = await axios.get(`http://localhost:8000/user/${id}`);
+        // If the fetched user ID is the same as the current user's ID, return false (no conflict)
+        if (userData.data.data.userId === userId) {
+          return false;
+        } else {
+          // If the fetched user ID is different, return true (conflict)
+          return true;
+        }
+      }
+      // If the user ID doesn't exist in the database, return false (no conflict)
+      return exists;
     } catch (error) {
       console.error("Error checking if user ID exists:", error);
       return false;
@@ -51,21 +70,20 @@ function UpdateUser() {
   // Function to handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-
     try {
+      // Check if the user ID already exists in the database
       const userIdExists = await checkUserIdExists(user.userId);
+      // If the user ID already exists, display an error message and return
       if (userIdExists) {
-        message.error(
-          "User with this ID already exists!,Try another User Id.."
-        );
+        message.error("User with this ID already exists! Try another User Id..");
         return;
       }
 
+      // Update user data in the backend
       await axios.patch(`http://localhost:8000/user/update/${id}`, user);
       console.log("User updated successfully:", user);
       message.success("User Updated successfully!");
-      // Navigate to a different page after successful update
+      // Navigate back to the user table page
       navigate("/admin/usertable");
     } catch (error) {
       console.error("Error updating user:", error);
@@ -100,7 +118,7 @@ function UpdateUser() {
           onSubmit={handleSubmit}
           style={{
             maxWidth: "400px",
-            overflowY: "auto", /* Add scrollbar if content overflows */
+            overflowY: "auto", // Add scrollbar if content overflows
             maxHeight: "80vh",
             margin: "auto",
             marginTop: "20px",

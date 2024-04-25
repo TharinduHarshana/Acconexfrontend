@@ -34,6 +34,8 @@ function Supplier() {
       await axios.delete(`http://localhost:8000/supplier/delete/${_id}`);
       // Update the suppliers state by filtering out the deleted supplier
       setSuppliers(suppliers.filter((supplier) => supplier._id !== _id));
+      setFilterSupplier(filterSupplier.filter((supplier) => supplier._id !== _id));
+    
       message.success("Supplier deleted successfully!");
     } catch (error) {
       console.error("Error deleting supplier:", error);

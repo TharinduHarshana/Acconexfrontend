@@ -29,17 +29,21 @@ function Users() {
   }, []);
 
   // Function to handle user deletion
+
   const handleDelete = async (_id) => {
     try {
       await axios.delete(`http://localhost:8000/user/delete/${_id}`);
       // Filter out the deleted user from the users state
-      setUsers(users.filter((user) => user._id !== _id));
+      const updatedUsers = users.filter((user) => user._id !== _id);
+      setUsers(updatedUsers);
+      setFilterUser(updatedUsers); // Update filterUser state as well
       message.success("User deleted successfully!");
     } catch (error) {
       console.error("Error deleting user:", error);
       message.error("An error occurred while deleting the user.");
     }
   };
+
   // Function to display a confirmation modal before deleting a user
   const showDeleteConfirmation = (_id) => {
     Modal.confirm({
@@ -55,7 +59,6 @@ function Users() {
     });
   };
 
-  //search users
   // Search users
   const filterUsers = (event) => {
     const searchValue = event.target.value.toLowerCase();

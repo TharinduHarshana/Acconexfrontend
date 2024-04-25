@@ -39,37 +39,53 @@ function UpdateSupplier() {
 
   const checkSupplierIdExists = async (supplierId) => {
     try {
+      // Fetch supplier data from the backend API
       const response = await axios.get(
         `http://localhost:8000/supplier/check/${supplierId}`
       );
-      return response.data.exists;
+      const { exists } = response.data;
+      // If the supplier ID exists in the database
+      if (exists) {
+        // Fetch the supplier data by ID
+        const supplierData = await axios.get(
+          `http://localhost:8000/supplier/${id}`
+        );
+        // If the fetched supplier ID is the same as the current supplier's ID, return false (no conflict)
+        if (supplierData.data.data.supplierId === supplierId) {
+          return false;
+        } else {
+          // If the fetched supplier ID is different, return true (conflict)
+          return true;
+        }
+      }
+      // If the supplier ID doesn't exist in the database, return false (no conflict)
+      return exists;
     } catch (error) {
       console.error("Error checking if supplier ID exists:", error);
-      return false; // Or handle the error appropriately
+      return false;
     }
   };
+
   // Function to handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       const supplierIdExists = await checkSupplierIdExists(supplier.supplierId);
       if (supplierIdExists) {
         message.error(
-          "Supplier with this ID already exists!, Try another Supplier Id"
+          "Supplier with this ID already exists! Try another Supplier Id.."
         );
         return;
       }
+
       await axios.patch(
         `http://localhost:8000/supplier/update/${id}`,
         supplier
       );
       console.log("Supplier updated successfully:", supplier);
-      message.success("Supplier updated successfully!");
-      // Assuming a successful update, navigate to a different page
+      message.success("Supplier Updated successfully!");
       navigate("/admin/supplier");
     } catch (error) {
-      message.error("Error updating supplier");
       console.error("Error updating supplier:", error);
     }
   };
@@ -93,14 +109,11 @@ function UpdateSupplier() {
 
   return (
     <>
-     
       <DefaultHandle>
-     
         <form
           onSubmit={handleSubmit}
           style={{
             maxWidth: "400px",
-           
             margin: "auto",
             marginTop: "1px",
             padding: "20px",
@@ -268,7 +281,6 @@ function UpdateSupplier() {
           </button>
         </form>
       </DefaultHandle>
-    
     </>
   );
 }

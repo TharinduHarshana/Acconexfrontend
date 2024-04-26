@@ -13,14 +13,18 @@ const WebCategory = (props) => {
   console.log(slug)
 
   useEffect(() => {
-    axios.get(`http://localhost:8000/item/${slug}`)
-      .then(res => {
-        console.log(res);
-        setItems(res.data.data);
-      })
-      .catch(err => console.log(err));
-  }, []);
-
+    const fetchItems = async () => {
+       try {
+         const response = await axios.get(`http://localhost:8000/webitem/${slug}`);
+         setItems(response.data.data);
+       } catch (err) {
+         console.error(err);
+       }
+    };
+   
+    fetchItems();
+   }, [slug]); // Dependency array ensures the effect runs when `slug` changes
+   
 
 function addtocartBtn(params){
   return <Link className='addtocart'
@@ -42,7 +46,7 @@ function addtocartBtn(params){
             <Card className='Itemcard' title={item.itemName} key={index}
               cover={<Image className='displaimg' alt="example" src={image} />}
               actions={[
-                <Rate allowHalf defaultValue={3} />,
+                <Rate allowHalf defaultValue={4} />,
                 <addtocartBtn/>
               ]}
             >

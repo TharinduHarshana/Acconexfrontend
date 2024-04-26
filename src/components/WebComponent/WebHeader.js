@@ -1,77 +1,65 @@
-import React from 'react'
-import{Menu}from 'antd'
-import {HomeOutlined} from '@ant-design/icons'
-import {useNavigate} from 'react-router-dom'
+import React, { useState, useEffect } from 'react';
+import { Menu } from 'antd';
+import { HomeOutlined } from '@ant-design/icons';
+import axios from 'axios';
 
-function WebHeader(){
-    const navigate = useNavigate();
+function WebHeader() {
+    const [categories, setCategories] = useState([]);
+
+    useEffect(() => {
+        axios.get('http://localhost:8000/item/')
+            .then(res => {
+                const uniqueCategories = Array.from(new Set(res.data.data.map(item => item.category)));
+                setCategories(uniqueCategories);
+            })
+            .catch(err => console.log(err));
+    }, []);
+
     const onMenuclick = (item) => {
-        navigate('/'+item.key)
+        window.location.href = '/web/' + item.key;
     };
 
-    return(
-        <div className='webHeader'>
-           <Menu 
-           mode='horizontal' 
-           theme='dark'
-            defaultSelectedKeys={['home']}
-            onClick={onMenuclick}
-           items ={[
-            {
-            label: <HomeOutlined/>,
-            key: 'home',
-        },
-        
-        {
-            label: 'ALL PRODUCTS',
-            key: 'products',
-                children: [
-                {
-                    label: 'Laptops',
-                    key: 'laptops',
-                },
-                {
-                    label: 'Desktop',
-                    key: 'desktop',
-                },
-                {
-                    label: 'CCTV',
-                    key: 'cctv',
-                },
-                {
-                    label: 'Laptop Accessories',
-                    key: 'laptopaccessories',
-                },
-                {
-                    label: 'Desktop Accessories',
-                    key: 'desktopaccessories',
-                },
-                {
-                    label: 'CCTV Accessories',
-                    key: 'cctvaccessories',
-                },
-                
-            ],
-        },
-        {
-            label: 'ABOUT US',
-            key: 'about',
-        },
-        {
-            label: 'SERVICES',
-            key: 'services',
-        },
-        {
-            label: 'PAYMENT METHODS',
-            key: 'payment',
-        },
-        {
-            label: 'CONTACT US',
-            key: 'contact',
-        },
-           ]}/>
+    return (
+        <div>
+            <div>
+                <h1>ACCONEX</h1>
+            </div>
+            <div className='webHeader'>
+                <Menu
+                    mode='horizontal'
+                    theme='dark'
+                    defaultSelectedKeys={['home']}
+                    onClick={onMenuclick}
+                >
+                    <Menu.Item key='home' icon={<HomeOutlined />}>
+                        Home
+                    </Menu.Item>
+                    <Menu.SubMenu key='products' title='ALL PRODUCTS'>
+                        {categories.map(category => (
+                            <Menu.Item key={category}>
+                                {category}
+                            </Menu.Item>
+                        ))}
+                    </Menu.SubMenu>
+                    <Menu.Item key='about'>
+                        ABOUT US
+                    </Menu.Item>
+                    <Menu.Item key='services'>
+                        SERVICES
+                    </Menu.Item>
+                    <Menu.Item key='payment'>
+                        PAYMENT METHODS
+                    </Menu.Item>
+                    <Menu.Item key='contact'>
+                        CONTACT US
+                    </Menu.Item>
+                    <Menu.Item key='login'>
+                        LOGIN/REGISTER
+                    </Menu.Item>
+                </Menu>
+            </div>
         </div>
-    )
+    );
 }
 
 export default WebHeader;

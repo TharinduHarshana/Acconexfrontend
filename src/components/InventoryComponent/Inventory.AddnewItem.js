@@ -70,7 +70,8 @@ const AddNewItem = () =>{
 
     return (
 <DefaultHandle>
-<div style={formStyle}>
+<div>
+      <div style={formStyle}>
         <form className='form'>
             <label style={label}>
               Display Name:
@@ -100,6 +101,10 @@ const AddNewItem = () =>{
               Fixed Price:
               <input type="text" className="form-control" placeholder="300" onChange={(e) => setFixedPrice(e.target.value)} value={fixedPrice} style={input} />
             </label>
+            </form>
+      </div>
+      <div style={formStyle}>
+            <form className='form'>
             <label style={label}>
               Item Sereal:
               <input type="text" className="form-control" placeholder="AK2928582-9582" onChange={(e) => setItemSerial(e.target.value)} value={itemSereal} style={input} />
@@ -125,8 +130,11 @@ const AddNewItem = () =>{
               Warranty:
               <input type="text" className="form-control" placeholder="AK2928582-9582" onChange={(e) => setWarranty(e.target.value)} value={warranty} style={input} />
             </label>
+            </form>
+      </div>
+            
             <button className='btn btn-success' onClick={(e) => sbmitItemData(e)} style={button}>Add New Item</button>
-          </form>
+          
 </div>
 </DefaultHandle>
     
@@ -134,36 +142,32 @@ const AddNewItem = () =>{
 }
 
 const formStyle = {
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'flex-end',   
-  color: '$font-color',
-  fontFamily: '$font-family',
-  fontSize: '14px',
-  fontWeight: '400',
-  width: '65%',
-  margin: 'auto',  
+  marginBottom: '20px',
+  display: 'inline-block',
+   width: '45%', // Adjust the width as needed
+  marginRight: '20px', // Add margin between the forms
+  verticalAlign: 'top',
 };
 
 const label = {
   display: 'block',
   marginBottom: '10px',
-  fontSize:'18p'
+  fontSize: '18px', // Corrected typo 'p' to 'px'
 };
 
 const input = {
-  width: '175%',
+  width: '100%', // Adjusted input width to fit the form container
   padding: '8px',
   marginBottom: '10px',
   boxSizing: 'border-box',
 };
 
 const button = {
-  marginLeft: 'none',
-  width: '100%',
+  width: '100%', // Adjusted button width to fit the form container
   height: '40px',
   fontWeight: 'bold',
   marginBottom: '20px',
 };
+
   
 export default AddNewItem;

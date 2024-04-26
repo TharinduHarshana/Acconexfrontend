@@ -46,10 +46,6 @@ import InventoryAdd from './components/InventoryComponent/Inventory.AddnewItem';
 import InventoryUpdate from './components/InventoryComponent/inventory.UpdateItem';
 import InventoryHome from './pages/Inventory';
 
-//import inventory 
-import InventoryAdd from './components/InventoryComponent/Inventory.AddnewItem';
-import InventoryUpdate from './components/InventoryComponent/inventory.UpdateItem';
-import InventoryHome from './pages/Inventory';
 
 
 
@@ -97,7 +93,7 @@ function App() {
         <Route path='admin/holdbill' element={<SuspendSale/>}/>
 
 
-        <Route path='admin/viewcustomer' element={<ViewCutomer/>}/>
+        {/* <Route path='admin/viewcustomer' element={<ViewCutomer/>}/> */}
 
         <Route path='admin/inventory' element={<InventoryHome/>}/>
         <Route path="admin/addnewitem" element={<InventoryAdd/>}/> 
@@ -107,7 +103,7 @@ function App() {
         <Route path='/admin/bill' element={<Bill/>}/>
         <Route path='/admin/addcus' element={<Customer/>}/>
         <Route path='/admin/holdbill' element={<SuspendSale/>}/>
-        <Route path='/admin/viewcustomer' element={<ViewCutomer/>}/>
+        {/* <Route path='/admin/viewcustomer' element={<ViewCutomer/>}/> */}
 
         <Route path='/admin/inventory' element={<InventoryHome/>}/>
         <Route path="/admin/addnewitem" element={<InventoryAdd/>}/> 

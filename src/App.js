@@ -5,6 +5,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Login from "./components/LoginComponents/Login";
 import Dashboard from "./components/SideBarComponent/DefaultHandle";
 import Homepage from "./pages/Homepage";
+import AdminDashboard from "./components/AdminDashboard";
 
 //import user components
 import CreateUser from "./components/ManageUsers/CreateUser";
@@ -33,7 +34,6 @@ import Daily_sales from './components/SalesComponents/Daily_sales';
 
 // web imports
 
-// import web components
 
 
 // import web components
@@ -48,6 +48,7 @@ import WebRegister from './pages/WebRegister';
 import InventoryAdd from './components/InventoryComponent/Inventory.AddnewItem';
 import InventoryUpdate from './components/InventoryComponent/inventory.UpdateItem';
 import InventoryHome from './pages/Inventory';
+
 
 
 
@@ -70,7 +71,6 @@ function App() {
         <Route path="/admin/userform/update/:id" element={<UpdateUser/>} />
         <Route path="/admin/userTable" element={<Users />} />
         <Route path="/admin/customer" element={<Customer/>}/>
-
        <Route path="/admin/customerform" element={<CustomerForm/>}/>
 
 
@@ -83,20 +83,16 @@ function App() {
         <Route path="admin/inventory/item-kits" element={<ItemKits/>}/>
         <Route path="admin/inventory/item-kits/table" element={<ItemKitsTable/>}/>
 
-
-
-        <Route path='sales' element={<SalesDachboad/>}/>
-        <Route path='bill' element={<Bill/>}/>
-        <Route path='addcus' element={<Customer/>}/>
-        <Route path='holdbill' element={<SuspendSale/>}/>
-        <Route path="dailysales" element={<Daily_sales/>}/>
        
+        
          
 
         <Route path='admin/sale' element={<SalesDachboad/>}/>
         <Route path='admin/bill' element={<Bill/>}/>
-        <Route path='admin/addcus' element={<Customer/>}/>
+        <Route path='/admin/customer' element={<Customer/>}/>
         <Route path='admin/holdbill' element={<SuspendSale/>}/>
+
+
 
 
         {/* <Route path='admin/viewcustomer' element={<ViewCutomer/>}/> */}
@@ -113,6 +109,7 @@ function App() {
 
         <Route path='/admin/inventory' element={<InventoryHome/>}/>
         <Route path="/admin/addnewitem" element={<InventoryAdd/>}/> 
+
 
         <Route path="/admin/inventory/updateitem/:id" element={<InventoryUpdate/>}/>
         

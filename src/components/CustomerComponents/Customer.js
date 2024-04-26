@@ -5,6 +5,7 @@ import DataTable from "react-data-table-component";
 import DefaultHandle from "../DefaultHandle";
 import axios from "axios";
 import CustomerForm from "./customerForm";
+import "../../styles/customer.css";
 
 function Customer() {
   const [customers, setCustomers] = useState([]);

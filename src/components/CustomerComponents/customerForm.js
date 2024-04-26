@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { CloseOutlined } from '@ant-design/icons';
+import "../../styles/customer.css";
+
 
 const CustomerForm = ({ handleSubmit, handleClose, formData = {}, editing, handleUpdate }) => {
   const [mobileError, setMobileError] = useState('');

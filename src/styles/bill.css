@@ -1,0 +1,64 @@
+.content{
+  margin-left: 40px;
+  display: flex;
+  
+}
+.bill_container{
+  display: flex;
+}
+
+
+/* Bill form container form styles */
+.print_bill form {
+  width: 400px;
+  background-color: rgb(238, 238, 238);
+  display: flex;
+  flex-direction: column;
+  padding: 50px 40px;
+  box-shadow: 5px 5px 10px rgb(0, 0, 0);
+  border-radius: 5px;
+  margin-left: 40px;
+  margin-top: 40px;
+}
+
+.bill_table{
+  width: 300px ;
+  background-color: rgb(238, 238, 238);
+  margin: 40px;
+  margin-top: 50px;
+  border: 1px solid #c9c5c2; 
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); 
+  border-radius: 5px;
+ 
+
+}
+
+.bill_table thead tr th{
+  background-color:beige;
+  padding :2% 20px;
+  align-items: center;
+
+
+}
+
+.bill_table   tbody td{
+  min-width: 150px;
+  height: 200px  auto;
+  padding: 2px 30px;
+  text-align: center;
+}
+
+.bill_table_container input{
+  background-color: rgb(238, 238, 238);
+  display: flex;
+  flex-direction: column;
+  padding: 10px 40px;
+  border: 1px solid #c9c5c2; 
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); 
+  border-radius: 5px;
+  margin-left: 40px;
+  margin-top: 40px;
+  width: 600px ;
+
+}
+

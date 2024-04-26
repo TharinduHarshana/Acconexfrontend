@@ -46,6 +46,11 @@ import InventoryAdd from './components/InventoryComponent/Inventory.AddnewItem';
 import InventoryUpdate from './components/InventoryComponent/inventory.UpdateItem';
 import InventoryHome from './pages/Inventory';
 
+<<<<<<< Updated upstream
+=======
+
+
+>>>>>>> Stashed changes
 
 function App() {
   return (
@@ -62,7 +67,6 @@ function App() {
         <Route path="/admin/userform/update/:id" element={<UpdateUser/>} />
         <Route path="/admin/userTable" element={<Users />} />
         <Route path="/admin/customer" element={<Customer/>}/>
-
        <Route path="/admin/customerform" element={<CustomerForm/>}/>
 
 
@@ -74,6 +78,7 @@ function App() {
         <Route path="/admin/supplier/update/:id" element={<UpdateSupplier />} />
         <Route path="admin/inventory/item-kits" element={<ItemKits/>}/>
         <Route path="admin/inventory/item-kits/table" element={<ItemKitsTable/>}/>
+<<<<<<< Updated upstream
 
 
 <<<<<<< HEAD
@@ -99,19 +104,17 @@ function App() {
         <Route path='/admin/holdbill' element={<SuspendSale/>}/>
 
 
+=======
+         
+
+        <Route path='admin/sale' element={<SalesDachboad/>}/>
+        <Route path='admin/bill' element={<Bill/>}/>
+        <Route path='/admin/customer' element={<Customer/>}/>
+        <Route path='admin/holdbill' element={<SuspendSale/>}/>
+
+>>>>>>> Stashed changes
         <Route path='admin/inventory' element={<InventoryHome/>}/>
         <Route path="admin/addnewitem" element={<InventoryAdd/>}/> 
-
-        
-        <Route path='/admin/sale' element={<SalesDachboad/>}/>
-        <Route path='/admin/bill' element={<Bill/>}/>
-        <Route path='/admin/addcus' element={<Customer/>}/>
-        <Route path='/admin/holdbill' element={<SuspendSale/>}/>
-        <Route path='/admin/viewcustomer' element={<ViewCutomer/>}/>
-
-        <Route path='/admin/inventory' element={<InventoryHome/>}/>
-        <Route path="/admin/addnewitem" element={<InventoryAdd/>}/> 
-
         <Route path="/admin/inventory/updateitem/:id" element={<InventoryUpdate/>}/>
         
         

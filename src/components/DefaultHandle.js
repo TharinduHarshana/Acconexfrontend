@@ -88,7 +88,7 @@ const DefaultHandle = ({ children }) => {
           onClick={handleMenuClick}
         >
           <Menu.Item key="/admin/dashboard" icon={<DashboardOutlined />}>
-            <Link to="/admin/home">Home</Link>
+            <Link to="admin/dashbord">Home</Link>
           </Menu.Item>
 
           <Menu.SubMenu
@@ -113,11 +113,15 @@ const DefaultHandle = ({ children }) => {
               <Link to="/admin/supplier">Supplier</Link>
             </Menu.Item>
             <Menu.Item key="customer" title="Customer">
+<<<<<<< Updated upstream
 <<<<<<< HEAD
               <Link to="/admin/customer">Customer</Link>
 =======
               <Link to="/admin/addcus">Customer</Link>
 >>>>>>> 313a2f63cb7cd0c6da72cdb8b40ec2089152226b
+=======
+              <Link to="/admin/customer">Customer</Link>
+>>>>>>> Stashed changes
             </Menu.Item>
           </Menu.SubMenu>
 
@@ -125,8 +129,8 @@ const DefaultHandle = ({ children }) => {
             <Link to="/admin/userTable">Users</Link>
           </Menu.Item>
 
-          <Menu.Item key="/sales" icon={<ShoppingCartOutlined />}>
-            <Link to="/sales">Sales</Link>
+          <Menu.Item key="/admin/sale" icon={<ShoppingCartOutlined/>}>
+            <Link to="/admin/sale">Sales</Link>
           </Menu.Item>
 
           <Menu.Item key="/admin/reports" icon={<LineChartOutlined />}>

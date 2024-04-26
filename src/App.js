@@ -25,6 +25,7 @@ import WebHomepage from "./pages/WebHomepage";
 import ItemKit from "./pages/ItemKitPage";
 import ItemKitsForm from "./components/ManageInventory/ItemKits";
 import UpdateKitForm from "./components/ManageInventory/UpdateItemKit";
+import Logout from "./components/LoginComponents/Logout";
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
 
         {/* admin routing path */}
         <Route path="/admin" element={<Login />} />
+        <Route path="admin/logout" element={<Logout/>}/>
         <Route path="/admin/userform" element={<CreateUser />} />
         <Route path="/admin/userform/update/:id" element={<UpdateUser />} />
         <Route path="/admin/userTable" element={<Users />} />

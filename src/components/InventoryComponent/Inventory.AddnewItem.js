@@ -144,7 +144,7 @@ const AddNewItem = () =>{
 const formStyle = {
   marginBottom: '20px',
   display: 'inline-block',
-   width: '45%', // Adjust the width as needed
+  width: '45%', // Adjust the width as needed
   marginRight: '20px', // Add margin between the forms
   verticalAlign: 'top',
 };

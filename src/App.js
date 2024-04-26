@@ -47,11 +47,15 @@ import InventoryHome from './pages/Inventory';
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
-    {/* user routing path */}
-    <Route path="/" element={<WebHomepage />} />
+    <Routes>
+        {/* user routing path */}
+        <Route path="/" element={<WebHomepage />} />
         
+        
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
        {/* admin routing path */}
         <Route path="/admin" element={<Login/>} />
         <Route path="/admin/dashbord" element={< Dashboard/>} />

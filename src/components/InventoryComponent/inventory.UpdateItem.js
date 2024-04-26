@@ -20,11 +20,11 @@ function UpdateItem() {
   const [category, setCategory] = useState('');
   const [warranty, setWarranty] = useState('');
   const [item,setItem] = useState([])
-  const {_id} = useParams();
+  const {id} = useParams();
   const navigate = useNavigate();
         
         useEffect(()=>{
-            axios.patch('http://localhost:8000/inventory/update/'+_id)
+            axios.patch('http://localhost:8000/item/update/'+id)
             .then(res => { console.log(res.data.data)
               setDisplayName(res.data.data.displayName)
               setItemName(res.data.data.itemName)
@@ -60,7 +60,7 @@ function UpdateItem() {
           };
       
           try {
-            await axios.patch(`http://localhost:8000/inventory/update/${_id}`, updatedItem)
+            await axios.patch(`http://localhost:8000/item/update/${id}`, updatedItem)
             Swal.fire({
               icon: 'success',
               title: 'Item updated successfully!',

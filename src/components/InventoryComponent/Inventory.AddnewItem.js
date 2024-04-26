@@ -50,7 +50,7 @@ const AddNewItem = () =>{
         }
       
         
-        axios.post('http://localhost:8000/api/inventory/add',newItem)
+        axios.post('http://localhost:8000/item/add',newItem)
         .then((res) =>{
             console.log(res)
             Swal.fire({

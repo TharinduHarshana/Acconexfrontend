@@ -40,24 +40,28 @@ import Daily_sales from './components/SalesComponents/Daily_sales';
 
 import WebHomepage from "./pages/WebHomepage";
 import CustomerForm from "./components/CustomerComponents/customerForm";
+import Category from './pages/WebCategory';
+import WebLogin from './pages/Weblogin';
+import WebRegister from './pages/WebRegister';
 
 //import inventory 
 import InventoryAdd from './components/InventoryComponent/Inventory.AddnewItem';
 import InventoryUpdate from './components/InventoryComponent/inventory.UpdateItem';
 import InventoryHome from './pages/Inventory';
 
-<<<<<<< Updated upstream
-=======
 
 
->>>>>>> Stashed changes
+
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
     {/* user routing path */}
-    <Route path="/" element={<WebHomepage />} />
+    <Route path='/web/home' element={<WebHomepage/>} />
+    <Route path='/web/:slug' element={<Category/>} />
+    <Route path='/web/login' element={<WebLogin/>} />
+    <Route path='/web/register' element={<WebRegister/>} />
         
 
        {/* admin routing path */}
@@ -78,33 +82,9 @@ function App() {
         <Route path="/admin/supplier/update/:id" element={<UpdateSupplier />} />
         <Route path="admin/inventory/item-kits" element={<ItemKits/>}/>
         <Route path="admin/inventory/item-kits/table" element={<ItemKitsTable/>}/>
-<<<<<<< Updated upstream
 
-
-<<<<<<< HEAD
-        <Route path='/sales' element={<SalesDachboad/>}/>
-        <Route path='/bill' element={<Bill/>}/>
-        {/* <Route path='/addcus' element={<Customer/>}/> */}
-        <Route path='/holdbill' element={<SuspendSale/>}/>
-        <Route path="/dailysales" element={<Daily_sales/>}/>
-=======
-
-        <Route path='sales' element={<SalesDachboad/>}/>
-        <Route path='bill' element={<Bill/>}/>
-        <Route path='addcus' element={<Customer/>}/>
-        <Route path='holdbill' element={<SuspendSale/>}/>
-        <Route path="dailysales" element={<Daily_sales/>}/>
->>>>>>> 313a2f63cb7cd0c6da72cdb8b40ec2089152226b
        
-         
-
-        <Route path='/admin/sale' element={<SalesDachboad/>}/>
-        <Route path='/admin/bill' element={<Bill/>}/>
-        {/* <Route path='/admin/addcus' element={<Customer/>}/> */}
-        <Route path='/admin/holdbill' element={<SuspendSale/>}/>
-
-
-=======
+        
          
 
         <Route path='admin/sale' element={<SalesDachboad/>}/>
@@ -112,9 +92,25 @@ function App() {
         <Route path='/admin/customer' element={<Customer/>}/>
         <Route path='admin/holdbill' element={<SuspendSale/>}/>
 
->>>>>>> Stashed changes
+
+
+
+        {/* <Route path='admin/viewcustomer' element={<ViewCutomer/>}/> */}
+
         <Route path='admin/inventory' element={<InventoryHome/>}/>
         <Route path="admin/addnewitem" element={<InventoryAdd/>}/> 
+
+        
+        <Route path='/admin/sale' element={<SalesDachboad/>}/>
+        <Route path='/admin/bill' element={<Bill/>}/>
+        <Route path='/admin/addcus' element={<Customer/>}/>
+        <Route path='/admin/holdbill' element={<SuspendSale/>}/>
+        {/* <Route path='/admin/viewcustomer' element={<ViewCutomer/>}/> */}
+
+        <Route path='/admin/inventory' element={<InventoryHome/>}/>
+        <Route path="/admin/addnewitem" element={<InventoryAdd/>}/> 
+
+
         <Route path="/admin/inventory/updateitem/:id" element={<InventoryUpdate/>}/>
         
         

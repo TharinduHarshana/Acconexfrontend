@@ -46,11 +46,7 @@ import InventoryAdd from './components/InventoryComponent/Inventory.AddnewItem';
 import InventoryUpdate from './components/InventoryComponent/inventory.UpdateItem';
 import InventoryHome from './pages/Inventory';
 
-<<<<<<< Updated upstream
-=======
 
-
->>>>>>> Stashed changes
 
 function App() {
   return (
@@ -78,41 +74,20 @@ function App() {
         <Route path="/admin/supplier/update/:id" element={<UpdateSupplier />} />
         <Route path="admin/inventory/item-kits" element={<ItemKits/>}/>
         <Route path="admin/inventory/item-kits/table" element={<ItemKitsTable/>}/>
-<<<<<<< Updated upstream
 
 
-<<<<<<< HEAD
-        <Route path='/sales' element={<SalesDachboad/>}/>
-        <Route path='/bill' element={<Bill/>}/>
-        {/* <Route path='/addcus' element={<Customer/>}/> */}
-        <Route path='/holdbill' element={<SuspendSale/>}/>
-        <Route path="/dailysales" element={<Daily_sales/>}/>
-=======
 
-        <Route path='sales' element={<SalesDachboad/>}/>
-        <Route path='bill' element={<Bill/>}/>
-        <Route path='addcus' element={<Customer/>}/>
-        <Route path='holdbill' element={<SuspendSale/>}/>
-        <Route path="dailysales" element={<Daily_sales/>}/>
->>>>>>> 313a2f63cb7cd0c6da72cdb8b40ec2089152226b
        
          
 
         <Route path='/admin/sale' element={<SalesDachboad/>}/>
         <Route path='/admin/bill' element={<Bill/>}/>
-        {/* <Route path='/admin/addcus' element={<Customer/>}/> */}
         <Route path='/admin/holdbill' element={<SuspendSale/>}/>
 
 
-=======
-         
 
-        <Route path='admin/sale' element={<SalesDachboad/>}/>
-        <Route path='admin/bill' element={<Bill/>}/>
-        <Route path='/admin/customer' element={<Customer/>}/>
-        <Route path='admin/holdbill' element={<SuspendSale/>}/>
+        
 
->>>>>>> Stashed changes
         <Route path='admin/inventory' element={<InventoryHome/>}/>
         <Route path="admin/addnewitem" element={<InventoryAdd/>}/> 
         <Route path="/admin/inventory/updateitem/:id" element={<InventoryUpdate/>}/>

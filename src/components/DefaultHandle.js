@@ -113,15 +113,8 @@ const DefaultHandle = ({ children }) => {
               <Link to="/admin/supplier">Supplier</Link>
             </Menu.Item>
             <Menu.Item key="customer" title="Customer">
-<<<<<<< Updated upstream
-<<<<<<< HEAD
-              <Link to="/admin/customer">Customer</Link>
-=======
-              <Link to="/admin/addcus">Customer</Link>
->>>>>>> 313a2f63cb7cd0c6da72cdb8b40ec2089152226b
-=======
-              <Link to="/admin/customer">Customer</Link>
->>>>>>> Stashed changes
+            <Link to="/admin/customer">Customer</Link>
+
             </Menu.Item>
           </Menu.SubMenu>
 

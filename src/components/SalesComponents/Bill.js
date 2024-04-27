@@ -1,37 +1,35 @@
+// Bill.js
+
 import React, { useState, useEffect } from 'react';
 import DefaultHandleSales from './DefaultHandleSales';
-import '../../styles/bill.css'
-import axios from 'axios'; 
+import '../../styles/bill.css';
+import axios from 'axios';
+import BillForm from './bill_Form';
 
-function Bill() {
+const Bill = ({ handleClose }) => {
   const [billItems, setBillItems] = useState([]);
   const [items, setItems] = useState([]);
   const [filteredItems, setFilteredItems] = useState([]);
   const [searchValue, setSearchValue] = useState('');
-  const [selectedItem, setSelectedItem] = useState(null); // State to store the selected item
-  const [quantity, setQuantity] = useState(1); // State to store quantity
-  const [discount, setDiscount] = useState(0); // State to store discount
   const [showModal, setShowModal] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [selectedItem, setSelectedItem] = useState(null); // State to store the selected item
+  const [invoiceNo, setInvoiceNo] = useState('');
+  const [cashier, setCashier] = useState('');
+  const [date, setDate] = useState('');
 
-  // Fetch all items 
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true);
       try {
         const response = await axios.get('http://localhost:8000/item/');
         setItems(response.data.data);
         setFilteredItems(response.data.data);
       } catch (error) {
-        setError(error.message);
+        console.error('Error fetching items:', error.message);
       }
-      setLoading(false);
     };
     fetchData();
   }, []);
- 
-  // Search items
+
   const filterItem = (event) => {
     const value = event.target.value.toLowerCase();
     setSearchValue(value);
@@ -43,13 +41,32 @@ function Bill() {
     setFilteredItems(filteredData);
   };
 
-  // Function to add item to bill table
-  const handleAddToBill = () => {
-    if (selectedItem) {
-      const itemToAdd = { ...selectedItem, quantity, discount };
-      setBillItems([...billItems, itemToAdd]);
-      setShowModal(false);
+  const handleAddToBill = (item) => {
+    setShowModal(true);
+    setSelectedItem(item); // Set the selected item
+  };
+
+  const handleBill = async (formData) => {
+    try {
+      const response = await axios.patch(`http://localhost:8000/item/update/${id}`, Item);
+      if (response.data.success) {
+        message.success("Customer updated successfully!");
+        fetchData();
+        setShowModal(false);
+        setEditingCustomer(null);
+      } else {
+        message.error(response.data.message);
+      }
+    } catch (error) {
+      console.error("Error updating customer:", error);
+      message.error("An error occurred while updating the customer.");
     }
+  };
+
+  const handleConfirmAddToBill = (formData) => {
+    const itemToAdd = { ...formData };
+    setBillItems([...billItems, itemToAdd]);
+    setShowModal(false);
   };
 
   return (
@@ -60,23 +77,26 @@ function Bill() {
             <div>
               <div className='bill_table_container'>
                 <input placeholder='Search item' value={searchValue} onChange={filterItem} />
-                
                 <table className='bill_table'>
                   <thead>
                     <tr>
+                      <th>Item ID</th>
                       <th>Item Name</th>
                       <th>Quantity</th>
                       <th>Price</th>
+                      <th>Action</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {/* Render filtered bill items */}
                     {filteredItems.map((item, index) => (
                       <tr key={index}>
+                        <td>{item.productID}</td>
                         <td>{item.displayName}</td>
                         <td>{item.quantity}</td>
                         <td>{item.sellingPrice}</td>
-                        <td><button onClick={() => {setSelectedItem(item) ;setShowModal(true)}}>Add to Bill</button></td> {/* Update selectedItem when button is clicked */}
+                        <td>
+                          <button onClick={() => handleAddToBill(item)}>Add to Bill</button>
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -84,65 +104,72 @@ function Bill() {
               </div>
             </div>
           </div>
-          {showModal && (
-            <div className='modal'>
-              <div className='modal-content'>
-                <h2>Add Quantity and Discount</h2>
-                <label>Quantity:</label>
-                <input type='number' value={quantity} onChange={(e) => setQuantity(e.target.value)} />
-                <label>Discount:</label>
-                <input type='number' value={discount} onChange={(e) => setDiscount(e.target.value)} />
-                <button onClick={handleAddToBill}>Add to Bill</button>
-              </div>
-            </div>
-          )}
-        <div className='print_bill'>
-          <div>
-          <form className='bill_form' >
+          <div className='print_bill'>
             <div>
-              <p style={{textAlign:'center',fontSize:18, fontStyle:"oblique"}}>Acconex Computers<br/></p>
-              <p style={{textAlign:'center',fontSize:11}}>Kaburupitiya, Mathara.<br/> Mob; 0712293447 Tel: 0770897865</p>
-              <hr/>
-              <p style={{fontSize:12}}>Invoice No:</p>
-              <p style={{fontSize:12}}>Chashier:</p>
-              <p style={{fontSize:12}}>Date:</p><hr/>
-            </div>
-            <div>
-                    <table>
-                      <thead>
-                        <tr>
-                          <th>Product</th>
-                          <th>Price</th>
-                          <th>Discount</th>
-                          <th>Amount</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                         {/* Render bill items */}
+              <form className='bill_form'>
+                <div>
+                  <p style={{ textAlign: 'center', fontSize: 18, fontStyle: 'oblique' }}>Acconex Computers<br /></p>
+                  <p style={{ textAlign: 'center', fontSize: 11 }}>Kaburupitiya, Mathara.<br /> Mob; 0712293447 Tel: 0770897865</p>
+                  <hr />
+                  <div className="form-row">
+                    <div className="form-group">
+                      <label style={{ fontSize: 12 }} htmlFor='invoice_no'>Invoice No:</label>
+                      <input type='text' id='invoice_no' className="input-no-border" value={invoiceNo} onChange={(e) => setInvoiceNo(e.target.value)} />
+                    </div>
+                    <div className="form-group">
+                      <label style={{ fontSize: 12 }} htmlFor='cashier'>Cashier:</label>
+                      <input type='text' id='cashier' className="input-no-border" value={cashier} onChange={(e) => setCashier(e.target.value)} />
+                    </div>
+                    <div className="form-group">
+                      <label style={{ fontSize: 12 }} htmlFor='date'>Date:</label>
+                      <input type='date' id='date' className="input-no-border" value={date} onChange={(e) => setDate(e.target.value)} />
+                    </div>
+                  </div>
+                </div> 
+                <div>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Discount</th>
+                        <th>Amount</th>
+                      </tr>
+                    </thead>
+                    <tbody>
                       {billItems.map((item, index) => (
                         <tr key={index}>
-                          <td>{item.displayName}</td>
-                          <td>{item.sellingPrice}</td>
+                          <td>{item.product}</td>
+                          <td>{item.price}</td>
+                          <td>{item.quantity}</td>
                           <td>{item.discount}</td>
-                          <td>{/* Calculate amount */}</td>
+                          <td>{((item.price * item.quantity)*item.discount)/100}</td>
                         </tr>
                       ))}
-                      </tbody>
-                    </table>
+                    </tbody>
+                  </table>
                 </div>
-                <hr/>
+                <hr />
                 <p>Net Total </p>
-                <p>Tebdered </p>
+                <p>Tendered </p>
                 <p>Balance </p>
-                <hr/>
-                <p style={{textAlign:'center'}}>Thank You..!Come Again.</p>
-          </form>
+                <hr />
+                <p style={{ textAlign: 'center' }}>Thank You..! Come Again.</p>
+              </form>
+            </div>
           </div>
-          </div>
+          {showModal && (
+            <BillForm
+              handleClose={() => setShowModal(false)}
+              handleConfirmAddToBill={handleConfirmAddToBill}
+              selectedItem={selectedItem} // Pass the selected item data to the modal form
+            />
+          )}
         </div>
       </DefaultHandleSales>
     </div>
-  )
+  );
 }
 
 export default Bill;

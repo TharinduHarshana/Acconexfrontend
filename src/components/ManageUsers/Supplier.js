@@ -121,7 +121,7 @@ function Supplier() {
           <input
             type="text end"
             className="input"
-            placeholder="Search..."
+            placeholder="Search Supplier..."
             onChange={filterSuppliers}
           />
         </div>

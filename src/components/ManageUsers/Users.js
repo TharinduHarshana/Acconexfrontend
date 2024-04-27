@@ -14,7 +14,11 @@ function Users() {
   useEffect(() => {
     const loadUsers = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/user/all");
+        const response = await axios.get("http://localhost:8000/user/all",{
+          withCredentials: true,
+        });
+        console.log(response.data)
+
         // Set the users state with the data from the response
         setUsers(response.data.data);
         //console.log(response.data);
@@ -32,7 +36,7 @@ function Users() {
 
   const handleDelete = async (_id) => {
     try {
-      await axios.delete(`http://localhost:8000/user/delete/${_id}`);
+      await axios.delete(`http://localhost:8000/user/delete/${_id}`,{ withCredentials: true });
       // Filter out the deleted user from the users state
       const updatedUsers = users.filter((user) => user._id !== _id);
       setUsers(updatedUsers);
@@ -110,7 +114,7 @@ function Users() {
         <input
           type="text end"
           className="input"
-          placeholder="Search..."
+          placeholder="Search user ..."
           onChange={filterUsers}
         />
       </div>

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import DataTable from "react-data-table-component";
 import { Link } from "react-router-dom";
@@ -7,10 +6,10 @@ import DefaultHandle from "../components/DefaultHandle";
 import { message, Modal, Space } from "antd";
 
 const ItemKit = () => {
- const [itemKit, setItemKit] = useState([]);
- const [filterKit, setFilterKit] = useState([]);
+  const [itemKit, setItemKit] = useState([]);
+  const [filterKit, setFilterKit] = useState([]);
 
- useEffect(() => {
+  useEffect(() => {
     const loadItemKit = async () => {
       try {
         const response = await axios.get("http://localhost:8000/itemkit/all");
@@ -21,9 +20,9 @@ const ItemKit = () => {
       }
     };
     loadItemKit();
- }, []);
+  }, []);
 
- const handleDelete = async (_id) => {
+  const handleDelete = async (_id) => {
     try {
       await axios.delete(`http://localhost:8000/itemkit/delete/${_id}`);
       setItemKit(itemKit.filter((itemKit) => itemKit._id !== _id));
@@ -33,9 +32,9 @@ const ItemKit = () => {
       console.error("Error deleting item kit:", error);
       message.error("An error occurred while deleting the item kit.");
     }
- };
+  };
 
- const showDeleteConfirmation = (_id) => {
+  const showDeleteConfirmation = (_id) => {
     Modal.confirm({
       title: "Confirm Delete",
       content: "Are you sure you want to delete this item kit?",
@@ -46,9 +45,9 @@ const ItemKit = () => {
         handleDelete(_id);
       },
     });
- };
+  };
 
- const filterKits = (event) => {
+  const filterKits = (event) => {
     const searchValue = event.target.value.toLowerCase();
     const kitData = itemKit.filter(
       (row) =>
@@ -56,9 +55,9 @@ const ItemKit = () => {
         row.itemKitId.toLowerCase().includes(searchValue)
     );
     setFilterKit(kitData);
- };
+  };
 
- const columns = [
+  const columns = [
     {
       name: "ItemKit Id",
       selector: (row) => row.itemKitId,
@@ -84,16 +83,16 @@ const ItemKit = () => {
         </div>
       ),
     },
- ];
+  ];
 
- return (
+  return (
     <>
       <DefaultHandle>
         <div>
           <input
             type="text"
             className="input"
-            placeholder="Search..."
+            placeholder="Search item kit..."
             onChange={filterKits}
           />
         </div>
@@ -110,6 +109,11 @@ const ItemKit = () => {
             New Item Kit
           </Link>
         </div>
+        <div
+          style={{ fontSize: "14px", fontWeight: "bold", marginBottom: "20px" }}
+        >
+          Total Kit {itemKit.length}
+        </div>
 
         <DataTable
           columns={columns}
@@ -120,8 +124,7 @@ const ItemKit = () => {
         />
       </DefaultHandle>
     </>
- );
+  );
 };
 
 export default ItemKit;
-

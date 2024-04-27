@@ -23,7 +23,7 @@ function UpdateUser() {
   useEffect(() => {
     // Fetch user data from the backend API
     axios
-      .get(`http://localhost:8000/user/${id}`)
+      .get(`http://localhost:8000/user/${id}`,{ withCredentials: true })
       .then((response) => {
         const userData = response.data.data;
         // Update the user state with data from the response
@@ -80,7 +80,7 @@ function UpdateUser() {
       }
 
       // Update user data in the backend
-      await axios.patch(`http://localhost:8000/user/update/${id}`, user);
+      await axios.patch(`http://localhost:8000/user/update/${id}`, user,{ withCredentials: true });
       console.log("User updated successfully:", user);
       message.success("User Updated successfully!");
       // Navigate back to the user table page

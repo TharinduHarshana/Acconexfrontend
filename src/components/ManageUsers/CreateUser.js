@@ -55,7 +55,8 @@ const CreateUserForm = () => {
   const checkUserIdExists = async (userId) => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/user/check/${userId}`
+        `http://localhost:8000/user/check/${userId}`,
+        { withCredentials: true } 
       );
       return response.data.exists;
     } catch (error) {
@@ -76,7 +77,8 @@ const CreateUserForm = () => {
       }
       const result = await axios.post(
         "http://localhost:8000/user/add",
-        formData
+        formData,
+        { withCredentials: true } 
       );
       console.log(result);
       message.success("User created successfully!");

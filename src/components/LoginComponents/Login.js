@@ -108,6 +108,7 @@ import "../../styles/login.css";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import axios from "axios"; // Assuming you're using Axios for HTTP requests
+import aconexImage from "../../images/icon.jpg"
 
 function Login() {
   const navigate = useNavigate();
@@ -153,6 +154,9 @@ function Login() {
         autoComplete="off"
         onFinish={handleSubmit}
       >
+        <div className="header">
+        <img src={aconexImage} alt="Aconex Logo" className="header-image" />
+       </div>
         <Form.Item
           name="userName" // Ensure this matches the backend field
           rules={[{ required: true, message: "Please input your Username!" }]}
@@ -182,6 +186,12 @@ function Login() {
             LOGIN
           </Button>
         </Form.Item>
+        <div className="login-form-topic">  
+        <h5>Problem with signing in ? </h5>
+        <div className="login-form-contact">
+        <p>Contact support: 0713214568</p>
+        </div> 
+      </div>
       </Form>
     </div>
   );

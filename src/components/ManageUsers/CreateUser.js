@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import DefaultHandle from "../DefaultHandle";
 import axios from "axios";
-import { Navigate, useNavigate } from "react-router-dom";
+import {useNavigate } from "react-router-dom";
 import "../../styles/userform.css";
 import { Row, Col } from "antd";
 import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
@@ -118,7 +118,7 @@ const CreateUserForm = () => {
       <DefaultHandle>
         <div style={{ padding: "20px" }}>
           <Form {...formItemLayout} className="form-containeer">
-            <Typography.Text className="header">
+            <Typography.Text >
               User Information{" "}
               <span style={{ color: "red", fontSize: "12px" }}>
                 (Fields in red * are required)

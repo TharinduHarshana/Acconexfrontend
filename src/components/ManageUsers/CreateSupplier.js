@@ -67,7 +67,7 @@ const CreateSupplierForm = () => {
     <>
       <DefaultHandle>
         <Form className="form-container">
-          <Typography.Text className="header">
+          <Typography.Text >
             Supplier Information{" "}
             <span style={{ color: "red", fontSize: "12px" }}>
               (Fields in red * are required)

@@ -40,6 +40,9 @@ import Daily_sales from './components/SalesComponents/Daily_sales';
 
 import WebHomepage from "./pages/WebHomepage";
 import CustomerForm from "./components/CustomerComponents/customerForm";
+import Category from './pages/WebCategory';
+import WebLogin from './pages/Weblogin';
+import WebRegister from './pages/WebRegister';
 
 //import inventory 
 import InventoryAdd from './components/InventoryComponent/Inventory.AddnewItem';
@@ -47,13 +50,15 @@ import InventoryUpdate from './components/InventoryComponent/inventory.UpdateIte
 import InventoryHome from './pages/Inventory';
 
 
-
 function App() {
   return (
     <BrowserRouter>
       <Routes>
     {/* user routing path */}
-    <Route path="/" element={<WebHomepage />} />
+    <Route path='/web/home' element={<WebHomepage/>} />
+    <Route path='/web/:slug' element={<Category/>} />
+    <Route path='/web/login' element={<WebLogin/>} />
+    <Route path='/web/register' element={<WebRegister/>} />
         
 
        {/* admin routing path */}
@@ -77,19 +82,18 @@ function App() {
 
 
 
-       
-         
-
         <Route path='/admin/sale' element={<SalesDachboad/>}/>
         <Route path='/admin/bill' element={<Bill/>}/>
         <Route path='/admin/holdbill' element={<SuspendSale/>}/>
 
 
+        {/* <Route path='admin/viewcustomer' element={<ViewCutomer/>}/> */}
 
-        
 
         <Route path='admin/inventory' element={<InventoryHome/>}/>
         <Route path="admin/addnewitem" element={<InventoryAdd/>}/> 
+
+
         <Route path="/admin/inventory/updateitem/:id" element={<InventoryUpdate/>}/>
         
         

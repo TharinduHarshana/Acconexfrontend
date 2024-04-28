@@ -6,7 +6,7 @@ import '../../styles/bill.css';
 import axios from 'axios';
 import BillForm from './bill_Form';
 
-const Bill = ({ handleClose }) => {
+const Bill = () => {
   const [billItems, setBillItems] = useState([]);
   const [items, setItems] = useState([]);
   const [filteredItems, setFilteredItems] = useState([]);
@@ -28,7 +28,32 @@ const Bill = ({ handleClose }) => {
       }
     };
     fetchData();
+
+    // Generate invoice number
+    const currentInvoiceNumber = generateInvoiceNumber();
+    setInvoiceNo(currentInvoiceNumber);
+
+    // Get current date and time
+    const currentDate = getCurrentDateTime();
+    setDate(currentDate);
+
   }, []);
+
+  const generateInvoiceNumber = () => {
+    return `inv${(1000 + billItems.length + 1).toString().substr(1)}`;
+  };
+
+  
+  // Function to get current date and time
+  const getCurrentDateTime = () => {
+    const date = new Date();
+    const formattedDate = date.toISOString().slice(0, 10); // Get date in YYYY-MM-DD format
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const seconds = date.getSeconds();
+    const formattedTime = `${hours}:${minutes}:${seconds}`; // Get time in HH:MM:SS format
+    return `${formattedDate} ${formattedTime}`;
+  };
 
   const filterItem = (event) => {
     const value = event.target.value.toLowerCase();
@@ -41,27 +66,11 @@ const Bill = ({ handleClose }) => {
     setFilteredItems(filteredData);
   };
 
-  const handleAddToBill = (item) => {
-    setShowModal(true);
-    setSelectedItem(item); // Set the selected item
-  };
-
-  const handleBill = async (formData) => {
-    try {
-      const response = await axios.patch(`http://localhost:8000/item/update/${id}`, Item);
-      if (response.data.success) {
-        message.success("Customer updated successfully!");
-        fetchData();
-        setShowModal(false);
-        setEditingCustomer(null);
-      } else {
-        message.error(response.data.message);
-      }
-    } catch (error) {
-      console.error("Error updating customer:", error);
-      message.error("An error occurred while updating the customer.");
-    }
-  };
+ // Inside the Bill component
+ const handleChange = (item) => {
+  setSelectedItem(item); // Set the selected item
+  setShowModal(true); // Show the modal form
+};
 
   const handleConfirmAddToBill = (formData) => {
     const itemToAdd = { ...formData };
@@ -95,7 +104,7 @@ const Bill = ({ handleClose }) => {
                         <td>{item.quantity}</td>
                         <td>{item.sellingPrice}</td>
                         <td>
-                          <button onClick={() => handleAddToBill(item)}>Add to Bill</button>
+                          <button onClick={() => handleChange(item)}>Add</button>
                         </td>
                       </tr>
                     ))}
@@ -115,7 +124,7 @@ const Bill = ({ handleClose }) => {
                     <div className="form-group">
                       <label style={{ fontSize: 12 }} htmlFor='invoice_no'>Invoice No:</label>
                       <input type='text' id='invoice_no' className="input-no-border" value={invoiceNo} onChange={(e) => setInvoiceNo(e.target.value)} />
-                    </div>
+                    </div> 
                     <div className="form-group">
                       <label style={{ fontSize: 12 }} htmlFor='cashier'>Cashier:</label>
                       <input type='text' id='cashier' className="input-no-border" value={cashier} onChange={(e) => setCashier(e.target.value)} />
@@ -144,7 +153,7 @@ const Bill = ({ handleClose }) => {
                           <td>{item.price}</td>
                           <td>{item.quantity}</td>
                           <td>{item.discount}</td>
-                          <td>{((item.price * item.quantity)*item.discount)/100}</td>
+                          <td>{((item.price * item.quantity)-item.discount)}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -164,6 +173,10 @@ const Bill = ({ handleClose }) => {
               handleClose={() => setShowModal(false)}
               handleConfirmAddToBill={handleConfirmAddToBill}
               selectedItem={selectedItem} // Pass the selected item data to the modal form
+              invoiceNo={invoiceNo}
+              setInvoiceNo={setInvoiceNo}
+              date={date}
+              setDate={setDate}
             />
           )}
         </div>

@@ -2,38 +2,31 @@
 
 import React, { useState, useEffect } from 'react';
 import { CloseOutlined } from '@ant-design/icons';
-import axios from 'axios';
 
-const BillForm = ({ handleClose, handleConfirmAddToBill, selectedItem }) => {
+const BillForm = ({ handleClose, handleConfirmAddToBill, selectedItem, invoiceNo, setInvoiceNo, date, setDate }) => {
   const [formData, setFormData] = useState({
     product: '',
     price: '',
-    quantity: '',
-    discount: '',
+    quantity: '1',
+    discount: '0.00',
   });
 
-  // Fetch item details when selectedItem changes
+
   useEffect(() => {
     if (selectedItem) {
-      // Fetch additional data related to the selected item
-      const fetchItemData = async () => {
-        try {
-          const response = await axios.get(`http://localhost:8000/item/${selectedItem.productID}}`); // Assuming selectedItem has an id property
-          const itemData = response.data; // Adjust this according to your API response structure
-          // Update the formData state with the fetched data
-          setFormData({
-            product: itemData.product,
-            price: itemData.price,
-            quantity: itemData.quantity,
-            discount: '', // You may fetch discount data as well if available
-          });
-        } catch (error) {
-          console.error('Error fetching item data:', error.message);
-        }
-      };
-      fetchItemData();
+      // Update the formData state with the fetched data
+      setFormData({
+        product: selectedItem.displayName,
+        price: selectedItem.sellingPrice,
+        quantity:'1',
+        discount: '0.00', // You may fetch discount data as well if available
+      });
     }
+    
   }, [selectedItem]);
+ 
+    // Function to generate invoice number
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -42,7 +35,6 @@ const BillForm = ({ handleClose, handleConfirmAddToBill, selectedItem }) => {
       [name]: value,
     }));
   };
-
   const handleSubmit = (e) => {
     e.preventDefault();
     handleConfirmAddToBill(formData);
@@ -55,17 +47,26 @@ const BillForm = ({ handleClose, handleConfirmAddToBill, selectedItem }) => {
         <CloseOutlined />
       </div>
 
+      <label htmlFor='invoice'>Invoice NO:</label>
+      <input type='text' id='invoice' name='invoice'  value={invoiceNo} readOnly />
+
+      <label htmlFor='cashire'>Cashier:</label>
+      <input type='text' id='cashire' name='cashire'  />
+
+      <label htmlFor='date'>Date & Time:</label>
+      <input type='text' id='date' name='date' value={date} readOnly />
+
       <label htmlFor='product'>Product Name:</label>
-      <input type='text' id='product' name='product' value={formData.product} onChange={handleChange} />
+      <input type='text' id='product' name='product' value={formData.product} readOnly />
 
       <label htmlFor='price'>Price:</label>
-      <input type='text' id='price' name='price' value={formData.price} onChange={handleChange} />
+      <input type='text' id='price' name='price' value={formData.price} readOnly />
 
       <label htmlFor='quantity'>Quantity:</label>
       <input type='number' id='quantity' name='quantity' value={formData.quantity} onChange={handleChange} />
 
       <label htmlFor='discount'>Discount:</label>
-      <input type='number' id='discount' name='discount' value={formData.discount} onChange={handleChange} />
+      <input type='text' id='discount' name='discount' value={formData.discount} onChange={handleChange}  />
 
       <button className='btn' type='submit'>Add to Bill</button>
     </form>

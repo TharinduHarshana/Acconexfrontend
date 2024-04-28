@@ -1,4 +1,3 @@
-// // useLogout.js
 // import { useNavigate } from 'react-router-dom';
 // import axios from 'axios';
 
@@ -29,32 +28,35 @@
 // export default useLogout;
 
 // useLogout.js
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
+// Define the useLogout custom hook
 const useLogout = () => {
- const navigate = useNavigate();
+  const navigate = useNavigate();
 
- const logout = async () => {
+  // Define async function to handle logout
+  const logout = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/user/logout', {
-        withCredentials: true,
+      const response = await axios.get("http://localhost:8000/user/logout", {
+        // Make a GET request to the logout endpoint
+        withCredentials: true, // Include credentials in the request
       });
-
-      if (response.data.message === 'Logged out successfully') {
-        console.log('Logout successful');
-        navigate('/admin'); // Adjust the path as needed
+      // Check if the response message indicates successful logout
+      if (response.data.message === "Logged out successfully") {
+        console.log("Logout successful");
+        // Navigate to the admin page
+        navigate("/admin");
         //window.location.reload();
       } else {
-        console.error('Logout failed');
+        console.error("Logout failed");
       }
     } catch (error) {
-      console.error('Error during logout:', error);
+      console.error("Error during logout:", error);
     }
- };
-
- return logout;
+  };
+  // Return the logout function from the hook
+  return logout;
 };
-
+// Export the useLogout hook
 export default useLogout;
-

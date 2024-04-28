@@ -208,32 +208,39 @@ import axios from "axios";
 import aconexImage from "../../images/icon.jpg";
 
 function Login() {
+  // Initialize useNavigate hook for navigation
  const navigate = useNavigate();
 
+ // Define async function to handle form submission
  const handleSubmit = async (values) => {
     console.log("Sending request to:", "/user/login");
     console.log("Request payload:", values);
 
     try {
+      // Make a POST request to the login endpoint
       const response = await axios.post(
-        "http://localhost:8000/user/login",
-        values,
+        "http://localhost:8000/user/login",// URL of the login endpoint
+        values,// Form values
         {
-          withCredentials: true,
+          withCredentials: true,// Include credentials in the request
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "application/json",// Set content type to JSON
           },
         }
       );
+      // Log the response from the server
       console.log("Response:", response);
 
       if (response.status === 200) {
+        // Set the token as a cookie
         document.cookie = `token=${response.data.token}; path=/; Secure; HttpOnly`;
         message.success("Login successful");
+        // Navigate to the admin home page
         navigate("/admin/home");
       }
-    } catch (error) {
+    } catch (error) {// Catch any errors that occur during the request
       console.error("Error:", error);
+      // Check if the error is a 401 (unauthorized)
       if (error.response && error.response.status === 401) {
         message.error("Incorrect password or username. Please try again.");
       } else {
@@ -248,7 +255,7 @@ function Login() {
         name="normal_login"
         className="login-form"
         autoComplete="off"
-        onFinish={handleSubmit}
+        onFinish={handleSubmit}// Call handleSubmit when the form is submitted
       >
         <div className="header">
           <img src={aconexImage} alt="Aconex Logo" className="header-image" />
@@ -292,6 +299,6 @@ function Login() {
     </div>
  );
 }
-
+// Export the Login component
 export default Login;
 

@@ -434,7 +434,7 @@ const CreateUserForm = () => {
               </Col>
             </Row>
             <div style={{ marginTop: "20px", textAlign: "right" }}>
-              <Button type="primary" htmlType="submit" onClick={handleSubmit}>
+              <Button type="primary" htmlType="submit" onClick={handleSubmit} >
                 Save
               </Button>
             </div>

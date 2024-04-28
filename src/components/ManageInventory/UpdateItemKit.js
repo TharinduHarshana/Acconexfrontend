@@ -7,9 +7,11 @@ import axios from "axios";
 import "../../styles/item-kits-form.css";
 
 function UpdateKitsForm() {
+  // Extracting ID parameter from URL using useParams hook
   const { id } = useParams();
+  // Declaring useNavigate hook for navigation
   const navigate = useNavigate();
-
+  // Defining custom MultiValue component for selected items in dropdown
   const MultiValue = (props) => {
     return (
       <components.MultiValue {...props}>
@@ -17,7 +19,7 @@ function UpdateKitsForm() {
       </components.MultiValue>
     );
   };
-
+  // Declaring state for item kit data using useState hook
   const [itemKit, setItemKit] = useState({
     itemKitId: "",
     itemKitName: "",
@@ -27,12 +29,14 @@ function UpdateKitsForm() {
     selectedItems: [],
   });
 
-  const [inventoryItems, setInventoryItems] = useState([]);
-  const [totalPrice, setTotalPrice] = useState(0);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [loading, setLoading] = useState(true);
+  const [inventoryItems, setInventoryItems] = useState([]); // Declaring state for inventory items using useState hook and initializing it as an empty array
+  const [totalPrice, setTotalPrice] = useState(0); // Declaring state for total price using useState hook and initializing it as 0
+  const [errorMessage, setErrorMessage] = useState(""); // Declaring state for error messages using useState hook and initializing it as an empty string
+  const [loading, setLoading] = useState(true); // Declaring state for loading indicator using useState hook and initializing it as true
 
+  // Using useEffect hook to fetch inventory items on component mount
   useEffect(() => {
+    // Defining asynchronous function to fetch inventory items
     const fetchInventoryItems = async () => {
       try {
         const response = await axios.get("http://localhost:8000/item/");
@@ -46,30 +50,38 @@ function UpdateKitsForm() {
       }
     };
 
-    fetchInventoryItems();
-  }, []);
+    fetchInventoryItems(); // Calling the function to fetch inventory items
+  }, []); // Dependency array is empty, so this effect runs only once after the initial render
 
+  // Using useEffect hook to fetch item kit data on component mount and when inventory items change
   useEffect(() => {
+    // Defining asynchronous function to fetch item kit data
     const fetchItemKitData = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/itemkit/${id}`);
+        const response = await axios.get(`http://localhost:8000/itemkit/${id}`); // Making GET request to fetch item kit data by ID
         if (response.data.success) {
           const itemKitData = response.data.data;
-          let selectedItems = [];
+          let selectedItems = []; // Initializing array to store selected items
 
           if (itemKitData.items && itemKitData.items.length > 0) {
-            selectedItems = inventoryItems.filter((item) =>
-              itemKitData.items.includes(item._id)
+            // Checking if item kit has associated items
+            selectedItems = inventoryItems.filter(
+              (
+                item // Filtering inventory items to find selected items
+              ) => itemKitData.items.includes(item._id)
             );
           } else if (itemKitData.item) {
+            // Checking if item kit has a single associated item
             const item = inventoryItems.find(
+              // Finding the associated item in the inventory items
               (item) => item._id === itemKitData.item
             );
             if (item) {
-              selectedItems = [item];
+              // If associated item is found
+              selectedItems = [item]; // Assigning the associated item to selectedItems array
             }
           }
-
+          // Setting item kit state with fetched data
           setItemKit({
             ...itemKit,
             itemKitId: itemKitData.itemKitId,
@@ -78,6 +90,7 @@ function UpdateKitsForm() {
             price: itemKitData.price,
             quantity: itemKitData.quantity,
             selectedItems: selectedItems.map((item) => ({
+              // Formatting selected items for dropdown
               value: item._id,
               label: item.itemName,
             })),
@@ -91,22 +104,26 @@ function UpdateKitsForm() {
       }
     };
 
-    fetchItemKitData();
-  }, [id, inventoryItems]); // Include inventoryItems dependency
+    fetchItemKitData(); // Calling the function to fetch item kit data
+  }, [id, inventoryItems]); // Dependency array includes ID and inventoryItems, so this effect runs when ID or inventory items change
 
+  // Using useEffect hook to calculate total price when selected items change
   useEffect(() => {
     const selectedItemsTotalPrice = itemKit.selectedItems.reduce(
+      // Calculating total price of selected items
       (total, item) => {
         const selectedItem = inventoryItems.find(
+          // Finding the selected item in the inventory items
           (inventoryItem) => inventoryItem._id === item.value
         );
-        return total + selectedItem.sellingPrice;
+        return total + selectedItem.sellingPrice; // Adding the selling price of the selected item to the total
       },
       0
     );
-    setTotalPrice(selectedItemsTotalPrice);
-  }, [itemKit.selectedItems, inventoryItems]);
+    setTotalPrice(selectedItemsTotalPrice); // Updating the total price state
+  }, [itemKit.selectedItems, inventoryItems]); // Updating the total price state
 
+  // Handling change event for input fields
   const handleChange = (e) => {
     if (e.target.name === "quantity" && parseInt(e.target.value, 10) < 0) {
       setItemKit({ ...itemKit, [e.target.name]: 0 });
@@ -116,20 +133,21 @@ function UpdateKitsForm() {
       setItemKit({ ...itemKit, [e.target.name]: e.target.value });
     }
   };
-
+  // Handling change event for selected items in dropdown
   const handleItemSelectChange = (selectedItems) => {
     const formattedSelectedItems = selectedItems.map((item) => ({
       value: item.value,
       label: item.label,
     }));
-
+    // Calculating new total price based on selected items
     const newTotalPrice = selectedItems.reduce((total, item) => {
+      // Finding the selected item in the inventory items
       const selectedItem = inventoryItems.find(
         (inventoryItem) => inventoryItem._id === item.value
       );
-      return total + selectedItem.sellingPrice;
+      return total + selectedItem.sellingPrice; // Adding the selling price of the selected item to the total
     }, 0);
-
+    // Updating item kit state with new selected items and total price
     setItemKit({
       ...itemKit,
       selectedItems: formattedSelectedItems,
@@ -140,39 +158,44 @@ function UpdateKitsForm() {
   // Function to check if an item kit ID already exists in the database
   const checkItemKitIdExists = async (itemKitId) => {
     try {
-       // Fetch item kit data from the backend API
-       const response = await axios.get(`http://localhost:8000/itemkit/check/${itemKitId}`);
-       const { exists } = response.data;
-   
-       // If the item kit ID exists in the database
-       if (exists) {
-         // Fetch the item kit data by ID
-         const itemKitData = await axios.get(`http://localhost:8000/itemkit/${id}`);
-         // If the fetched item kit ID is the same as the current item kit's ID, return false (no conflict)
-         if (itemKitData.data.data.itemKitId === itemKitId) {
-           return false;
-         } else {
-           // If the fetched item kit ID is different, return true (conflict)
-           return true;
-         }
-       }
-       // If the item kit ID doesn't exist in the database, return false (no conflict)
-       return exists;
-    } catch (error) {
-       console.error("Error checking if item kit ID exists:", error);
-       return false; // Default to no conflict on error
-    }
-   };
-   
+      // Fetch item kit data from the backend API
+      const response = await axios.get(
+        `http://localhost:8000/itemkit/check/${itemKitId}`
+      );
+      const { exists } = response.data;
 
+      // If the item kit ID exists in the database
+      if (exists) {
+        // Fetch the item kit data by ID
+        const itemKitData = await axios.get(
+          `http://localhost:8000/itemkit/${id}`
+        );
+        // If the fetched item kit ID is the same as the current item kit's ID, return false (no conflict)
+        if (itemKitData.data.data.itemKitId === itemKitId) {
+          return false;
+        } else {
+          // If the fetched item kit ID is different, return true (conflict)
+          return true;
+        }
+      }
+      // If the item kit ID doesn't exist in the database, return false (no conflict)
+      return exists;
+    } catch (error) {
+      console.error("Error checking if item kit ID exists:", error);
+      return false; // Default to no conflict on error
+    }
+  };
+
+  // Handling form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     console.log("Selected items length:", itemKit.selectedItems.length);
+    // Extracting item IDs from selected items
     const itemIds = itemKit.selectedItems.map((item) => item.value);
 
     try {
-      // Pass the current item kit's ID to exclude it from the conflict check
+      // Checking if item kit ID already exists
       const itemKitIdExists = await checkItemKitIdExists(itemKit.itemKitId);
       if (itemKitIdExists) {
         message.error("Item kit with this ID already exists! Try another Id..");
@@ -190,7 +213,7 @@ function UpdateKitsForm() {
       console.error("Error updating item kit:", error);
     }
   };
-
+  // Checking if data is still loading
   if (loading) {
     return <div>Loading...</div>; // Render a loading indicator until data is fetched
   }
@@ -249,7 +272,7 @@ function UpdateKitsForm() {
               onChange={handleChange}
             />
             <label htmlFor="selectedItems">Selected Items:</label>
-            <Select
+            <Select // Dropdown for selecting items
               name="selectedItems"
               id="selectedItems"
               color="red"
@@ -258,6 +281,7 @@ function UpdateKitsForm() {
                 !itemKit.selectedItems.length && "error"
               }`}
               components={{ MultiValue }}
+              // Mapping inventory items to options for dropdown
               options={inventoryItems.map((item) => ({
                 value: item._id,
                 label: item.itemName,
@@ -273,5 +297,5 @@ function UpdateKitsForm() {
     </>
   );
 }
-
+// Exporting UpdateKitsForm component
 export default UpdateKitsForm;

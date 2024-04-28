@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import DefaultHandle from "../DefaultHandle";
-import { message } from "antd";
+import { message, Button } from "antd";
+import { CloseOutlined } from "@ant-design/icons";
 
 function UpdateSupplier() {
   // Extracting ID parameter from URL
@@ -123,6 +124,17 @@ function UpdateSupplier() {
             boxShadow: "0px 8px 32px rgba(0, 0, 0, 0.1)",
           }}
         >
+          <Button
+            type="primary"
+            icon={<CloseOutlined />}
+            onClick={() => navigate("/admin/supplier")}
+            style={{
+              color: "black", 
+              backgroundColor: "#fff", 
+              border: "none", 
+              float: "right", 
+            }}
+          ></Button>
           <h2
             style={{
               fontSize: "20px",
@@ -132,9 +144,7 @@ function UpdateSupplier() {
               fontWeight: "bold",
               color: "#333",
             }}
-          >
-            Update Supplier
-          </h2>
+          ></h2>
 
           <div style={{ marginBottom: "20px" }}>
             <label
@@ -269,10 +279,10 @@ function UpdateSupplier() {
             className="btn btn-primary"
             style={{
               width: "100%",
-              padding: "10px",
+              padding: "5px",
               borderRadius: "5px",
               border: "none",
-              backgroundColor: "#007bff",
+              backgroundColor: "black",
               color: "#fff",
               cursor: "pointer",
             }}

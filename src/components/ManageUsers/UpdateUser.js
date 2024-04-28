@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import DefaultHandle from "../DefaultHandle";
-import { message } from "antd";
+import { message,Button } from "antd";
+import { CloseOutlined } from '@ant-design/icons';
+
 
 function UpdateUser() {
   // Get the id parameter from the URL
@@ -110,10 +112,13 @@ function UpdateUser() {
       setPhoneError("Please enter only numbers and a maximum of 10 digits");
     }
   };
+ 
+
 
   return (
     <>
       <DefaultHandle>
+      
         <form
           onSubmit={handleSubmit}
           style={{
@@ -129,9 +134,20 @@ function UpdateUser() {
             boxShadow: "0px 8px 32px rgba(0, 0, 0, 0.1)",
           }}
         >
+          <Button
+            type="primary"
+            icon={<CloseOutlined />}
+            onClick={() => navigate("/admin/userTable")}
+            style={{
+              color: "black", 
+              backgroundColor: "#fff", 
+              border: "none", 
+              float: "right", 
+            }}
+          ></Button>
           <h2
             style={{
-              fontSize: "20px",
+              fontSize: "18px",
               fontFamily: "Arial, sans-serif",
               textAlign: "center",
               margin: "0 0 20px",
@@ -139,7 +155,7 @@ function UpdateUser() {
               color: "#333",
             }}
           >
-            Update User
+             
           </h2>
 
           <div style={{ marginBottom: "20px" }} className="form-group">
@@ -229,16 +245,16 @@ function UpdateUser() {
               <option value="sales staff">Sales Staff</option>
             </select>
           </div>
-
+         
           <button
             type="submit"
             className="btn btn-primary"
             style={{
               width: "100%",
-              padding: "10px",
+              padding: "5px",
               borderRadius: "5px",
               border: "none",
-              backgroundColor: "#007bff",
+              backgroundColor: "black",
               color: "#fff",
               cursor: "pointer",
             }}

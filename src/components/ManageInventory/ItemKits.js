@@ -88,28 +88,32 @@ function ItemKitsForm() {
     }
   };
   // Handling change event for selected items in the dropdown
+  
   const handleItemSelectChange = (selectedItems) => {
     const formattedSelectedItems = selectedItems.map((item) => ({
-      value: item.value,
-      label: item.label,
-    }));
-
+       value: item.value,
+       label: item.label,
+    })
+  );
+  
     // Calculate the new total price by adding the price of the newly selected items
     const newTotalPrice = selectedItems.reduce((total, item) => {
-      // Calculating new total price
-      const selectedItem = inventoryItems.find(
-        // Finding the selected item in the inventory items
-        (inventoryItem) => inventoryItem._id === item.value
-      );
-      return total + selectedItem.sellingPrice; // Adding the selling price of the selected item to the total
-    }, totalPrice); // Start with the existing totalPrice
+       // Calculating new total price
+       const selectedItem = inventoryItems.find(
+         // Finding the selected item in the inventory items
+         (inventoryItem) => inventoryItem._id === item.value
+       );
+       return total + selectedItem.sellingPrice; // Adding the selling price of the selected item to the total
+    }, 0); // Start with 0 to calculate the total from scratch
+   
     // Updating form data
     setFormData({
-      ...formData,
-      selectedItems: formattedSelectedItems, // Updating selected items with the formatted selected items
-      price: newTotalPrice, // Update the price with the new total price
+       ...formData,
+       selectedItems: formattedSelectedItems, // Updating selected items with the formatted selected items
+       price: newTotalPrice>> 0 ? newTotalPrice : "", // Update the price with the new total price or an empty string if no items are selected
     });
-  };
+   };
+   
   // Function to check if item kit ID already exists
   const checkIfItemKitIdExists = async (itemKitId) => {
     try {
@@ -189,6 +193,8 @@ function ItemKitsForm() {
           <h2></h2>
           {errorMessage && <p className="error-message">{errorMessage}</p>}
           <form onSubmit={handleSubmit}>
+          <p style={{ color: 'red' }}>All the fields are required.</p>
+
             <label htmlFor="itemKitId">Item Kit ID:</label>
             <input
               type="text"
@@ -206,7 +212,7 @@ function ItemKitsForm() {
               name="itemKitName"
               value={formData.itemKitName}
               onChange={handleChange}
-              color="red"
+              
             />
 
             <label htmlFor="itemDescription">Item Description:</label>

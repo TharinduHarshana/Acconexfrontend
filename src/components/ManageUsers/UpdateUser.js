@@ -2,9 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import DefaultHandle from "../DefaultHandle";
-import { message,Button } from "antd";
-import { CloseOutlined } from '@ant-design/icons';
-
+import { message, Button } from "antd";
+import { CloseOutlined } from "@ant-design/icons";
 
 function UpdateUser() {
   // Get the id parameter from the URL
@@ -25,7 +24,7 @@ function UpdateUser() {
   useEffect(() => {
     // Fetch user data from the backend API
     axios
-      .get(`http://localhost:8000/user/${id}`,{ withCredentials: true })
+      .get(`http://localhost:8000/user/${id}`, { withCredentials: true })
       .then((response) => {
         const userData = response.data.data;
         // Update the user state with data from the response
@@ -77,12 +76,16 @@ function UpdateUser() {
       const userIdExists = await checkUserIdExists(user.userId);
       // If the user ID already exists, display an error message and return
       if (userIdExists) {
-        message.error("User with this ID already exists! Try another User Id..");
+        message.error(
+          "User with this ID already exists! Try another User Id.."
+        );
         return;
       }
 
       // Update user data in the backend
-      await axios.patch(`http://localhost:8000/user/update/${id}`, user,{ withCredentials: true });
+      await axios.patch(`http://localhost:8000/user/update/${id}`, user, {
+        withCredentials: true,
+      });
       console.log("User updated successfully:", user);
       message.success("User Updated successfully!");
       // Navigate back to the user table page
@@ -112,26 +115,23 @@ function UpdateUser() {
       setPhoneError("Please enter only numbers and a maximum of 10 digits");
     }
   };
- 
-
 
   return (
     <>
       <DefaultHandle>
-      
         <form
           onSubmit={handleSubmit}
           style={{
             maxWidth: "400px",
-            overflowY: "auto", // Add scrollbar if content overflows
+            overflowY: "auto",
             maxHeight: "80vh",
             margin: "auto",
             marginTop: "20px",
             padding: "20px",
             border: "1px solid #ccc",
             borderRadius: "16px",
-            backgroundColor: "#fff",
-            boxShadow: "0px 8px 32px rgba(0, 0, 0, 0.1)",
+            backgroundColor: "white",
+            boxShadow: "0px 8px 32px rgba(0, 0, 0, 0.2)",
           }}
         >
           <Button
@@ -139,12 +139,17 @@ function UpdateUser() {
             icon={<CloseOutlined />}
             onClick={() => navigate("/admin/userTable")}
             style={{
-              color: "black", 
-              backgroundColor: "#fff", 
-              border: "none", 
-              float: "right", 
+              padding: "5px 5px 5px 5px",
+              color: "black",
+              backgroundColor: "#fff",
+              border: "none",
+              float: "right",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
             }}
           ></Button>
+
           <h2
             style={{
               fontSize: "18px",
@@ -154,9 +159,7 @@ function UpdateUser() {
               fontWeight: "bold",
               color: "#333",
             }}
-          >
-             
-          </h2>
+          ></h2>
 
           <div style={{ marginBottom: "20px" }} className="form-group">
             <label style={{ marginBottom: "5px", display: "block" }}>
@@ -245,7 +248,7 @@ function UpdateUser() {
               <option value="sales staff">Sales Staff</option>
             </select>
           </div>
-         
+
           <button
             type="submit"
             className="btn btn-primary"

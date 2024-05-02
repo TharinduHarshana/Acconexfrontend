@@ -22,10 +22,9 @@ import ViewCutomer from "./pages/ViewCutomer";
 
 // web imports
 import WebHomepage from "./pages/WebHomepage";
-import ItemKit from "./pages/ItemKitPage";
-import ItemKitsForm from "./components/ManageInventory/ItemKits";
 import UpdateKitForm from "./components/ManageInventory/UpdateItemKit";
 import Logout from "./components/LoginComponents/Logout";
+import ItemKitForm from "./components/ManageInventory/ItemKits";
 
 function App() {
   return (
@@ -45,8 +44,8 @@ function App() {
         <Route path="/admin/supplier" element={<Supplier />} />
         <Route path="/admin/supplier/create" element={<CreateSupplierForm />} />
         <Route path="/admin/supplier/update/:id" element={<UpdateSupplier />} />
-        <Route path="/admin/inventory/item-kits" element={<ItemKit />} />
-        <Route path="/admin/inventory/kits/add" element={<ItemKitsForm />} />
+       <Route path="/admin/inventory/item-kits" element={<ItemKitForm/>}/>
+        {/* <Route path="/admin/inventory/kits/add" element={<ItemKitsForm />} /> */}
         <Route path="/admin/inventory/kits/update/:id" element={<UpdateKitForm/>}/>
 
         <Route path="admin/sale" element={<SalesDachboad />} />

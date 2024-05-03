@@ -4,7 +4,6 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 //login and dashboard import
 import Login from "./components/LoginComponents/Login";
 import Dashboard from "./components/SideBarComponent/DefaultHandle";
-import Homepage from "./pages/Homepage";
 import AdminDashboard from "./components/AdminDashboard";
 
 //import user components
@@ -29,12 +28,6 @@ import Customer from './components/CustomerComponents/Customer';
 import SuspendSale from './components/SalesComponents/SuspendSale';
 
 import Daily_sales from './components/SalesComponents/Daily_sales';
-
-
-
-// web imports
-
-
 
 // import web components
 
@@ -95,26 +88,18 @@ function App() {
 
 
 
-
         {/* <Route path='admin/viewcustomer' element={<ViewCutomer/>}/> */}
 
         <Route path='admin/inventory' element={<InventoryHome/>}/>
         <Route path="admin/addnewitem" element={<InventoryAdd/>}/> 
+        <Route path="/admin/inventory/updateitem/:id" element={<InventoryUpdate/>}/>
 
-        
+
         <Route path='/admin/sale' element={<SalesDachboad/>}/>
         <Route path='/admin/bill' element={<Bill/>}/>
         <Route path='/admin/addcus' element={<Customer/>}/>
         <Route path='/admin/holdbill' element={<SuspendSale/>}/>
         {/* <Route path='/admin/viewcustomer' element={<ViewCutomer/>}/> */}
-
-        <Route path='/admin/inventory' element={<InventoryHome/>}/>
-        <Route path="/admin/addnewitem" element={<InventoryAdd/>}/> 
-
-
-        <Route path="/admin/inventory/updateitem/:id" element={<InventoryUpdate/>}/>
-        
-        
 
 
       </Routes>

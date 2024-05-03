@@ -1,0 +1,22 @@
+.main{
+    background-color: #030303;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px 0 rgba(87, 86, 86, 0.1);
+
+}
+.logoimg{
+    width: 400px;
+    height: 100px;
+    margin-left: 20px;
+}
+
+.heding1{
+    color: #ffffff;
+    display: inline-block;
+    font-family: 'Roboto', sans-serif;
+    line-height: 0.2;
+
+}

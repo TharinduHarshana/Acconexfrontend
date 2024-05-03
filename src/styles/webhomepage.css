@@ -1,0 +1,19 @@
+.slideshow-container {
+    max-width: 100%;
+    position: relative;
+    margin: auto;
+  }
+  
+  .slide {
+    display: none;
+  }
+  
+  .slide.showing {
+    display: block;
+  }
+  
+  .slide img {
+    width: 100%;
+    height: 500px;
+  }
+  

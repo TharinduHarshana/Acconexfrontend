@@ -13,15 +13,18 @@ const WebCategory = (props) => {
   console.log(slug)
 
   useEffect(() => {
-    axios.get(`http://localhost:8000/item/${slug}`)
-      .then(res => {
-        console.log(res);
-        setItems(res.data.data);
-      })
-      .catch(err => console.log(err));
-  }, []);
-
-  function handleClick() {
+    const fetchItems = async () => {
+       try {
+         const response = await axios.get(`http://localhost:8000/webitem/${slug}`);
+         setItems(response.data.data);
+       } catch (err) {
+         console.error(err);
+       }
+    };
+   
+    fetchItems();
+   }, [slug]); // Dependency array ensures the effect runs when `slug` changes
+   function handleClick() {
     // Add logic for handling click on "Add to Cart" button
   }
 

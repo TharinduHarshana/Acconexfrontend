@@ -1,0 +1,29 @@
+
+/* Head cells */
+
+
+    .head-cell {
+        font-size: 20px;
+        font-weight: bold;
+        padding-left: 0 8px; /* Note: This might not work as expected, you may need to adjust */
+      }
+      
+      /* Rows */
+      .row {
+        font-size: 16px;
+      }
+      
+      /* Cells */
+      .cell {
+        padding-left: 8px;
+        padding-right: 8px;
+        border-bottom: 1px solid #ddd;
+      }
+      
+      /* Pagination */
+      .pagination {
+        font-size: 14px;
+      }
+  
+
+  

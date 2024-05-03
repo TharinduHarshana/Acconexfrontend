@@ -16,6 +16,8 @@ import {
   ShoppingFilled,
   MailOutlined,
 } from "@ant-design/icons";
+import "../styles/sidebar.css";
+import "../styles/adminheader.css";
 import { Link } from "react-router-dom";
 
 const { Header, Sider, Content } = Layout;
@@ -76,7 +78,7 @@ const DefaultHandle = ({ children }) => {
     <Layout>
       <Sider trigger={null} collapsible collapsed={collapsed}>
         <div className="demo-logo-vertical">
-          <h3 >ACONEX COMPUTER</h3>
+          <h3>ACONEX COMPUTER</h3>
         </div>
         <Menu
           theme="dark"
@@ -86,7 +88,7 @@ const DefaultHandle = ({ children }) => {
           onClick={handleMenuClick}
         >
           <Menu.Item key="/admin/dashboard" icon={<DashboardOutlined />}>
-            <Link to="/admin/dashboard">Home</Link>
+            <Link to="admin/dashbord">Home</Link>
           </Menu.Item>
 
           <Menu.SubMenu
@@ -111,15 +113,23 @@ const DefaultHandle = ({ children }) => {
               <Link to="/admin/supplier">Supplier</Link>
             </Menu.Item>
             <Menu.Item key="customer" title="Customer">
+<<<<<<< Updated upstream
+<<<<<<< HEAD
               <Link to="/admin/customer">Customer</Link>
+=======
+              <Link to="/admin/addcus">Customer</Link>
+>>>>>>> 313a2f63cb7cd0c6da72cdb8b40ec2089152226b
+=======
+              <Link to="/admin/customer">Customer</Link>
+>>>>>>> Stashed changes
             </Menu.Item>
           </Menu.SubMenu>
-          
+
           <Menu.Item key="/admin/users" icon={<UserOutlined />}>
             <Link to="/admin/userTable">Users</Link>
           </Menu.Item>
-          
-          <Menu.Item key="admin/sale" icon={<ShoppingCartOutlined />}>
+
+          <Menu.Item key="/admin/sale" icon={<ShoppingCartOutlined/>}>
             <Link to="/admin/sale">Sales</Link>
           </Menu.Item>
 
@@ -138,6 +148,7 @@ const DefaultHandle = ({ children }) => {
             level={3}
             style={{ fontSize: "13px", fontFamily: "sans-serif" }}
           >
+            Dashboard
           </Typography.Title>
           <Space>
             <div className="header-action" style={{ marginRight: "8px" }}>
@@ -206,7 +217,6 @@ const DefaultHandle = ({ children }) => {
             margin: "24px 16px",
             padding: 24,
             minHeight: 280,
-            overflow: "auto", // Add overflow property here
           }}
         >
           {children}
@@ -216,4 +226,7 @@ const DefaultHandle = ({ children }) => {
   );
 };
 
+
+
 export default DefaultHandle;
+

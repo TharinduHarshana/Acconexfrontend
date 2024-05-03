@@ -16,6 +16,9 @@ const Bill = () => {
   const [invoiceNo, setInvoiceNo] = useState('');
   const [cashier, setCashier] = useState('');
   const [date, setDate] = useState('');
+  const[total,setTotal]= useState(0);
+  const [tendered,setTendered]=useState('');
+  const [balance,setBalance]= useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -37,7 +40,25 @@ const Bill = () => {
     const currentDate = getCurrentDateTime();
     setDate(currentDate);
 
+    setCashier('hiru');
   }, []);
+
+  useEffect(( )=>{
+    //calculate net amount
+    const calculatedTotal = billItems.reduce((acc,item)=>acc+((item.price*item.quantity)-item.discount),0);
+    setTotal(calculatedTotal);
+
+    //calculate balance
+    if(tendered !== ''){
+      const enteredAmount = parseFloat(tendered);
+      const calculateBalance = enteredAmount - calculatedTotal;
+      setBalance(calculateBalance);
+    }
+
+  } ,[billItems,tendered,total]);
+
+  
+
 
   const generateInvoiceNumber = () => {
     return `inv${(1000 + billItems.length + 1).toString().substr(1)}`;
@@ -55,6 +76,7 @@ const Bill = () => {
     return `${formattedDate} ${formattedTime}`;
   };
 
+  
   const filterItem = (event) => {
     const value = event.target.value.toLowerCase();
     setSearchValue(value);
@@ -89,10 +111,10 @@ const Bill = () => {
                 <table className='bill_table'>
                   <thead>
                     <tr>
-                      <th>Item ID</th>
-                      <th>Item Name</th>
-                      <th>Quantity</th>
-                      <th>Price</th>
+                      <th style={{width: '50px'}}>Item ID</th>
+                      <th style={{width: '150px'}}>Item Name</th>
+                      <th style={{width: '50px'}}>Quantity</th>
+                      <th style={{width:'50px'}}>Price</th>
                       <th>Action</th>
                     </tr>
                   </thead>
@@ -121,20 +143,20 @@ const Bill = () => {
                   <p style={{ textAlign: 'center', fontSize: 11 }}>Kaburupitiya, Mathara.<br /> Mob; 0712293447 Tel: 0770897865</p>
                   <hr />
                   <div className="form-row">
-                    <div className="form-group">
-                      <label style={{ fontSize: 12 }} htmlFor='invoice_no'>Invoice No:</label>
-                      <input type='text' id='invoice_no' className="input-no-border" value={invoiceNo} onChange={(e) => setInvoiceNo(e.target.value)} />
-                    </div> 
-                    <div className="form-group">
-                      <label style={{ fontSize: 12 }} htmlFor='cashier'>Cashier:</label>
-                      <input type='text' id='cashier' className="input-no-border" value={cashier} onChange={(e) => setCashier(e.target.value)} />
+                    <div className="print_bill_label">
+                    <label style={{ fontSize: 12 }} htmlFor='invoice_no'>Invoice No:</label><br/>
+                    <label style={{ fontSize: 12 }} htmlFor='cashier'>Cashier:</label><br/>
+                    <label style={{ fontSize: 12 }} htmlFor='date'>Date:</label>
+                  </div> 
+                  
+                    <div className="print_bill_input">
+                      <input type='text' style={{ fontSize: 12 }} id='invoice_no' className="input-no-border" value={invoiceNo} onChange={(e) => setInvoiceNo(e.target.value)} readOnly /><br/>
+                      <input type='text' style={{ fontSize: 12 }} id='cashier' className="input-no-border" value={cashier} onChange={(e) => setCashier(e.target.value)} readOnly /><br/>
+                      <input type='text' style={{ fontSize: 12 }} id='date' className="input-no-border" value={date} onChange={(e) => setDate(e.target.value)} readOnly />
                     </div>
-                    <div className="form-group">
-                      <label style={{ fontSize: 12 }} htmlFor='date'>Date:</label>
-                      <input type='date' id='date' className="input-no-border" value={date} onChange={(e) => setDate(e.target.value)} />
-                    </div>
+                   
                   </div>
-                </div> 
+                </div> <hr/>
                 <div>
                   <table>
                     <thead>
@@ -160,9 +182,20 @@ const Bill = () => {
                   </table>
                 </div>
                 <hr />
-                <p>Net Total </p>
-                <p>Tendered </p>
-                <p>Balance </p>
+                <div className="form-row">
+                    <div className="print_bill_label">
+                    <label style={{ fontSize: 13 }} htmlFor='net_amount'>Net Amount:</label><br/>
+                    <label style={{ fontSize: 13 }} htmlFor='torent'>Torent:</label><br/>
+                    <label style={{ fontSize: 13 }} htmlFor='balance'>Balance:</label>
+                  </div> 
+                  
+                    <div className="print_bill_input">
+                      <input type='float' id='net_amount' className="input-no-border" value={total} onChange={(e) => setTotal(e.target.value)} readOnly/><br/>
+                      <input type='float' id='torent' className="input-no-border" value={tendered} onChange={(e) => setTendered(e.target.value)}/><br/>
+                      <input type='float' id='balance' className="input-no-border" value={balance} onChange={(e) => setBalance(e.target.value)} readOnly />
+                    </div>
+                   
+                  </div>
                 <hr />
                 <p style={{ textAlign: 'center' }}>Thank You..! Come Again.</p>
               </form>
@@ -179,6 +212,11 @@ const Bill = () => {
               setDate={setDate}
             />
           )}
+          <div className='bill_btn'>
+                <button className='complete_sale'>Complete Sell</button>
+                <button className='add_customer'>Add Customer</button>
+                <button className='suspend_sale'>Suspend Sale</button>
+          </div>
         </div>
       </DefaultHandleSales>
     </div>

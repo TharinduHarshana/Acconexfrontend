@@ -58,7 +58,7 @@
 }
 
 .bill_table{
-  width: 300px ;
+  width: 600px ;
   background-color: rgb(238, 238, 238);
   margin: 40px;
   margin-top: 50px;
@@ -78,7 +78,7 @@
 }
 
 .bill_table   tbody td{
-  min-width: 150px;
+  
   height: 200px  auto;
   padding: 10px 30px;
   text-align: center;
@@ -109,10 +109,38 @@
 }
 .form-row{
   justify-content: space-between;
+  display: flex;
 }
 /* bill.css */
 
 .input-no-border {
   border: none;
   outline: none;
+  text-align: right;
+  background-color: rgb(238, 238, 238);
+}
+.complete_sale,
+.suspend_sale,
+.add_customer{
+  color: rgb(0, 0, 0);
+  border: none;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); 
+  border-radius: 3px;
+  font-style:oblique;
+  font-weight: bold;
+  margin-top: 40px;
+  margin-left: 40px;
+  margin-bottom: auto;
+  height: 30px ;
+  width: 150px;
+}
+.complete_sale{
+  background-color: rgb(141, 237, 149);
+}
+.suspend_sale{
+  background-color: rgb(240, 103, 103);
+}
+
+.add_customer{
+  background-color: rgb(136, 116, 237);
 }

@@ -3,8 +3,9 @@
 import React, { useState, useEffect } from 'react';
 import { CloseOutlined } from '@ant-design/icons';
 
-const BillForm = ({ handleClose, handleConfirmAddToBill, selectedItem, invoiceNo, setInvoiceNo, date, setDate }) => {
+const BillForm = ({ handleClose, handleConfirmAddToBill, selectedItem, invoiceNo,  date, cashire }) => {
   const [formData, setFormData] = useState({
+    cashire:'',
     product: '',
     price: '',
     quantity: '1',
@@ -16,6 +17,7 @@ const BillForm = ({ handleClose, handleConfirmAddToBill, selectedItem, invoiceNo
     if (selectedItem) {
       // Update the formData state with the fetched data
       setFormData({
+        cashire:'',
         product: selectedItem.displayName,
         price: selectedItem.sellingPrice,
         quantity:'1',
@@ -46,15 +48,6 @@ const BillForm = ({ handleClose, handleConfirmAddToBill, selectedItem, invoiceNo
       <div className='close-btn' onClick={handleClose}>
         <CloseOutlined />
       </div>
-
-      <label htmlFor='invoice'>Invoice NO:</label>
-      <input type='text' id='invoice' name='invoice'  value={invoiceNo} readOnly />
-
-      <label htmlFor='cashire'>Cashier:</label>
-      <input type='text' id='cashire' name='cashire'  />
-
-      <label htmlFor='date'>Date & Time:</label>
-      <input type='text' id='date' name='date' value={date} readOnly />
 
       <label htmlFor='product'>Product Name:</label>
       <input type='text' id='product' name='product' value={formData.product} readOnly />

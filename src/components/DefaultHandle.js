@@ -109,25 +109,18 @@ const DefaultHandle = ({ children }) => {
             title="Contacts"
             icon={<ContactsOutlined />}
           >
-            <Menu.Item key="supplier" title="Supplier">
+          <Menu.Item key="supplier" title="Supplier">
               <Link to="/admin/supplier">Supplier</Link>
-            </Menu.Item>
-            <Menu.Item key="customer" title="Customer">
-<<<<<<< Updated upstream
-<<<<<<< HEAD
-              <Link to="/admin/customer">Customer</Link>
-=======
-              <Link to="/admin/addcus">Customer</Link>
->>>>>>> 313a2f63cb7cd0c6da72cdb8b40ec2089152226b
-=======
-              <Link to="/admin/customer">Customer</Link>
->>>>>>> Stashed changes
-            </Menu.Item>
-          </Menu.SubMenu>
-
-          <Menu.Item key="/admin/users" icon={<UserOutlined />}>
-            <Link to="/admin/userTable">Users</Link>
           </Menu.Item>
+
+          <Menu.Item key="customer" title="Customer">
+            <Link to="/admin/customer">Customer</Link>
+          </Menu.Item>
+
+          </Menu.SubMenu>
+            <Menu.Item key="/admin/users" icon={<UserOutlined />}>
+              <Link to="/admin/userTable">Users</Link>
+            </Menu.Item>
 
           <Menu.Item key="/admin/sale" icon={<ShoppingCartOutlined/>}>
             <Link to="/admin/sale">Sales</Link>

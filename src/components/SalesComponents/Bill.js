@@ -5,6 +5,9 @@ import DefaultHandleSales from './DefaultHandleSales';
 import '../../styles/bill.css';
 import axios from 'axios';
 import BillForm from './bill_Form';
+import { jsPDF } from 'jspdf';
+import html2canvas from 'html2canvas';
+import TenderedPopup from './TenderedPopup';
 
 const Bill = () => {
   const [billItems, setBillItems] = useState([]);
@@ -16,9 +19,11 @@ const Bill = () => {
   const [invoiceNo, setInvoiceNo] = useState('');
   const [cashier, setCashier] = useState('');
   const [date, setDate] = useState('');
-  const[total,setTotal]= useState(0);
-  const [tendered,setTendered]=useState('');
-  const [balance,setBalance]= useState(0);
+  const[total,setTotal]= useState('');
+  const [tendered,setTendered]=useState('0.00');
+  const [balance,setBalance]= useState('');
+  const [paymentMethod, setPaymentMethod] = useState('');
+  const [showTenderedPopup, setShowTenderedPopup] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -76,7 +81,7 @@ const Bill = () => {
     return `${formattedDate} ${formattedTime}`;
   };
 
-  
+  //search the item
   const filterItem = (event) => {
     const value = event.target.value.toLowerCase();
     setSearchValue(value);
@@ -88,7 +93,7 @@ const Bill = () => {
     setFilteredItems(filteredData);
   };
 
- // Inside the Bill component
+ 
  const handleChange = (item) => {
   setSelectedItem(item); // Set the selected item
   setShowModal(true); // Show the modal form
@@ -100,6 +105,49 @@ const Bill = () => {
     setShowModal(false);
   };
 
+  //generate the bill into pdf and download
+  const generatePDF = () => {
+    const input = document.getElementById('print_bill');
+  
+    const pdfWidth = input.offsetWidth;
+    const pdfHeight = input.offsetHeight;
+  
+    html2canvas(input, { width: pdfWidth, height: pdfHeight }).then((canvas) => {
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF({
+        orientation: 'p',
+        unit: 'px',
+        format: [pdfWidth, pdfHeight]
+      });
+  
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      pdf.save('bill.pdf');
+    });
+  };
+  
+//set payment method
+const handleConfirmTendered = (tenderedAmount) => {
+  // Handle the confirmation of the tendered amount here
+  setTendered(tenderedAmount);
+  setShowTenderedPopup(false);
+};
+
+// Function to format numbers with two decimal places
+const formatNumber = (number) => {
+  return parseFloat(number).toFixed(2);
+};
+
+// Function to handle cash radio button change
+const handleCashRadioChange = () => {
+  setShowTenderedPopup(true); // Show the tendered popup when "Cash" is selected
+  setPaymentMethod('cash'); // Set payment method to "Cash"
+};
+
+// Callback function to handle tendered amount confirmation
+const handleBankTransferRadioChange = () => {
+  setTendered(formatNumber(total)); // Set tendered amount to net amount
+  setPaymentMethod('bank'); // Set payment method to "Bank Transfer"
+};
   return (
     <div className='bill_container'>
       <DefaultHandleSales>
@@ -135,7 +183,10 @@ const Bill = () => {
               </div>
             </div>
           </div>
-          <div className='print_bill'>
+          <div className='print_bill' id='print_bill' >
+            <div className='searchcustomer'>
+                <input placeholder='Search customer' />
+            </div>
             <div>
               <form className='bill_form'>
                 <div>
@@ -158,19 +209,19 @@ const Bill = () => {
                   </div>
                 </div> <hr/>
                 <div>
-                  <table>
+                  <table className='print_bill_table'>
                     <thead>
                       <tr>
                         <th>Product</th>
                         <th>Price</th>
-                        <th>Quantity</th>
+                        <th>Qty</th>
                         <th>Discount</th>
                         <th>Amount</th>
                       </tr>
                     </thead>
                     <tbody>
                       {billItems.map((item, index) => (
-                        <tr key={index}>
+                        < tr key={index}>
                           <td>{item.product}</td>
                           <td>{item.price}</td>
                           <td>{item.quantity}</td>
@@ -190,17 +241,31 @@ const Bill = () => {
                   </div> 
                   
                     <div className="print_bill_input">
-                      <input type='float' id='net_amount' className="input-no-border" value={total} onChange={(e) => setTotal(e.target.value)} readOnly/><br/>
-                      <input type='float' id='torent' className="input-no-border" value={tendered} onChange={(e) => setTendered(e.target.value)}/><br/>
-                      <input type='float' id='balance' className="input-no-border" value={balance} onChange={(e) => setBalance(e.target.value)} readOnly />
+                      <input type='float' id='net_amount' className="input-no-border" value={formatNumber(total)} onChange={(e) => setTotal(e.target.value)} readOnly/><br/>
+                      <input type='float' id='torent' className="input-no-border" value={formatNumber(tendered)} onChange={(e) => setTendered(formatNumber(e.target.value))}/><br/>
+                      <input type='float' id='balance' className="input-no-border" value={formatNumber(balance)} onChange={(e) => setBalance(e.target.value)} readOnly />
                     </div>
-                   
+                    
+                  </div>
+                  <br/>
+                    <div className='payment-method-container'>
+                      <div className="payment-method">
+                        <input type='radio' name='paymentMethod' id='cash' checked={paymentMethod === 'cash'} value='cash' onChange={handleCashRadioChange} />
+                        <label htmlFor='cash'>Cash</label>
+                      </div>
+                      <div className="payment-method">
+                        <input type='radio' name='paymentMethod' id='bank' checked={paymentMethod === 'bank'} value='bank' onChange={handleBankTransferRadioChange} />
+                        <label htmlFor='bank'>Bank Transfer</label>
+                      </div>
                   </div>
                 <hr />
                 <p style={{ textAlign: 'center' }}>Thank You..! Come Again.</p>
               </form>
             </div>
           </div>
+          {showTenderedPopup && paymentMethod === 'cash' && ( // Show tendered popup only when "Cash" is selected
+            <TenderedPopup onClose={() => setShowTenderedPopup(false)} onConfirm={handleConfirmTendered} />
+          )}
           {showModal && (
             <BillForm
               handleClose={() => setShowModal(false)}
@@ -213,7 +278,7 @@ const Bill = () => {
             />
           )}
           <div className='bill_btn'>
-                <button className='complete_sale'>Complete Sell</button>
+                <button className='complete_sale'  onClick={generatePDF}>Complete Sell</button>
                 <button className='add_customer'>Add Customer</button>
                 <button className='suspend_sale'>Suspend Sale</button>
           </div>

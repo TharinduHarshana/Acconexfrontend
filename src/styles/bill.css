@@ -10,14 +10,24 @@
 /* Bill form container form styles */
 .print_bill form 
 {
-  width: 400px;
+  width: 450px;
   background-color: rgb(238, 238, 238);
   display: flex;
   flex-direction: column;
-  padding: 50px 40px;
-  box-shadow: 5px 5px 10px rgb(0, 0, 0);
+  padding: 30px 40px 1px;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); 
   border-radius: 5px;
   margin-top: 40px;
+}
+
+.print_bill_table
+{
+  width: 370px;
+  border-color: #c9c5c2;
+}
+.print_bill_table thead tr th{
+background-color: rgb(16, 3, 73);
+color: aliceblue;
 }
 
 .modal-content{
@@ -26,7 +36,7 @@
   display: flex;
   flex-direction: column;
   padding: 50px 40px;
-  box-shadow: 5px 5px 10px rgb(0, 0, 0);
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); 
   border-radius: 5px;
   position: absolute;
   top: 50%;
@@ -129,10 +139,10 @@
   font-style:oblique;
   font-weight: bold;
   margin-top: 40px;
-  margin-left: 40px;
+  margin-left: 20px;
   margin-bottom: auto;
   height: 30px ;
-  width: 150px;
+  width: 120px;
 }
 .complete_sale{
   background-color: rgb(141, 237, 149);
@@ -143,4 +153,50 @@
 
 .add_customer{
   background-color: rgb(136, 116, 237);
+}
+.payment-method-container
+{
+  display: flex;
+  justify-content: space-around;
+  
+}
+.popup{
+  width: 270px;
+  height: 150px;
+  background-color: rgb(238, 238, 238);
+  display: flex;
+  flex-direction: column;
+  padding: 30px 40px 40px;
+  box-shadow: 5px 5px 10px rgb(0, 0, 0);
+  border-radius: 5px;
+  position: absolute;
+  top: 50%;
+  left: 80%;
+  right: 10%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+}
+
+.popupbtnclose{
+ margin-left: 40px;
+}
+.popupbtnok,
+.popupbtnclose{
+  color: rgb(0, 0, 0);
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); 
+  border-radius: 3px;
+  font-style:oblique;
+  font-weight: bold;
+}
+.searchcustomer input {
+  background-color: rgb(238, 238, 238);
+  display: flex;
+  flex-direction: column;
+  padding: 10px 40px;
+  border: 1px solid #c9c5c2; 
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); 
+  border-radius: 5px;
+  margin-left: 10px;
+  margin-top: 40px;
+  width: 430px ;
 }

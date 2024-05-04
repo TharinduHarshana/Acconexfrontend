@@ -22,9 +22,9 @@ import ViewCutomer from "./pages/ViewCutomer";
 
 // web imports
 import WebHomepage from "./pages/WebHomepage";
-import UpdateKitForm from "./components/ManageInventory/UpdateItemKit";
 import Logout from "./components/LoginComponents/Logout";
-import ItemKitForm from "./components/ManageInventory/ItemKits";
+import ItemKit from "./pages/ItemKitPage";
+import ItemKitsForm from "./components/ManageInventory/ItemKits";
 
 function App() {
   return (
@@ -35,7 +35,7 @@ function App() {
 
         {/* admin routing path */}
         <Route path="/admin" element={<Login />} />
-        <Route path="admin/logout" element={<Logout/>}/>
+        <Route path="admin/logout" element={<Logout />} />
         <Route path="/admin/userform" element={<CreateUser />} />
         <Route path="/admin/userform/update/:id" element={<UpdateUser />} />
         <Route path="/admin/userTable" element={<Users />} />
@@ -44,9 +44,8 @@ function App() {
         <Route path="/admin/supplier" element={<Supplier />} />
         <Route path="/admin/supplier/create" element={<CreateSupplierForm />} />
         <Route path="/admin/supplier/update/:id" element={<UpdateSupplier />} />
-       <Route path="/admin/inventory/item-kits" element={<ItemKitForm/>}/>
-        {/* <Route path="/admin/inventory/kits/add" element={<ItemKitsForm />} /> */}
-        <Route path="/admin/inventory/kits/update/:id" element={<UpdateKitForm/>}/>
+        <Route path="/admin/inventory/kits/add" element={<ItemKitsForm />} />
+        <Route path="/admin/inventory/item-kits" element={<ItemKit />} />
 
         <Route path="admin/sale" element={<SalesDachboad />} />
         <Route path="admin/bill" element={<Bill />} />

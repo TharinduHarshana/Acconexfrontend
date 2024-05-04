@@ -1,59 +1,121 @@
-/* ItemKitForm.css */
-
-/* Container for the form and table */
-.item-kit-container {
+.item-kits-form {
     display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 20px; /* Adjust as needed */
-}
-
-/* General styles for the form */
-.item-kit-form {
-    width: 45%; /* Adjust the width as needed */
-    margin-right: 20px; /* Space between the form and the table */
-}
-
-/* Styles for labels and inputs */
-.item-kit-form label {
-    display: block;
-    margin-bottom: 10px;
-}
-
-.item-kit-form input[type='text'],
-.item-kit-form input[type='number'],
-.item-kit-form textarea {
-    width: 80%; /* Reduced width to 80% of the parent container */
+    background-color: white;
+    flex-direction: column;
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow-y: auto;
+    max-height: 80vh;
+    margin-top: 30px;
+  }
+  
+  .item-kits-form h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .item-kits-form form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .item-kits-form label {
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  
+  .item-kits-form input,
+  .item-kits-form select {
     padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 4px;
     border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
-    display: block; /* Ensure the input fields are block elements */
-    margin-top: 5px; /* Add some space above the input fields */
-}
-
-/* Styles for the table */
-.item-kit-table {
-    width: 45%; /* Adjust the width as needed */
-}
-
-.item-kit-table table {
+    width: calc(100% - 22px);
+    max-width: 300px;
+    
+  }
+  
+  .item-kits-form button {
+    padding: 10px 10px;
+    background-color: white;
+    color: black;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-top: 20px;
+    width: 50%;
+    font-weight: bold;
+  }
+  
+  
+  
+  .select-option-wrapper {
+    width: 100%;
+  }
+  
+  
+  
+  .item-kits-form table {
     width: 100%;
     border-collapse: collapse;
-}
-
-.item-kit-table th,
-.item-kit-table td {
+    margin-top: 20px;
+  }
+  
+  .item-kits-form th,
+  .item-kits-form td {
+    border: 1px solid #ccc;
     padding: 10px;
     text-align: left;
-    border-bottom: 1px solid #ccc;
-}
+  }
+  
+  .item-kits-form th {
+    background-color:black;
+    font-weight: bold;
+    color: white;
+    
+  }
+  
+  .item-kits-form tbody tr:hover {
+    background-color:gray;
+  }
 
-.item-kit-table th {
-    background-color: #f2f2f2; /* Light grey background for headers */
-}
-
-/* Optional: Styles for the "Add item" input */
-.item-kit-form .add-item-input {
-    margin-top: 10px;
-}
+  .item-kits-form table button {
+    padding: 5px 10px; /* Adjust padding to reduce the height and width */
+    font-size: 12px; /* Adjust font size if needed */
+  }
+  
+  .search-field input {
+    padding-left: 30px; /* Adjust based on the size of your icon */
+    border: 1px solid #ccc;
+    border-radius: 8px; /* Increased from 4px to 8px for a more rounded appearance */
+  }
+  .search-field {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .search-field input {
+    padding-left: 30px; /* Adjust based on the size of your icon */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 200px; /* Adjust width as needed */
+  }
+  
+  .search-field.anticon {
+    position: absolute;
+    left: 5px;
+    top: 5px;
+    pointer-events: none; /* Prevents the icon from receiving click events */
+  }
+  
+  
+  @media (max-width: 600px) {
+   .item-kits-form {
+      padding: 10px;
+    }
+  }
+  

@@ -1,8 +1,8 @@
 // Bill.js
 
 import React, { useState, useEffect } from 'react';
-import DefaultHandleSales from './DefaultHandleSales';
-import '../../styles/bill.css';
+import DefaultHandleSales from '../DefaultHandleSales';
+import '../../../styles/bill.css';
 import axios from 'axios';
 import BillForm from './bill_Form';
 import { jsPDF } from 'jspdf';
@@ -24,6 +24,11 @@ const Bill = () => {
   const [balance,setBalance]= useState('');
   const [paymentMethod, setPaymentMethod] = useState('');
   const [showTenderedPopup, setShowTenderedPopup] = useState(false);
+  const [searchCustomerValue, setSearchCustomerValue] = useState("");
+  const [customers, setCustomers] = useState([]); // State for storing customer data
+  const [filteredCustomers, setFilteredCustomers] = useState([]); // State for storing filtered customer list
+  const [selectedCustomerName, setSelectedCustomerName] = useState('');
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -31,6 +36,10 @@ const Bill = () => {
         const response = await axios.get('http://localhost:8000/item/');
         setItems(response.data.data);
         setFilteredItems(response.data.data);
+
+        const customerResponse = await axios.get('http://localhost:8000/customer/');
+        setCustomers(customerResponse.data.data);
+
       } catch (error) {
         console.error('Error fetching items:', error.message);
       }
@@ -148,6 +157,25 @@ const handleBankTransferRadioChange = () => {
   setTendered(formatNumber(total)); // Set tendered amount to net amount
   setPaymentMethod('bank'); // Set payment method to "Bank Transfer"
 };
+
+//search customer
+const filterCustomer = (event) => {
+    const value = event.target.value.toLowerCase();
+    setSearchCustomerValue(value);
+    const filteredData = customers.filter(
+      (row) =>
+        row.name.toLowerCase().includes(value) ||
+        row.cusid.toLowerCase().includes(value)
+    );
+    setFilteredCustomers(filteredData);
+  };
+
+
+  const handleCustomerItemClick = (customer) => {
+    setSelectedCustomerName(customer.name);
+    // Other logic you may have
+  };
+  
   return (
     <div className='bill_container'>
       <DefaultHandleSales>
@@ -172,7 +200,7 @@ const handleBankTransferRadioChange = () => {
                         <td>{item.productID}</td>
                         <td>{item.displayName}</td>
                         <td>{item.quantity}</td>
-                        <td>{item.sellingPrice}</td>
+                        <td>{formatNumber(item.sellingPrice)}</td>
                         <td>
                           <button onClick={() => handleChange(item)}>Add</button>
                         </td>
@@ -184,9 +212,32 @@ const handleBankTransferRadioChange = () => {
             </div>
           </div>
           <div className='print_bill' id='print_bill' >
-            <div className='searchcustomer'>
-                <input placeholder='Search customer' />
-            </div>
+          <div className='searchcustomer'>
+          <input placeholder='Search customer' value={searchCustomerValue} onChange={filterCustomer} />
+              {searchCustomerValue && filteredCustomers.length > 0 && (
+                    <div className='customer-list'>
+                      {filteredCustomers.map((customer, index) => (
+                        <div key={index} className='customer-item'>
+                          <table >
+                            <tbody>
+                              <tr>
+                                <td> 
+                                <span style={{fontWeight:'bold'}}>Name :{customer.name}</span><br/>
+                                <span>Address :{customer.address}</span>
+                                <span style={{marginLeft:'30px'}}>Mobile :{customer.mobile}</span>
+                                </td>
+                              </tr>
+                             
+                            </tbody>
+                          
+                          </table>
+                        </div>
+                     ))}
+                   </div>
+                
+              )}
+          </div>
+
             <div>
               <form className='bill_form'>
                 <div>
@@ -223,10 +274,10 @@ const handleBankTransferRadioChange = () => {
                       {billItems.map((item, index) => (
                         < tr key={index}>
                           <td>{item.product}</td>
-                          <td>{item.price}</td>
+                          <td>{formatNumber(item.price)}</td>
                           <td>{item.quantity}</td>
                           <td>{item.discount}</td>
-                          <td>{((item.price * item.quantity)-item.discount)}</td>
+                          <td>{formatNumber(((item.price * item.quantity)-item.discount))}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -259,7 +310,7 @@ const handleBankTransferRadioChange = () => {
                       </div>
                   </div>
                 <hr />
-                <p style={{ textAlign: 'center' }}>Thank You..! Come Again.</p>
+                <p style={{ textAlign: 'center' }}>Thank You {selectedCustomerName && ` ${selectedCustomerName}`}..! Come Again.</p>
               </form>
             </div>
           </div>

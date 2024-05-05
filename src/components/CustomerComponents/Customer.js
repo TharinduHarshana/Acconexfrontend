@@ -26,6 +26,8 @@ function Customer() {
     fetchCustomers();
   }, []);
 
+
+  //delete customer
   const handleDelete = async (cusid) => {
     try {
       await axios.delete(`http://localhost:8000/customer/delete/${cusid}`);
@@ -37,6 +39,7 @@ function Customer() {
     }
   };
 
+  //delete confirmation masg
   const showDeleteConfirmation = (cusid) => {
     Modal.confirm({
       title: "Confirm Delete",
@@ -64,6 +67,7 @@ function Customer() {
         return;
       }
 
+      //add new customer
       const response = await axios.post("http://localhost:8000/customer/add", formData);
       if (response.data.success) {
         message.success(response.data.message);
@@ -83,6 +87,7 @@ function Customer() {
     setEditingCustomer(customer);
   };
 
+  //update customer details
   const handleUpdate = async (formData) => {
     try {
       const response = await axios.patch(`http://localhost:8000/customer/update/${formData.cusid}`, formData);
@@ -100,6 +105,7 @@ function Customer() {
     }
   };
 
+  //search customer
   const filteredDataList = customers.filter(
     (row) =>
       row.name.toLowerCase().includes(searchValue.toLowerCase()) ||
@@ -109,6 +115,7 @@ function Customer() {
   const handleSearch = (e) => {
     setSearchValue(e.target.value);
   };
+
 
   return (
     <div>

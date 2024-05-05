@@ -24,7 +24,7 @@ import ItemKitsTable from "./components/ManageInventory/ItemKitsTable";
 
 //import sales components
 import SalesDachboad from './components/SalesComponents/SalesDachboad';
-import Bill from './components/SalesComponents/Bill';
+import Bill from './components/SalesComponents/Bill_components/Bill';
 import Customer from './components/CustomerComponents/Customer';
 import SuspendSale from './components/SalesComponents/SuspendSale';
 
@@ -82,7 +82,7 @@ function App() {
 
 
 
-        <Route path='/admin/sale' element={<SalesDachboad/>}/>
+        <Route path='/admin/sale' element={<Bill/>}/>
         <Route path='/admin/bill' element={<Bill/>}/>
         <Route path='/admin/holdbill' element={<SuspendSale/>}/>
 

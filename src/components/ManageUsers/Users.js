@@ -9,15 +9,17 @@ function Users() {
   // State to store the list of users
   const [users, setUsers] = useState([]);
   const [filterUser, setFilterUser] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   //Effect hook to fetch users data when the component mounts
   useEffect(() => {
     const loadUsers = async () => {
+      setLoading(true);
       try {
-        const response = await axios.get("http://localhost:8000/user/all",{
+        const response = await axios.get("http://localhost:8000/user/all", {
           withCredentials: true,
         });
-        console.log(response.data)
+        console.log(response.data);
 
         // Set the users state with the data from the response
         setUsers(response.data.data);
@@ -26,17 +28,24 @@ function Users() {
         console.log(response.data);
       } catch (error) {
         console.error("Error fetching users:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
     loadUsers();
   }, []);
 
+  if (loading) {
+    return <div>Loading...</div>; // Show a loading indicator while data is being fetched
+  }
   // Function to handle user deletion
 
   const handleDelete = async (_id) => {
     try {
-      await axios.delete(`http://localhost:8000/user/delete/${_id}`,{ withCredentials: true });
+      await axios.delete(`http://localhost:8000/user/delete/${_id}`, {
+        withCredentials: true,
+      });
       // Filter out the deleted user from the users state
       const updatedUsers = users.filter((user) => user._id !== _id);
       setUsers(updatedUsers);

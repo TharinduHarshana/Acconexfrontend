@@ -12,7 +12,9 @@ const ItemKit = () => {
   useEffect(() => {
     const loadItemKit = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/itemkit/all");
+        const response = await axios.get("http://localhost:8000/itemkit/all",{
+          withCredentials: true,
+        });
         setItemKit(response.data.data);
         setFilterKit(response.data.data); // Initialize filterKit with fetched data
       } catch (error) {

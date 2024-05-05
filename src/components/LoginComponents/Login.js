@@ -36,6 +36,10 @@ function Login() {
         message.success("Login successful");
         // Navigate to the admin home page
         navigate("/admin/home");
+      } else if (response.data.message === "Token expired") {
+        // Handle token expiration
+        message.error("Your session has expired. Please log in again.");
+        navigate("/admin"); // Redirect to the login page
       }
     } catch (error) {
       // Catch any errors that occur during the request

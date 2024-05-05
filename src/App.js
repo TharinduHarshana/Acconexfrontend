@@ -23,12 +23,10 @@ import ItemKits from "./components/ManageInventory/ItemKits";
 import ItemKitsTable from "./components/ManageInventory/ItemKitsTable";
 
 //import sales components
-import SalesDachboad from './components/SalesComponents/SalesDachboad';
 import Bill from './components/SalesComponents/Bill_components/Bill';
 import Customer from './components/CustomerComponents/Customer';
 import SuspendSale from './components/SalesComponents/SuspendSale';
-
-import Daily_sales from './components/SalesComponents/Daily_sales';
+import Dailysales from './components/SalesComponents/Daily_sales';
 
 
 
@@ -85,6 +83,7 @@ function App() {
         <Route path='/admin/sale' element={<Bill/>}/>
         <Route path='/admin/bill' element={<Bill/>}/>
         <Route path='/admin/holdbill' element={<SuspendSale/>}/>
+        <Route path='/admin/dailysales' element={<Dailysales/>}/>
 
 
         {/* <Route path='admin/viewcustomer' element={<ViewCutomer/>}/> */}

@@ -8,6 +8,9 @@ import BillForm from './bill_Form';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 import TenderedPopup from './TenderedPopup';
+import CustomerForm from "../../CustomerComponents/customerForm";
+import { message } from 'antd';
+
 
 const Bill = () => {
   const [billItems, setBillItems] = useState([]);
@@ -19,7 +22,7 @@ const Bill = () => {
   const [invoiceNo, setInvoiceNo] = useState('');
   const [cashier, setCashier] = useState('');
   const [date, setDate] = useState('');
-  const[total,setTotal]= useState('');
+  const [total,setTotal]= useState('');
   const [tendered,setTendered]=useState('0.00');
   const [balance,setBalance]= useState('');
   const [paymentMethod, setPaymentMethod] = useState('');
@@ -28,6 +31,7 @@ const Bill = () => {
   const [customers, setCustomers] = useState([]); // State for storing customer data
   const [filteredCustomers, setFilteredCustomers] = useState([]); // State for storing filtered customer list
   const [selectedCustomerName, setSelectedCustomerName] = useState('');
+  const [showForm, setShowForm] = useState(false);
 
 
   useEffect(() => {
@@ -114,6 +118,49 @@ const Bill = () => {
     setShowModal(false);
   };
 
+
+  // Function to handle completion of sale and saving data to daily sales
+  const handleCompleteSale = async () => {
+    try {
+        const itemCount = billItems.reduce((acc, item) => acc + item.quantity, 0);
+        const total = billItems.reduce((acc, item) => acc + ((item.price * item.quantity) - item.discount), 0);
+        const data = {
+            POSNO:invoiceNo,
+            cashirename: cashier,
+            datetime:date,
+            customername: 0,
+            itemcount: itemCount,
+            paymentmethod: 0,
+            totalamount: total,
+            totalcost: 0, // You may need to calculate this value based on your business logic
+            profit: 0, // You may need to calculate this value based on your business logic
+        };
+
+        // Send an HTTP POST request to your backend API to add data to daily sales
+        const response = await axios.post("http://localhost:8000/dailysales/add", data);
+
+        // Check if the request was successful
+        if (response.data.success) {
+            message.success("Sale completed successfully and data saved to daily sales.");
+            // Clear any necessary state or perform other actions if needed
+        } else {
+            message.error("Failed to save data to daily sales. Please try again later.");
+        }
+    } catch (error) {
+        console.error("Error completing sale and saving data to daily sales:", error);
+        message.error("An error occurred while completing the sale. Please try again later.");
+    }
+};
+
+  
+
+// Function to generate PDF and complete the sale
+const generatePDFAndCompleteSale = () => {
+  generatePDF(); // Generate PDF
+  handleCompleteSale(); // Save data to daily sales after generating PDF
+};
+
+
   //generate the bill into pdf and download
   const generatePDF = () => {
     const input = document.getElementById('print_bill');
@@ -173,8 +220,38 @@ const filterCustomer = (event) => {
 
   const handleCustomerItemClick = (customer) => {
     setSelectedCustomerName(customer.name);
+    setSearchCustomerValue(""); // Set the selected customer's name
     // Other logic you may have
   };
+  
+  //add customer
+  const handleAddCustomer = () => {
+    setShowForm(true);
+  };
+  const handleFormSubmit = async (formData) => {
+    try {
+      // Check if the customer ID already exists
+      const existingCustomer = customers.find((customer) => customer.cusid === formData.cusid);
+      if (existingCustomer) {
+        message.error("Customer ID already exists. Please choose a different ID.");
+        return;
+      }
+
+      //add new customer
+      const response = await axios.post("http://localhost:8000/customer/add", formData);
+      if (response.data.success) {
+        message.success(response.data.message);
+        setShowForm(false);
+      } else {
+        message.error(response.data.message);
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      message.error("An error occurred while submitting the form.");
+    }
+  };
+
+
   
   return (
     <div className='bill_container'>
@@ -213,29 +290,26 @@ const filterCustomer = (event) => {
           </div>
           <div className='print_bill' id='print_bill' >
           <div className='searchcustomer'>
-          <input placeholder='Search customer' value={searchCustomerValue} onChange={filterCustomer} />
-              {searchCustomerValue && filteredCustomers.length > 0 && (
-                    <div className='customer-list'>
-                      {filteredCustomers.map((customer, index) => (
-                        <div key={index} className='customer-item'>
-                          <table >
-                            <tbody>
-                              <tr>
-                                <td> 
-                                <span style={{fontWeight:'bold'}}>Name :{customer.name}</span><br/>
-                                <span>Address :{customer.address}</span>
-                                <span style={{marginLeft:'30px'}}>Mobile :{customer.mobile}</span>
-                                </td>
-                              </tr>
-                             
-                            </tbody>
-                          
-                          </table>
-                        </div>
-                     ))}
-                   </div>
-                
-              )}
+            <input placeholder='Search customer' value={searchCustomerValue} onChange={filterCustomer} />
+            {searchCustomerValue && filteredCustomers.length > 0 && (
+              <div className='customer-list'>
+                {filteredCustomers.map((customer, index) => (
+                  <div key={index} className='customer-item' onClick={() => handleCustomerItemClick(customer)}>
+                    <table>
+                      <tbody>
+                        <tr>
+                          <td className='selectedcustomer'>
+                            <span style={{ fontWeight: 'bold' }}>Name: {customer.name}</span><br />
+                            <span>Address: {customer.address}</span>
+                            <span style={{ marginLeft: '30px' }}>Mobile: {customer.mobile}</span>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
             <div>
@@ -310,11 +384,11 @@ const filterCustomer = (event) => {
                       </div>
                   </div>
                 <hr />
-                <p style={{ textAlign: 'center' }}>Thank You {selectedCustomerName && ` ${selectedCustomerName}`}..! Come Again.</p>
+                <p style={{ textAlign: 'center' }}>Thank You {selectedCustomerName && `${selectedCustomerName}`}..! Come Again.</p>
               </form>
             </div>
           </div>
-          {showTenderedPopup && paymentMethod === 'cash' && ( // Show tendered popup only when "Cash" is selected
+          {showTenderedPopup && paymentMethod === 'cash' && ( 
             <TenderedPopup onClose={() => setShowTenderedPopup(false)} onConfirm={handleConfirmTendered} />
           )}
           {showModal && (
@@ -326,11 +400,16 @@ const filterCustomer = (event) => {
               setInvoiceNo={setInvoiceNo}
               date={date}
               setDate={setDate}
+              handleCompleteSale={handleCompleteSale}
             />
           )}
+          {showForm && (
+            <CustomerForm handleSubmit={handleFormSubmit} handleClose={() => setShowForm(false)} />
+          )}
+        
           <div className='bill_btn'>
-                <button className='complete_sale'  onClick={generatePDF}>Complete Sell</button>
-                <button className='add_customer'>Add Customer</button>
+                <button className='complete_sale'  onClick={generatePDFAndCompleteSale}>Complete Sell</button>
+                <button className='add_customer'onClick={handleAddCustomer}>Add Customer</button>
                 <button className='suspend_sale'>Suspend Sale</button>
           </div>
         </div>

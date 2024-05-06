@@ -119,38 +119,54 @@ const Bill = () => {
   };
 
 
-  // Function to handle completion of sale and saving data to daily sales
   const handleCompleteSale = async () => {
     try {
-        const itemCount = billItems.reduce((acc, item) => acc + item.quantity, 0);
-        const total = billItems.reduce((acc, item) => acc + ((item.price * item.quantity) - item.discount), 0);
-        const data = {
-            POSNO:invoiceNo,
-            cashirename: cashier,
-            datetime:date,
-            customername: 0,
-            itemcount: itemCount,
-            paymentmethod: 0,
-            totalamount: total,
-            totalcost: 0, // You may need to calculate this value based on your business logic
-            profit: 0, // You may need to calculate this value based on your business logic
-        };
+      // Calculate item count
+      const itemCount = billItems.reduce((acc, item) => acc + item.quantity, 0);
 
-        // Send an HTTP POST request to your backend API to add data to daily sales
-        const response = await axios.post("http://localhost:8000/dailysales/add", data);
-
-        // Check if the request was successful
-        if (response.data.success) {
-            message.success("Sale completed successfully and data saved to daily sales.");
-            // Clear any necessary state or perform other actions if needed
-        } else {
-            message.error("Failed to save data to daily sales. Please try again later.");
+  
+      // Calculate total cost and profit
+      let totalCost = 0;
+      billItems.forEach(item => {
+        // Find the corresponding item in the inventory
+        const inventoryItem = items.find(invItem => invItem.productID === item.productID);
+        if (inventoryItem) {
+          // Subtract the cost from the selling price and multiply by quantity
+          totalCost += (inventoryItem.sellingPrice - inventoryItem.cost) * item.quantity;
         }
+      });
+  
+      // Calculate profit
+      const profit = total - totalCost;
+  
+      const data = {
+        POSNO: '9099',
+        cashirename: cashier,
+        datetime: date,
+        customername: selectedCustomerName,
+        itemcount: itemCount,
+        paymentmethod: paymentMethod,
+        totalamount: total,
+        totalcost: totalCost, // Calculated total cost
+        profit: profit // Calculated profit
+      };
+  
+      // Send HTTP POST request to save data to daily sales
+      const response = await axios.post("http://localhost:8000/dailysales/add", data);
+  
+      // Handle response
+      if (response.data.success) {
+        message.success("Sale completed successfully and data saved to daily sales.");
+        // Clear any necessary state or perform other actions if needed
+      } else {
+        message.error("Failed to save data to daily sales. Please try again later.");
+      }
     } catch (error) {
-        console.error("Error completing sale and saving data to daily sales:", error);
-        message.error("An error occurred while completing the sale. Please try again later.");
+      console.error("Error completing sale and saving data to daily sales:", error);
+      message.error("An error occurred while completing the sale. Please try again later.");
     }
-};
+  };
+  
 
   
 
@@ -361,8 +377,8 @@ const filterCustomer = (event) => {
                 <div className="form-row">
                     <div className="print_bill_label">
                     <label style={{ fontSize: 13 }} htmlFor='net_amount'>Net Amount:</label><br/>
-                    <label style={{ fontSize: 13 }} htmlFor='torent'>Torent:</label><br/>
-                    <label style={{ fontSize: 13 }} htmlFor='balance'>Balance:</label>
+                    <label style={{ fontSize: 13 }} htmlFor='torent'>Tendered Amount:</label><br/>
+                    <label style={{ fontSize: 13 }} htmlFor='balance'>Due Amount:</label>
                   </div> 
                   
                     <div className="print_bill_input">

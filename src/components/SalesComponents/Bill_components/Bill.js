@@ -32,6 +32,8 @@ const Bill = () => {
   const [filteredCustomers, setFilteredCustomers] = useState([]); // State for storing filtered customer list
   const [selectedCustomerName, setSelectedCustomerName] = useState('');
   const [showForm, setShowForm] = useState(false);
+  
+
 
 
   useEffect(() => {
@@ -72,6 +74,8 @@ const Bill = () => {
       const calculateBalance = enteredAmount - calculatedTotal;
       setBalance(calculateBalance);
     }
+
+   
 
   } ,[billItems,tendered,total]);
 
@@ -118,37 +122,29 @@ const Bill = () => {
     setShowModal(false);
   };
 
+   // Sum up the quantity of each item in the billItems array
+  const calculateTotalQuantity = () => {
+   
+    const totalQuantity = billItems.reduce((acc, item) => acc + parseInt(item.quantity), 0);
+    return totalQuantity;
+  };
 
+  
   const handleCompleteSale = async () => {
     try {
       // Calculate item count
-      const itemCount = billItems.reduce((acc, item) => acc + item.quantity, 0);
-
-  
-      // Calculate total cost and profit
-      let totalCost = 0;
-      billItems.forEach(item => {
-        // Find the corresponding item in the inventory
-        const inventoryItem = items.find(invItem => invItem.productID === item.productID);
-        if (inventoryItem) {
-          // Subtract the cost from the selling price and multiply by quantity
-          totalCost += (inventoryItem.sellingPrice - inventoryItem.cost) * item.quantity;
-        }
-      });
-  
-      // Calculate profit
-      const profit = total - totalCost;
-  
+      const totalQuantity = calculateTotalQuantity();
+      const totalcost = billItems.reduce((acc, item) => acc + item.costPrice * item.quantity, 0);
       const data = {
-        POSNO: '9099',
+        POSNO: '494',
         cashirename: cashier,
         datetime: date,
         customername: selectedCustomerName,
-        itemcount: itemCount,
+        itemcount:totalQuantity,
         paymentmethod: paymentMethod,
         totalamount: total,
-        totalcost: totalCost, // Calculated total cost
-        profit: profit // Calculated profit
+        totalcost: totalcost, 
+        profit: 0 // Calculated profit
       };
   
       // Send HTTP POST request to save data to daily sales
@@ -173,7 +169,7 @@ const Bill = () => {
 // Function to generate PDF and complete the sale
 const generatePDFAndCompleteSale = () => {
   generatePDF(); // Generate PDF
-  handleCompleteSale(); // Save data to daily sales after generating PDF
+   handleCompleteSale();// Save data to daily sales after generating PDF
 };
 
 
@@ -282,8 +278,9 @@ const filterCustomer = (event) => {
                     <tr>
                       <th style={{width: '50px'}}>Item ID</th>
                       <th style={{width: '150px'}}>Item Name</th>
-                      <th style={{width: '50px'}}>Quantity</th>
+                      <th style={{width: '20px'}}>Qnt</th>
                       <th style={{width:'50px'}}>Price</th>
+                      <th style={{width:'50px'}}> Cost</th>
                       <th>Action</th>
                     </tr>
                   </thead>
@@ -294,6 +291,7 @@ const filterCustomer = (event) => {
                         <td>{item.displayName}</td>
                         <td>{item.quantity}</td>
                         <td>{formatNumber(item.sellingPrice)}</td>
+                        <td>{formatNumber(item.costPrice)}</td>
                         <td>
                           <button onClick={() => handleChange(item)}>Add</button>
                         </td>
@@ -401,6 +399,8 @@ const filterCustomer = (event) => {
                   </div>
                 <hr />
                 <p style={{ textAlign: 'center' }}>Thank You {selectedCustomerName && `${selectedCustomerName}`}..! Come Again.</p>
+                <p>Total Quantity: {calculateTotalQuantity()}</p>
+        
               </form>
             </div>
           </div>

@@ -1,72 +1,126 @@
-import React, {useState,useEffect} from 'react'
+import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import Swal from "sweetalert2";
-import DataTable from 'react-data-table-component'
-import DefaultHandle from '../DefaultHandle'
+import Swal from 'sweetalert2';
+import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import storage from '../InventoryComponent/firebase'; // Adjust the import path as necessary
+import DefaultHandle from '../DefaultHandle';
 
+const AddNewItem = () => {
+  // Store data in form
+  const [displayName, setDisplayName] = useState('');
+  const [itemName, setItemName] = useState('');
+  const [productID, setProductID] = useState('');
+  const [quantity, setQuantity] = useState('');
+  const [costPrice, setCostPrice] = useState('');
+  const [sellingPrice, setSellingPrice] = useState('');
+  const [fixedPrice, setFixedPrice] = useState('');
+  const [itemSereal, setItemSerial] = useState('');
+  const [supplierID, setSupplierID] = useState('');
+  const [category, setCategory] = useState('');
+  const [warranty, setWarranty] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
+  const [imageLink, setImageLink] = useState('');
+  const [file, setFile] = useState('');
+  const [percent, setPercent] = useState(0);
 
-const AddNewItem = () =>{
-    //store data in form
-    const [displayName, setDisplayName] = useState('');
-    const [itemName, setItemName] = useState('');
-    const [productID, setProductID] = useState('');
-    const [quantity, setQuantity] = useState('');
-    const [costPrice, setCostPrice] = useState('');
-    const [sellingPrice, setSellingPrice] = useState('');
-    const [fixedPrice, setFixedPrice] = useState('');
-    const [itemSereal, setItemSerial] = useState('');
-    const [supplierID, setSupplierID] = useState('');
-    const [category, setCategory] = useState('');
-    const [warranty, setWarranty] = useState('');
+  // Image upload file change handle
+  function handleChange(event) {
+    setFile(event.target.files[0]);
+  }
 
-    
-    //add new item to DB
-    function sbmitItemData(e){
-        e.preventDefault();
-
-        //Check all required data are fill the user
-        if (displayName ==='' || itemName === '' || productID ==='' || quantity === '' || costPrice === '' || sellingPrice === ' ' || supplierID === '' || category ==='' || warranty==''){
-            Swal.fire({
-                icon:'error',
-                title: 'Oops....',
-                text:'Plase Enter All Data'
-            })
-            return;
-        }
-
-        const newItem ={
-            displayName, 
-            itemName, 
-            productID, 
-            quantity, 
-            costPrice, 
-            sellingPrice,
-            fixedPrice,
-            itemSereal,
-            supplierID,
-            category, 
-            warranty
-        }
-      
-        
-        axios.post('http://localhost:8000/item/add',newItem)
-        .then((res) =>{
-            console.log(res)
-            Swal.fire({
-                position: 'center',
-                icon: 'success',
-                title: 'New Item Added !',
-                showConfirmButton: false,
-                timer: 1500
-              })
-        })
-        .catch((err)=>{
-            console.log(err);
-        })
-
-        window.location.reload(false)
+  // Image upload
+  const handleUpload = () => {
+    if (!file) {
+      alert('Please upload an image first!');
     }
+
+    const storageRef = ref(storage, `/files/${file.name}`);
+
+    // Progress can be paused and resumed. It also exposes progress updates.
+    // Receives the storage reference and the file to upload.
+    const uploadTask = uploadBytesResumable(storageRef, file);
+
+    uploadTask.on(
+      'state_changed',
+      (snapshot) => {
+        const percent = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+
+        // Update progress
+        setPercent(percent);
+      },
+      (err) => console.log(err),
+      () => {
+        // Download URL
+        getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+          console.log(url);
+          setImageLink(url);
+        });
+      }
+    );
+  };
+
+  function sbmitItemData(e) {
+    e.preventDefault();
+
+    // Check all required data are filled by the user
+    if (
+      displayName === '' ||
+      itemName === '' ||
+      productID === '' ||
+      quantity === '' ||
+      costPrice === '' ||
+      sellingPrice === '' || // Check for empty string, not ' '
+      supplierID === '' ||
+      category === '' ||
+      warranty === '' ||
+      imageLink === ''
+    ) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops....',
+        text: 'Please Enter All Data',
+      });
+      return;
+    }
+
+    // Parse numeric values as numbers
+    const numericQuantity = parseInt(quantity, 10);
+    const numericCostPrice = parseFloat(costPrice);
+    const numericSellingPrice = parseFloat(sellingPrice);
+    const numericFixedPrice = parseFloat(fixedPrice);
+
+    const newItem = {
+      displayName,
+      itemName,
+      productID,
+      quantity: numericQuantity,
+      costPrice: numericCostPrice,
+      sellingPrice: numericSellingPrice,
+      fixedPrice: numericFixedPrice,
+      itemSereal,
+      supplierID,
+      category,
+      warranty,
+      imageLink,
+    };
+    console.log(newItem);
+    axios
+      .post('http://localhost:8000/item/add', newItem)
+      .then((res) => {
+        console.log(res);
+        Swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: 'New Item Added!',
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
 
     return (
 <DefaultHandle>
@@ -163,7 +217,28 @@ const AddNewItem = () =>{
               Warranty:
               <input type="text" className="form-control" placeholder="AK2928582-9582" onChange={(e) => setWarranty(e.target.value)} value={warranty} style={input} />
             </label>
-            <button className='btn btn-success' onClick={(e) => sbmitItemData(e)} style={button}>Add New Item</button>
+
+            <div className="row md-6">
+          <div className="col-md-6">
+          <label className="labels" style={{ float: "left" }}>
+              Upload Image :
+            </label>
+            <input 
+              type="file"
+              class="form-control"  
+              onChange={handleChange}   
+            />
+            <div style={{marginTop: "10px"}}>
+              <button type="button" class="btn btn-secondary" onClick={handleUpload}>Upload</button>
+              <p>{percent} "% done"</p>
+            </div>
+          </div>
+        </div>
+
+              
+              <button className="btn btn-success" onClick={sbmitItemData}>
+              Add New Item
+              </button>
           </form>
 </div>
 </DefaultHandle>

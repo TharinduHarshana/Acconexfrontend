@@ -2,11 +2,13 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import DefaultHandle from "../DefaultHandle";
 import { message } from "antd";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import "../../styles/item-kit.css";
 import { SearchOutlined } from "@ant-design/icons";
 
-function ItemKitsForm() {
+function ItemKitsUpdate() {
+  // Extracting ID parameter from URL using useParams hook
+  const { id } = useParams();
   const navigate = useNavigate();
 
   const [inventoryItems, setInventoryItems] = useState([]);
@@ -41,6 +43,33 @@ function ItemKitsForm() {
   // Handle search input
   const [searchItem, setSearchItem] = useState("");
 
+  // Fetch item kit data by ID when the component mounts
+  useEffect(() => {
+    const fetchItemKitData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8000/itemkit/${id}`);
+        if (response.data.success) {
+          const itemKitData = response.data.data;
+          setFormData({
+            itemKitId: itemKitData.itemKitId,
+            itemKitName: itemKitData.itemKitName,
+            itemDescription: itemKitData.itemDescription,
+            price: itemKitData.price,
+            kitQuantity: itemKitData.kitQuantity,
+            items: itemKitData.items,
+            itemQuantity: itemKitData.itemQuantity,
+          });
+        } else {
+          console.error("Failed to fetch item kit data:", response.data);
+        }
+      } catch (error) {
+        console.error("Error fetching item kit data:", error);
+      }
+    };
+
+    fetchItemKitData();
+  }, [id]);
+
   // Function to handle quantity change
   const handleQuantityChange = (e, item) => {
     setInventoryItems(
@@ -65,7 +94,7 @@ function ItemKitsForm() {
       setFormData((prevFormData) => ({
         ...prevFormData,
         items: newItems,
-        itemQuantity: newItemQuantities,
+        itemQuantity: newItemQuantities, // Ensure this is correctly updated
         price: newPrice,
       }));
     } else {
@@ -74,7 +103,7 @@ function ItemKitsForm() {
       setFormData((prevFormData) => ({
         ...prevFormData,
         items: [...prevFormData.items, item],
-        itemQuantity: [...prevFormData.itemQuantity, item.quantity],
+        itemQuantity: [...prevFormData.itemQuantity, item.quantity], // Ensure this is correctly updated
         price: prevFormData.price + itemTotalPrice,
       }));
       // Deduct the item quantity from the inventory
@@ -93,13 +122,31 @@ function ItemKitsForm() {
   //Function to check if item kit ID already exists
   const checkIfItemKitIdExists = async (itemKitId) => {
     try {
+      // Fetch item kit data from the backend API
       const response = await axios.get(
         `http://localhost:8000/itemkit/check/${itemKitId}`
       );
-      return response.data.exists;
+      const { exists } = response.data;
+
+      // If the item kit ID exists in the database
+      if (exists) {
+        // Fetch the item kit data by ID
+        const itemKitData = await axios.get(
+          `http://localhost:8000/itemkit/${id}`
+        );
+        // If the fetched item kit ID is the same as the current item kit's ID, return false (no conflict)
+        if (itemKitData.data.data.itemKitId === itemKitId) {
+          return false;
+        } else {
+          // If the fetched item kit ID is different, return true (conflict)
+          return true;
+        }
+      }
+      // If the item kit ID doesn't exist in the database, return false (no conflict)
+      return exists;
     } catch (error) {
       console.error("Error checking if item kit ID exists:", error);
-      return false;
+      return false; // Default to no conflict on error
     }
   };
 
@@ -108,54 +155,9 @@ function ItemKitsForm() {
     e.preventDefault();
     console.log("Submitting form data:", formData);
 
-    // Define required fields and their validation logic
-    const requiredFields = [
-      "itemKitId",
-      "itemKitName",
-      "itemDescription",
-      "price",
-      "kitQuantity",
-      "items", // Added to the list of required fields
-    ];
-
-    // Validate that all required fields are filled
-    const allFieldsFilled = requiredFields.every((field) => formData[field]);
-
-    // Validate that 'items' is not empty and each item has 'productID' and 'quantity'
-    const itemsValid =
-      formData.items.length > 0 &&
-      formData.items.every((item) => item.productID && item.quantity);
-
-    // Validate that 'itemQuantity' is not empty and matches the length of 'items'
-    const itemQuantityValid =
-      formData.itemQuantity.length > 0 &&
-      formData.itemQuantity.length === formData.items.length;
-
-    // Validate form data
-    if (!allFieldsFilled || !itemsValid || !itemQuantityValid) {
-      message.error(
-        "Please fill in all required fields and ensure items and quantities are correctly specified."
-      );
-      return; // Exit the function if validation fails
-    }
-
-    // Validate that price, kitQuantity, and itemQuantity are positive numbers
-    const priceValid = Number(formData.price) >= 0;
-    const kitQuantityValid = Number(formData.kitQuantity) >= 0;
-    const itemsQuantityValid = formData.items.every(
-      (item) => Number(item.quantity) >= 0
-    );
-
-    if (!priceValid || !kitQuantityValid || !itemsQuantityValid) {
-      message.error(
-        "Price, kit quantity, and item quantity must be positive numbers."
-      );
-      return; // Exit the function if validation fails
-    }
-
+    // Checking if item kit ID already exists
     const itemKitIdExists = await checkIfItemKitIdExists(formData.itemKitId);
     if (itemKitIdExists) {
-      // If item kit ID already exists
       message.error(
         "An item kit with this ID already exists. Please choose a different ID."
       );
@@ -163,12 +165,12 @@ function ItemKitsForm() {
     }
 
     try {
-      const response = await axios.post(
-        "http://localhost:8000/itemkit/create",
+      const response = await axios.patch(
+        `http://localhost:8000/itemkit/update/${id}`,
         formData
       );
       console.log("Item kit submitted successfully:", response.data);
-      message.success("Item kit create successful!");
+      message.success("Item kit update successful!");
 
       // Update inventory items' quantities based on the items included in the kit
       setInventoryItems((prevInventoryItems) =>
@@ -264,7 +266,7 @@ function ItemKitsForm() {
               />
             </div>
 
-            <button type="submit">Create Item Kit</button>
+            <button type="submit">Update Item Kit</button>
           </form>
           <table>
             <thead>
@@ -325,6 +327,4 @@ function ItemKitsForm() {
   );
 }
 
-export default ItemKitsForm;
-
-
+export default ItemKitsUpdate;

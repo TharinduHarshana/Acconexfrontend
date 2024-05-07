@@ -12,9 +12,27 @@ body {
 .container {
     padding: 10px;
     max-width: fit-content;
-    margin: 50px auto;
+    margin: 10px auto;
+    
 }
-
+  .tableContainer
+  {
+    max-height: fit-content;
+    overflow-x: auto;
+    position: relative;
+      
+  }
+  th, td {
+    padding: 8px;
+    border: 1px solid #ddd;
+  }
+  
+  @media screen and (max-width: 600px) {
+    th, td {
+      font-size: 12px;
+    }
+  }
+  
 /* Button styles */
 .btn {
     border: none;
@@ -22,12 +40,20 @@ body {
     font-size: 18px;
     border-radius: 5px;
     cursor: pointer;
+  
+}
+.btn.btn_add{
+   position: fixed;
+   right: 150px;
+   margin-top: 20px;
+  
 }
 
 /* Add customer button styles */
 .btn_add {
     background-color: rgb(1, 1, 41);
     color: white;
+    
 }
 
 /* CustomerForm.js Add container styles */
@@ -125,10 +151,12 @@ body {
     cursor: pointer;
 }
 
+
 /* Table container styles */
 .tableContainer,
-.bill_tableContainer {
-    margin-top: 50px;
+.bill_tableContainer,
+.daily_sale_tableContainer {
+    margin-top: 60px;
     border: 1px solid #c9c5c2;
     box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
     border-radius: 5px;
@@ -137,18 +165,35 @@ body {
 }
 
 /* Bill table container styles */
-.bill_tableContainer {
+.bill_tableContainer,
+.daily_sale_tableContainer{
     height: 300px;
+    table-layout: auto;
+}
+/*Daily sale table container styles*/
+.daily_sale_tableContainer{
+  width: 400px auto;
+  margin: 40px;
+   margin-top: 50px;
+   border: 1px solid #c9c5c2; 
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); 
+  border-radius: 5px;
+  display: flex;  
+  justify-content: space-between;
+
 }
 
 /* Table header row styles */
 .tableContainer table thead tr,
-.bill_tableContainer table thead tr {
+.bill_tableContainer table thead tr,
+.daily_sale_tableContainer table thead tr {
     background-color: beige;
 }
 
 /* Table header cell styles */
 .tableContainer table thead tr th,
+.daily_sale_tableContainer table thead tr th,
+.daily_sale_tableContainer table tbody td,
 .tableContainer table thead tbody td {
     min-width: 200px;
     padding: 7px;
@@ -156,8 +201,10 @@ body {
 }
 
 /* Bill table header cell styles */
+.bill_tableContainer table thead tbody td,
 .bill_tableContainer table thead tr th,
-.bill_tableContainer table tbody tr td {
+.daily_sale_tableContainer table tbody tr td
+{
     min-width: 125px;
     padding: 7px;
     text-align: center;
@@ -165,13 +212,15 @@ body {
 
 /* Table body cell styles */
 .tableContainer table tbody tr td,
+.daily_sale_tableContainer table tbody tr td,
 .bill_tableContainer table tbody tr td {
     border-bottom: 1px solid #c9c5c2;
 }
 
 /* Edit and delete button styles */
 .btn-edit,
-.btn-delete {
+.btn-delete
+{
     font-size: 15px;
     padding: 5px 10px;
     margin: 0px 10px;
@@ -195,4 +244,20 @@ body {
     padding: 10px;
     max-width: fit-content;
     margin: 15px auto;
+}
+
+/*serch button of bill*/
+.serchdiv.inboxserch{
+    text-align: center;
+    padding: 10px auto;
+    margin-top: 5px;
+}
+/*bill button */
+
+.add_cus_btn{
+    margin-right: 10px;
+}
+
+.linebrake{
+    margin-top: 20px;
 }

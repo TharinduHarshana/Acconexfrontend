@@ -95,7 +95,7 @@ const DefaultHandle = ({ children }) => {
           onClick={handleMenuClick}
         >
           <Menu.Item key="/admin/dashboard" icon={<DashboardOutlined />}>
-            <Link to="/admin/home">Home</Link>
+            <Link to="admin/dashbord">Home</Link>
           </Menu.Item>
 
           <Menu.SubMenu
@@ -116,20 +116,21 @@ const DefaultHandle = ({ children }) => {
             title="Contacts"
             icon={<ContactsOutlined />}
           >
-            <Menu.Item key="supplier" title="Supplier">
+          <Menu.Item key="supplier" title="Supplier">
               <Link to="/admin/supplier">Supplier</Link>
-            </Menu.Item>
-            <Menu.Item key="customer" title="Customer">
-              <Link to="/admin/customer">Customer</Link>
-            </Menu.Item>
-          </Menu.SubMenu>
-
-          <Menu.Item key="/admin/users" icon={<UserOutlined />}>
-            <Link to="/admin/userTable">Users</Link>
           </Menu.Item>
 
-          <Menu.Item key="/admin/sales" icon={<ShoppingCartOutlined />}>
-            <Link to="/admin/sales">Sales</Link>
+          <Menu.Item key="customer" title="Customer">
+            <Link to="/admin/customer">Customer</Link>
+          </Menu.Item>
+
+          </Menu.SubMenu>
+            <Menu.Item key="/admin/users" icon={<UserOutlined />}>
+              <Link to="/admin/userTable">Users</Link>
+            </Menu.Item>
+
+          <Menu.Item key="/admin/sale" icon={<ShoppingCartOutlined/>}>
+            <Link to="/admin/sale">Sales</Link>
           </Menu.Item>
 
           <Menu.Item key="/admin/reports" icon={<LineChartOutlined />}>
@@ -229,4 +230,7 @@ const DefaultHandle = ({ children }) => {
   );
 };
 
+
+
 export default DefaultHandle;
+

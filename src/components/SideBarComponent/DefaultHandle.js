@@ -16,10 +16,7 @@ import {
   ShoppingFilled,
   MailOutlined,
 } from "@ant-design/icons";
-// import "../styles/sidebar.css";
-// import "../styles/adminheader.css";
 import { Link } from "react-router-dom";
-
 
 const { Header, Sider, Content } = Layout;
 const { Search } = Input;
@@ -89,7 +86,7 @@ const DefaultHandle = ({ children }) => {
           onClick={handleMenuClick}
         >
           <Menu.Item key="/admin/dashboard" icon={<DashboardOutlined />}>
-            <Link to="/admin/home">Home</Link>
+            <Link to="/admin/dashboard">Home</Link>
           </Menu.Item>
 
           <Menu.SubMenu
@@ -117,22 +114,13 @@ const DefaultHandle = ({ children }) => {
               <Link to="/admin/customer">Customer</Link>
             </Menu.Item>
           </Menu.SubMenu>
-
-
-          <Menu.Item key="/user" icon={<UserOutlined />}>
-            <Link to="/user">Users</Link>
-          </Menu.Item>
-
-          <Menu.Item key="/sale" icon={<ShoppingCartOutlined />}>
-            <Link to="/sale">Sales</Link>
-          </Menu.Item>
+          
           <Menu.Item key="/admin/users" icon={<UserOutlined />}>
             <Link to="/admin/userTable">Users</Link>
           </Menu.Item>
-
-          <Menu.Item key="/admin/sales" icon={<ShoppingCartOutlined />}>
-            <Link to="/admin/sales">Sales</Link>
-
+          
+          <Menu.Item key="admin/sale" icon={<ShoppingCartOutlined />}>
+            <Link to="/admin/sale">Sales</Link>
           </Menu.Item>
 
           <Menu.Item key="/admin/reports" icon={<LineChartOutlined />}>
@@ -150,7 +138,6 @@ const DefaultHandle = ({ children }) => {
             level={3}
             style={{ fontSize: "13px", fontFamily: "sans-serif" }}
           >
-            Dashboard
           </Typography.Title>
           <Space>
             <div className="header-action" style={{ marginRight: "8px" }}>
@@ -219,6 +206,7 @@ const DefaultHandle = ({ children }) => {
             margin: "24px 16px",
             padding: 24,
             minHeight: 280,
+            overflow: "auto", // Add overflow property here
           }}
         >
           {children}

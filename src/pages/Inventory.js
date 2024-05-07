@@ -42,6 +42,11 @@ const Items = () =>{
     },
 
     {
+      name: 'Image',
+      cell: (row) => <img src={row.imageLink} alt="Item Image" style={{ width: '50px' }} />,
+    },
+
+    {
       name: 'Actions',
       cell: (row) => (
         <div>

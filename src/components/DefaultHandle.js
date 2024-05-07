@@ -96,12 +96,18 @@ const DefaultHandle = ({ children }) => {
             title="Inventory"
             icon={<ProductOutlined />}
           >
+            
+
             <Menu.Item key="inventory" title="inventory">
               <Link to="/admin/inventory">Inventory</Link>
             </Menu.Item>
             <Menu.Item key="itemKits" title="item-kits">
               <Link to="/admin/inventory/item-kits">Item Kits</Link>
             </Menu.Item>
+            <Menu.Item key="category" title="category">
+              <Link to="/admin/category">Category</Link>
+            </Menu.Item>
+            
           </Menu.SubMenu>
 
           <Menu.SubMenu

@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import storage from '../InventoryComponent/firebase'; // Adjust the import path as necessary
 import DefaultHandle from '../DefaultHandle';
+import '../../styles/addnewitem.css';
 
 const AddNewItem = () => {
   // Store data in form
@@ -19,10 +20,16 @@ const AddNewItem = () => {
   const [supplierID, setSupplierID] = useState('');
   const [category, setCategory] = useState('');
   const [warranty, setWarranty] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
   const [imageLink, setImageLink] = useState('');
   const [file, setFile] = useState('');
   const [percent, setPercent] = useState(0);
+  const [categories, setCategories] = useState([]);
+  const [suppliers, setSuppliers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  
+
+
+  
 
   // Image upload file change handle
   function handleChange(event) {
@@ -59,6 +66,23 @@ const AddNewItem = () => {
       }
     );
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const categoriesResponse = await axios.get('http://localhost:8000/category/');
+        const suppliersResponse = await axios.get('http://localhost:8000/supplier/get');
+        setCategories(categoriesResponse.data.data);
+        setSuppliers(suppliersResponse.data.data);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   function sbmitItemData(e) {
     e.preventDefault();
@@ -123,30 +147,30 @@ const AddNewItem = () => {
   }
 
     return (
-<DefaultHandle>
-<div style={formStyle}>
+<DefaultHandle> 
+<div className='formContainer'>
         <form className='form'>
-            <label style={label}>
+            <label className='label'>
               Display Name:
-              <input type="text" className='form-control' placeholder="Cutting Wheel" onChange={(e) => setDisplayName(e.target.value)} value={displayName} required style={input} />
+              <input type="text"  placeholder="Cutting Wheel" onChange={(e) => setDisplayName(e.target.value)} value={displayName} required className='input' />
             </label>
-            <label style={label}> 
+            <label className='label'> 
               Item Name:
-              <input type="text" className="form-control" placeholder="Cutting Wheel 5''" onChange={(e) => setItemName(e.target.value)} value={itemName} required style={input} />
+              <input type="text"  placeholder="Cutting Wheel 5''" onChange={(e) => setItemName(e.target.value)} value={itemName} required className='input' />
             </label>
-            <label style={label} >
+            <label className='label' >
               Product ID:
-              <input type="text" className="form-control" placeholder="001" onChange={(e) => setProductID(e.target.value)} value={productID} required style={input} />
+              <input type="text"  placeholder="001" onChange={(e) => setProductID(e.target.value)} value={productID} required className='input' />
             </label>
-            <label style={label}>
+            <label className='label'>
               Quantity:
-              <input type="number" className="form-control" placeholder="20" onChange={(e) => setQuantity(e.target.value)} value={quantity} required style={input} />
+              <input type="number"  placeholder="20" onChange={(e) => setQuantity(e.target.value)} value={quantity} required className='input' />
             </label>
-            <label style={label}>
+            <label className='label'>
   Cost Price
   <input 
     type="text" 
-    className="form-control" 
+
     placeholder="200" 
     onChange={(e) => {
       const inputVal = e.target.value;
@@ -156,14 +180,14 @@ const AddNewItem = () => {
     }} 
     value={costPrice} 
     required 
-    style={input} 
+    className='input' 
   />
 </label>
-<label style={label}>
+<label className='label'>
   Selling Price:
   <input 
     type="text" 
-    className="form-control" 
+
     placeholder="400" 
     onChange={(e) => {
       const inputVal = e.target.value;
@@ -173,14 +197,14 @@ const AddNewItem = () => {
     }} 
     value={sellingPrice} 
     required 
-    style={input} 
+    className='input' 
   />
 </label>
-<label style={label}>
+<label className='label'>
   Fixed Price:
   <input 
     type="text" 
-    className="form-control" 
+
     placeholder="300" 
     onChange={(e) => {
       const inputVal = e.target.value;
@@ -189,38 +213,37 @@ const AddNewItem = () => {
       }
     }} 
     value={fixedPrice} 
-    style={input} 
+    className='input' 
   />
 </label>
 <label>
               Item Sereal:
-              <input type="text" className="form-control" placeholder="AK2928582-9582" onChange={(e) => setItemSerial(e.target.value)} value={itemSereal} style={input} />
+              <input type="text" placeholder="AK2928582-9582" onChange={(e) => setItemSerial(e.target.value)} value={itemSereal} className='input' />
             </label>
 
-            <label style={label} >Select Supplier:</label>
-                <select className="form-control" onChange={(e) => setSupplierID(e.target.value)} value={supplierID} style={input}>
-                  <option value="5">Volvo</option>
-                  <option value="6">Saab</option>
-                  <option value="7">Mercedes</option>
-                  <option value="4">Audi</option>
-                </select>
+            {/* Your form inputs */}
+      <label className='label'>Select Supplier:</label>
+      <select onChange={(e) => setSupplierID(e.target.value)} value={supplierID} className='input'>
+        {suppliers.map((supplier) => (
+          <option key={supplier._id} value={supplier.supplierId}>{supplier.firstName}</option>
+        ))}
+      </select>
 
-              <label style={label}>Select Category</label>
-                  <select className="form-control" onChange={(e) => setCategory(e.target.value)} value={category} style={input}>
-                    <option value="1">Volvo</option>
-                    <option value="2">Saab</option>
-                    <option value="3">Mercedes</option>
-                    <option value="4">Audi</option>
-              </select>
+      <label className='label'>Select Category:</label>
+      <select onChange={(e) => setCategory(e.target.value)} value={category} className='input'>
+        {categories.map((category) => (
+          <option key={category._id} value={category.categoryname}>{category.categoryname}</option>
+        ))}
+      </select>
 
-            <label style={label}>
+            <label className= 'label'>
               Warranty:
-              <input type="text" className="form-control" placeholder="AK2928582-9582" onChange={(e) => setWarranty(e.target.value)} value={warranty} style={input} />
+              <input type="text"  placeholder="AK2928582-9582" onChange={(e) => setWarranty(e.target.value)} value={warranty} className='input' />
             </label>
 
             <div className="row md-6">
           <div className="col-md-6">
-          <label className="labels" style={{ float: "left" }}>
+          <label className="labels">
               Upload Image :
             </label>
             <input 
@@ -228,7 +251,7 @@ const AddNewItem = () => {
               class="form-control"  
               onChange={handleChange}   
             />
-            <div style={{marginTop: "10px"}}>
+            <div className={{marginTop: "10px"}}>
               <button type="button" class="btn btn-secondary" onClick={handleUpload}>Upload</button>
               <p>{percent} "% done"</p>
             </div>
@@ -246,37 +269,6 @@ const AddNewItem = () => {
     )
 }
 
-const formStyle = {
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'flex-end',   
-  color: '$font-color',
-  fontFamily: '$font-family',
-  fontSize: '14px',
-  fontWeight: '400',
-  width: '65%',
-  margin: 'auto',  
-};
 
-const label = {
-  display: 'block',
-  marginBottom: '10px',
-  fontSize:'18p'
-};
-
-const input = {
-  width: '175%',
-  padding: '8px',
-  marginBottom: '10px',
-  boxSizing: 'border-box',
-};
-
-const button = {
-  marginLeft: 'none',
-  width: '100%',
-  height: '40px',
-  fontWeight: 'bold',
-  marginBottom: '20px',
-};
   
 export default AddNewItem;

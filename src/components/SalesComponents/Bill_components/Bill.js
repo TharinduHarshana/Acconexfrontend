@@ -1,5 +1,3 @@
-// Bill.js
-
 import React, { useState, useEffect } from 'react';
 import DefaultHandleSales from '../DefaultHandleSales';
 import '../../../styles/bill.css';
@@ -11,94 +9,73 @@ import TenderedPopup from './TenderedPopup';
 import CustomerForm from "../../CustomerComponents/customerForm";
 import { message } from 'antd';
 
-
 const Bill = () => {
   const [billItems, setBillItems] = useState([]);
   const [items, setItems] = useState([]);
   const [filteredItems, setFilteredItems] = useState([]);
   const [searchValue, setSearchValue] = useState('');
   const [showModal, setShowModal] = useState(false);
-  const [selectedItem, setSelectedItem] = useState(null); // State to store the selected item
+  const [selectedItem, setSelectedItem] = useState(null);
   const [invoiceNo, setInvoiceNo] = useState('');
   const [cashier, setCashier] = useState('');
   const [date, setDate] = useState('');
-  const [total,setTotal]= useState('');
-  const [tendered,setTendered]=useState('0.00');
-  const [balance,setBalance]= useState('');
+  const [total, setTotal] = useState(0);
+  const [tendered, setTendered] = useState(0);
+  const [balance, setBalance] = useState(0);
   const [paymentMethod, setPaymentMethod] = useState('');
   const [showTenderedPopup, setShowTenderedPopup] = useState(false);
   const [searchCustomerValue, setSearchCustomerValue] = useState("");
-  const [customers, setCustomers] = useState([]); // State for storing customer data
-  const [filteredCustomers, setFilteredCustomers] = useState([]); // State for storing filtered customer list
+  const [customers, setCustomers] = useState([]);
+  const [filteredCustomers, setFilteredCustomers] = useState([]);
   const [selectedCustomerName, setSelectedCustomerName] = useState('');
   const [showForm, setShowForm] = useState(false);
-  
-
-
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/item/');
-        setItems(response.data.data);
-        setFilteredItems(response.data.data);
-
-        const customerResponse = await axios.get('http://localhost:8000/customer/');
-        setCustomers(customerResponse.data.data);
-
+        const [itemsResponse, customersResponse] = await Promise.all([
+          axios.get('http://localhost:8000/item/'),
+          axios.get('http://localhost:8000/customer/')
+        ]);
+        setItems(itemsResponse.data.data);
+        setFilteredItems(itemsResponse.data.data);
+        setCustomers(customersResponse.data.data);
       } catch (error) {
-        console.error('Error fetching items:', error.message);
+        console.error('Error fetching items or customers:', error.message);
       }
     };
     fetchData();
-
-    // Generate invoice number
     const currentInvoiceNumber = generateInvoiceNumber();
     setInvoiceNo(currentInvoiceNumber);
-
-    // Get current date and time
     const currentDate = getCurrentDateTime();
     setDate(currentDate);
-
     setCashier('hiru');
   }, []);
 
-  useEffect(( )=>{
-    //calculate net amount
-    const calculatedTotal = billItems.reduce((acc,item)=>acc+((item.price*item.quantity)-item.discount),0);
+  useEffect(() => {
+    const calculatedTotal = billItems.reduce((acc, item) => acc + ((item.price * item.quantity) - item.discount), 0);
     setTotal(calculatedTotal);
-
-    //calculate balance
-    if(tendered !== ''){
+    if (tendered !== '') {
       const enteredAmount = parseFloat(tendered);
       const calculateBalance = enteredAmount - calculatedTotal;
       setBalance(calculateBalance);
     }
-
-   
-
-  } ,[billItems,tendered,total]);
-
-  
-
+  }, [billItems, tendered]);
 
   const generateInvoiceNumber = () => {
     return `inv${(1000 + billItems.length + 1).toString().substr(1)}`;
   };
 
-  
-  // Function to get current date and time
   const getCurrentDateTime = () => {
     const date = new Date();
-    const formattedDate = date.toISOString().slice(0, 10); // Get date in YYYY-MM-DD format
+    const formattedDate = date.toISOString().slice(0, 10);
     const hours = date.getHours();
     const minutes = date.getMinutes();
     const seconds = date.getSeconds();
-    const formattedTime = `${hours}:${minutes}:${seconds}`; // Get time in HH:MM:SS format
+    const formattedTime = `${hours}:${minutes}:${seconds}`;
     return `${formattedDate} ${formattedTime}`;
   };
 
-  //search the item
   const filterItem = (event) => {
     const value = event.target.value.toLowerCase();
     setSearchValue(value);
@@ -110,11 +87,10 @@ const Bill = () => {
     setFilteredItems(filteredData);
   };
 
- 
- const handleChange = (item) => {
-  setSelectedItem(item); // Set the selected item
-  setShowModal(true); // Show the modal form
-};
+  const handleChange = (item) => {
+    setSelectedItem(item);
+    setShowModal(true);
+  };
 
   const handleConfirmAddToBill = (formData) => {
     const itemToAdd = { ...formData };
@@ -122,38 +98,38 @@ const Bill = () => {
     setShowModal(false);
   };
 
-   // Sum up the quantity of each item in the billItems array
   const calculateTotalQuantity = () => {
-   
-    const totalQuantity = billItems.reduce((acc, item) => acc + parseInt(item.quantity), 0);
-    return totalQuantity;
+    return billItems.reduce((acc, item) => acc + parseInt(item.quantity), 0);
+  };
+
+  const calculateTotalCost = () => {
+    return billItems.reduce((acc, billItems) => acc + (selectedItem.costPrice * billItems.quantity), 0);
   };
 
   
   const handleCompleteSale = async () => {
     try {
-      // Calculate item count
       const totalQuantity = calculateTotalQuantity();
-      const totalcost = billItems.reduce((acc, item) => acc + item.costPrice * item.quantity, 0);
+      const totalCost = calculateTotalCost();
+      const calculateProfit = (total - totalCost);
+    
+
       const data = {
-        POSNO: '494',
+        POSNO: '56',
         cashirename: cashier,
         datetime: date,
         customername: selectedCustomerName,
-        itemcount:totalQuantity,
+        itemcount: totalQuantity,
         paymentmethod: paymentMethod,
         totalamount: total,
-        totalcost: totalcost, 
-        profit: 0 // Calculated profit
+        totalcost: totalCost,
+        profit: calculateProfit
       };
-  
-      // Send HTTP POST request to save data to daily sales
+
       const response = await axios.post("http://localhost:8000/dailysales/add", data);
-  
-      // Handle response
+
       if (response.data.success) {
         message.success("Sale completed successfully and data saved to daily sales.");
-        // Clear any necessary state or perform other actions if needed
       } else {
         message.error("Failed to save data to daily sales. Please try again later.");
       }
@@ -162,24 +138,16 @@ const Bill = () => {
       message.error("An error occurred while completing the sale. Please try again later.");
     }
   };
-  
 
-  
+  const generatePDFAndCompleteSale = () => {
+    generatePDF();
+    handleCompleteSale();
+  };
 
-// Function to generate PDF and complete the sale
-const generatePDFAndCompleteSale = () => {
-  generatePDF(); // Generate PDF
-   handleCompleteSale();// Save data to daily sales after generating PDF
-};
-
-
-  //generate the bill into pdf and download
   const generatePDF = () => {
     const input = document.getElementById('print_bill');
-  
     const pdfWidth = input.offsetWidth;
     const pdfHeight = input.offsetHeight;
-  
     html2canvas(input, { width: pdfWidth, height: pdfHeight }).then((canvas) => {
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF({
@@ -187,38 +155,31 @@ const generatePDFAndCompleteSale = () => {
         unit: 'px',
         format: [pdfWidth, pdfHeight]
       });
-  
       pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
       pdf.save('bill.pdf');
     });
   };
-  
-//set payment method
-const handleConfirmTendered = (tenderedAmount) => {
-  // Handle the confirmation of the tendered amount here
-  setTendered(tenderedAmount);
-  setShowTenderedPopup(false);
-};
 
-// Function to format numbers with two decimal places
-const formatNumber = (number) => {
-  return parseFloat(number).toFixed(2);
-};
+  const handleConfirmTendered = (tenderedAmount) => {
+    setTendered(tenderedAmount);
+    setShowTenderedPopup(false);
+  };
 
-// Function to handle cash radio button change
-const handleCashRadioChange = () => {
-  setShowTenderedPopup(true); // Show the tendered popup when "Cash" is selected
-  setPaymentMethod('cash'); // Set payment method to "Cash"
-};
+  const formatNumber = (number) => {
+    return parseFloat(number).toFixed(2);
+  };
 
-// Callback function to handle tendered amount confirmation
-const handleBankTransferRadioChange = () => {
-  setTendered(formatNumber(total)); // Set tendered amount to net amount
-  setPaymentMethod('bank'); // Set payment method to "Bank Transfer"
-};
+  const handleCashRadioChange = () => {
+    setShowTenderedPopup(true);
+    setPaymentMethod('cash');
+  };
 
-//search customer
-const filterCustomer = (event) => {
+  const handleBankTransferRadioChange = () => {
+    setTendered(formatNumber(total));
+    setPaymentMethod('bank');
+  };
+
+  const filterCustomer = (event) => {
     const value = event.target.value.toLowerCase();
     setSearchCustomerValue(value);
     const filteredData = customers.filter(
@@ -229,27 +190,22 @@ const filterCustomer = (event) => {
     setFilteredCustomers(filteredData);
   };
 
-
   const handleCustomerItemClick = (customer) => {
     setSelectedCustomerName(customer.name);
-    setSearchCustomerValue(""); // Set the selected customer's name
-    // Other logic you may have
+    setSearchCustomerValue("");
   };
-  
-  //add customer
+
   const handleAddCustomer = () => {
     setShowForm(true);
   };
+
   const handleFormSubmit = async (formData) => {
     try {
-      // Check if the customer ID already exists
       const existingCustomer = customers.find((customer) => customer.cusid === formData.cusid);
       if (existingCustomer) {
         message.error("Customer ID already exists. Please choose a different ID.");
         return;
       }
-
-      //add new customer
       const response = await axios.post("http://localhost:8000/customer/add", formData);
       if (response.data.success) {
         message.success(response.data.message);
@@ -263,8 +219,6 @@ const filterCustomer = (event) => {
     }
   };
 
-
-  
   return (
     <div className='bill_container'>
       <DefaultHandleSales>
@@ -276,11 +230,11 @@ const filterCustomer = (event) => {
                 <table className='bill_table'>
                   <thead>
                     <tr>
-                      <th style={{width: '50px'}}>Item ID</th>
-                      <th style={{width: '150px'}}>Item Name</th>
-                      <th style={{width: '20px'}}>Qnt</th>
-                      <th style={{width:'50px'}}>Price</th>
-                      <th style={{width:'50px'}}> Cost</th>
+                      <th style={{ width: '50px' }}>Item ID</th>
+                      <th style={{ width: '150px' }}>Item Name</th>
+                      <th style={{ width: '20px' }}>Qnt</th>
+                      <th style={{ width: '50px' }}>Price</th>
+                      <th style={{ width: '50px' }}> Cost</th>
                       <th>Action</th>
                     </tr>
                   </thead>
@@ -302,30 +256,29 @@ const filterCustomer = (event) => {
               </div>
             </div>
           </div>
-          <div className='print_bill' id='print_bill' >
-          <div className='searchcustomer'>
-            <input placeholder='Search customer' value={searchCustomerValue} onChange={filterCustomer} />
-            {searchCustomerValue && filteredCustomers.length > 0 && (
-              <div className='customer-list'>
-                {filteredCustomers.map((customer, index) => (
-                  <div key={index} className='customer-item' onClick={() => handleCustomerItemClick(customer)}>
-                    <table>
-                      <tbody>
-                        <tr>
-                          <td className='selectedcustomer'>
-                            <span style={{ fontWeight: 'bold' }}>Name: {customer.name}</span><br />
-                            <span>Address: {customer.address}</span>
-                            <span style={{ marginLeft: '30px' }}>Mobile: {customer.mobile}</span>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-
+          <div className='print_bill' id='print_bill'>
+            <div className='searchcustomer'>
+              <input placeholder='Search customer' value={searchCustomerValue} onChange={filterCustomer} />
+              {searchCustomerValue && filteredCustomers.length > 0 && (
+                <div className='customer-list'>
+                  {filteredCustomers.map((customer, index) => (
+                    <div key={index} className='customer-item' onClick={() => handleCustomerItemClick(customer)}>
+                      <table>
+                        <tbody>
+                          <tr>
+                            <td className='selectedcustomer'>
+                              <span style={{ fontWeight: 'bold' }}>Name: {customer.name}</span><br />
+                              <span>Address: {customer.address}</span>
+                              <span style={{ marginLeft: '30px' }}>Mobile: {customer.mobile}</span>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
             <div>
               <form className='bill_form'>
                 <div>
@@ -334,19 +287,18 @@ const filterCustomer = (event) => {
                   <hr />
                   <div className="form-row">
                     <div className="print_bill_label">
-                    <label style={{ fontSize: 12 }} htmlFor='invoice_no'>Invoice No:</label><br/>
-                    <label style={{ fontSize: 12 }} htmlFor='cashier'>Cashier:</label><br/>
-                    <label style={{ fontSize: 12 }} htmlFor='date'>Date:</label>
-                  </div> 
-                  
+                      <label style={{ fontSize: 12 }} htmlFor='invoice_no'>Invoice No:</label><br />
+                      <label style={{ fontSize: 12 }} htmlFor='cashier'>Cashier:</label><br />
+                      <label style={{ fontSize: 12 }} htmlFor='date'>Date:</label>
+                    </div>
                     <div className="print_bill_input">
-                      <input type='text' style={{ fontSize: 12 }} id='invoice_no' className="input-no-border" value={invoiceNo} onChange={(e) => setInvoiceNo(e.target.value)} readOnly /><br/>
-                      <input type='text' style={{ fontSize: 12 }} id='cashier' className="input-no-border" value={cashier} onChange={(e) => setCashier(e.target.value)} readOnly /><br/>
+                      <input type='text' style={{ fontSize: 12 }} id='invoice_no' className="input-no-border" value={invoiceNo} onChange={(e) => setInvoiceNo(e.target.value)} readOnly /><br />
+                      <input type='text' style={{ fontSize: 12 }} id='cashier' className="input-no-border" value={cashier} onChange={(e) => setCashier(e.target.value)} readOnly /><br />
                       <input type='text' style={{ fontSize: 12 }} id='date' className="input-no-border" value={date} onChange={(e) => setDate(e.target.value)} readOnly />
                     </div>
-                   
                   </div>
-                </div> <hr/>
+                </div>
+                <hr />
                 <div>
                   <table className='print_bill_table'>
                     <thead>
@@ -360,12 +312,12 @@ const filterCustomer = (event) => {
                     </thead>
                     <tbody>
                       {billItems.map((item, index) => (
-                        < tr key={index}>
+                        <tr key={index}>
                           <td>{item.product}</td>
                           <td>{formatNumber(item.price)}</td>
                           <td>{item.quantity}</td>
                           <td>{item.discount}</td>
-                          <td>{formatNumber(((item.price * item.quantity)-item.discount))}</td>
+                          <td>{formatNumber(((item.price * item.quantity) - item.discount))}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -373,45 +325,42 @@ const filterCustomer = (event) => {
                 </div>
                 <hr />
                 <div className="form-row">
-                    <div className="print_bill_label">
-                    <label style={{ fontSize: 13 }} htmlFor='net_amount'>Net Amount:</label><br/>
-                    <label style={{ fontSize: 13 }} htmlFor='torent'>Tendered Amount:</label><br/>
+                  <div className="print_bill_label">
+                    <label style={{ fontSize: 13 }} htmlFor='net_amount'>Net Amount:</label><br />
+                    <label style={{ fontSize: 13 }} htmlFor='torent'>Tendered Amount:</label><br />
                     <label style={{ fontSize: 13 }} htmlFor='balance'>Due Amount:</label>
-                  </div> 
-                  
-                    <div className="print_bill_input">
-                      <input type='float' id='net_amount' className="input-no-border" value={formatNumber(total)} onChange={(e) => setTotal(e.target.value)} readOnly/><br/>
-                      <input type='float' id='torent' className="input-no-border" value={formatNumber(tendered)} onChange={(e) => setTendered(formatNumber(e.target.value))}/><br/>
-                      <input type='float' id='balance' className="input-no-border" value={formatNumber(balance)} onChange={(e) => setBalance(e.target.value)} readOnly />
-                    </div>
-                    
                   </div>
-                  <br/>
-                    <div className='payment-method-container'>
-                      <div className="payment-method">
-                        <input type='radio' name='paymentMethod' id='cash' checked={paymentMethod === 'cash'} value='cash' onChange={handleCashRadioChange} />
-                        <label htmlFor='cash'>Cash</label>
-                      </div>
-                      <div className="payment-method">
-                        <input type='radio' name='paymentMethod' id='bank' checked={paymentMethod === 'bank'} value='bank' onChange={handleBankTransferRadioChange} />
-                        <label htmlFor='bank'>Bank Transfer</label>
-                      </div>
+                  <div className="print_bill_input">
+                    <input type='float' id='net_amount' className="input-no-border" value={formatNumber(total)} readOnly /><br />
+                    <input type='float' id='torent' className="input-no-border" value={formatNumber(tendered)} onChange={(e) => setTendered(formatNumber(e.target.value))} /><br />
+                    <input type='float' id='balance' className="input-no-border" value={formatNumber(balance)} readOnly />
                   </div>
+                </div>
+                <br />
+                <div className='payment-method-container'>
+                  <div className="payment-method">
+                    <input type='radio' name='paymentMethod' id='cash' checked={paymentMethod === 'cash'} value='cash' onChange={handleCashRadioChange} />
+                    <label htmlFor='cash'>Cash</label>
+                  </div>
+                  <div className="payment-method">
+                    <input type='radio' name='paymentMethod' id='bank' checked={paymentMethod === 'bank'} value='bank' onChange={handleBankTransferRadioChange} />
+                    <label htmlFor='bank'>Bank Transfer</label>
+                  </div>
+                </div>
                 <hr />
                 <p style={{ textAlign: 'center' }}>Thank You {selectedCustomerName && `${selectedCustomerName}`}..! Come Again.</p>
                 <p>Total Quantity: {calculateTotalQuantity()}</p>
-        
               </form>
             </div>
           </div>
-          {showTenderedPopup && paymentMethod === 'cash' && ( 
+          {showTenderedPopup && paymentMethod === 'cash' && (
             <TenderedPopup onClose={() => setShowTenderedPopup(false)} onConfirm={handleConfirmTendered} />
           )}
           {showModal && (
             <BillForm
               handleClose={() => setShowModal(false)}
               handleConfirmAddToBill={handleConfirmAddToBill}
-              selectedItem={selectedItem} // Pass the selected item data to the modal form
+              selectedItem={selectedItem}
               invoiceNo={invoiceNo}
               setInvoiceNo={setInvoiceNo}
               date={date}
@@ -422,11 +371,10 @@ const filterCustomer = (event) => {
           {showForm && (
             <CustomerForm handleSubmit={handleFormSubmit} handleClose={() => setShowForm(false)} />
           )}
-        
           <div className='bill_btn'>
-                <button className='complete_sale'  onClick={generatePDFAndCompleteSale}>Complete Sell</button>
-                <button className='add_customer'onClick={handleAddCustomer}>Add Customer</button>
-                <button className='suspend_sale'>Suspend Sale</button>
+            <button className='complete_sale' onClick={generatePDFAndCompleteSale}>Complete Sell</button>
+            <button className='add_customer' onClick={handleAddCustomer}>Add Customer</button>
+            <button className='suspend_sale'>Suspend Sale</button>
           </div>
         </div>
       </DefaultHandleSales>

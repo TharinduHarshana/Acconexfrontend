@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import DefaultHandle from "../DefaultHandle";
-import { message, Button } from "antd";
+import { message,  } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
+import "../../styles/update.user.css"
+
 
 function UpdateUser() {
   // Get the id parameter from the URL
@@ -115,106 +117,47 @@ function UpdateUser() {
       setPhoneError("Please enter only numbers and a maximum of 10 digits");
     }
   };
+// Function to handle close button click
+const handleCloseButtonClick = () => {
+  // Navigate to the home page
+  navigate("/admin/userTable");
+};
 
   return (
     <>
       <DefaultHandle>
-        <form
-          onSubmit={handleSubmit}
-          style={{
-            maxWidth: "400px",
-            overflowY: "auto",
-            maxHeight: "80vh",
-            margin: "auto",
-            marginTop: "20px",
-            padding: "20px",
-            border: "1px solid #ccc",
-            borderRadius: "16px",
-            backgroundColor: "white",
-            boxShadow: "0px 8px 32px rgba(0, 0, 0, 0.2)",
-          }}
-        >
-          <Button
-            type="primary"
-            icon={<CloseOutlined />}
-            onClick={() => navigate("/admin/userTable")}
-            style={{
-              padding: "5px 5px 5px 5px",
-              color: "black",
-              backgroundColor: "#fff",
-              border: "none",
-              float: "right",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          ></Button>
+        <div className="form_addContainer">
+          
+          <form onSubmit={handleSubmit}>
+            <div className="close-btn"  onClick={handleCloseButtonClick}>
+              <CloseOutlined />
+            </div>
 
-          <h2
-            style={{
-              fontSize: "18px",
-              fontFamily: "Arial, sans-serif",
-              textAlign: "center",
-              margin: "0 0 20px",
-              fontWeight: "bold",
-              color: "#333",
-            }}
-          ></h2>
-
-          <div style={{ marginBottom: "20px" }} className="form-group">
-            <label style={{ marginBottom: "5px", display: "block" }}>
-              User Id:
-            </label>
+            <label>User Id:</label>
             <input
               type="text"
               className="form-control"
               name="userId"
               value={user.userId}
               onChange={handleInputChange}
-              style={{
-                width: "100%",
-                padding: "10px",
-                borderRadius: "5px",
-                border: "1px solid #ccc",
-              }}
             />
-          </div>
 
-          <div style={{ marginBottom: "20px" }} className="form-group">
-            <label style={{ marginBottom: "5px", display: "block" }}>
-              First Name:
-            </label>
+            <label>First Name:</label>
             <input
               type="text"
               className="form-control"
               name="firstName"
               value={user.firstName}
               onChange={handleInputChange}
-              style={{
-                width: "100%",
-                padding: "10px",
-                borderRadius: "5px",
-                border: "1px solid #ccc",
-              }}
             />
-          </div>
 
-          <div style={{ marginBottom: "20px" }} className="form-group">
-            <label style={{ marginBottom: "5px", display: "block" }}>
-              Phone Number:
-            </label>
+            <label>Phone Number:</label>
             <input
               type="text"
               className="form-control"
               name="phoneNumber"
               value={user.phoneNumber}
               onChange={handlePhoneChange}
-              style={{
-                width: "100%",
-                padding: "10px",
-                borderRadius: "5px",
-                border: "1px solid #ccc",
-              }}
             />
             {phoneError && (
               <div
@@ -224,47 +167,25 @@ function UpdateUser() {
                 {phoneError}
               </div>
             )}
-          </div>
 
-          <div style={{ marginBottom: "20px" }} className="form-group">
-            <label style={{ marginBottom: "5px", display: "block" }}>
-              User Role:
-            </label>
+            <label>User Role:</label>
             <select
               className="form-control"
               name="role"
               value={user.role}
               onChange={handleInputChange}
-              style={{
-                width: "100%",
-                padding: "10px",
-                borderRadius: "5px",
-                border: "1px solid #ccc",
-              }}
             >
               <option value="admin">Admin</option>
               <option value="inventory manager">Inventory Manager</option>
               <option value="cashier">Cashier</option>
               <option value="sales staff">Sales Staff</option>
             </select>
-          </div>
 
-          <button
-            type="submit"
-            className="btn btn-primary"
-            style={{
-              width: "100%",
-              padding: "5px",
-              borderRadius: "5px",
-              border: "none",
-              backgroundColor: "black",
-              color: "#fff",
-              cursor: "pointer",
-            }}
-          >
-            Update
-          </button>
-        </form>
+            <button type="submit" className="btn">
+              Update
+            </button>
+          </form>
+        </div>
       </DefaultHandle>
     </>
   );

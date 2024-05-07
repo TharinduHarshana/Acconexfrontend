@@ -94,7 +94,7 @@ function Login() {
           </Button>
         </Form.Item>
         <div className="login-form-topic">
-          <h5>Problem with signing in?</h5>
+          <p>Problem with signing in?</p>
           <div className="login-form-contact">
             <p>Contact support: 0713214568</p>
           </div>

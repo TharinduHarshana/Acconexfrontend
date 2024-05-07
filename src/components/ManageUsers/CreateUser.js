@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import DefaultHandle from "../DefaultHandle";
 import axios from "axios";
-import {useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "../../styles/userform.css";
 import { Row, Col } from "antd";
 import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
@@ -56,7 +56,7 @@ const CreateUserForm = () => {
     try {
       const response = await axios.get(
         `http://localhost:8000/user/check/${userId}`,
-        { withCredentials: true } 
+        { withCredentials: true }
       );
       return response.data.exists;
     } catch (error) {
@@ -66,7 +66,16 @@ const CreateUserForm = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent the default form submission
+    e.preventDefault();
+
+    const allFieldsFilled = Object.values(formData).every(
+      (field) => field.trim() !== ""
+    );
+
+    if (!allFieldsFilled) {
+      message.error("All fields are required.");
+      return;
+    }
     try {
       const userIdExists = await checkUserIdExists(formData.userId);
       if (userIdExists) {
@@ -78,7 +87,7 @@ const CreateUserForm = () => {
       const result = await axios.post(
         "http://localhost:8000/user/add",
         formData,
-        { withCredentials: true } 
+        { withCredentials: true }
       );
       console.log(result);
       message.success("User created successfully!");
@@ -120,7 +129,7 @@ const CreateUserForm = () => {
       <DefaultHandle>
         <div style={{ padding: "20px" }}>
           <Form {...formItemLayout} className="form-containeer">
-            <Typography.Text >
+            <Typography.Text>
               User Information{" "}
               <span style={{ color: "red", fontSize: "12px" }}>
                 (Fields in red * are required)
@@ -433,8 +442,18 @@ const CreateUserForm = () => {
                 </Form.Item>
               </Col>
             </Row>
-            <div style={{ marginTop: "20px", textAlign: "right" }}>
-              <Button type="primary" htmlType="submit" onClick={handleSubmit} >
+            <div className="form_btn">
+              <Button
+                htmlType="submit"
+                onClick={handleSubmit}
+                style={{
+                  backgroundColor: "rgb(1, 1, 41)",
+                  color: "white",
+                  fontWeight: "500",
+                  marginTop: "5px",
+                  fontSize: "14px",
+                }}
+              >
                 Save
               </Button>
             </div>

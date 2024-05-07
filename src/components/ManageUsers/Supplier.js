@@ -26,8 +26,8 @@ function Supplier() {
 
     loadSuppliers();
   }, []);
-  // Function to handle deleting a supplier
 
+  // Function to handle deleting a supplier
   const handleDelete = async (_id) => {
     try {
       // Send a DELETE request to delete the supplier with the specified ID
@@ -117,13 +117,16 @@ function Supplier() {
   return (
     <div>
       <DefaultHandle>
-        <div>
+        <div style={{ marginBottom: "10px" }}>
+        <div style={{  display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <input
+            style={{ marginBottom: "12px", width: "200px" }}
             type="text end"
             className="input"
             placeholder="Search Supplier..."
             onChange={filterSuppliers}
           />
+        </div>
         </div>
         <div
           style={{

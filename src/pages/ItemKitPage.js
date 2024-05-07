@@ -12,7 +12,7 @@ const ItemKit = () => {
   useEffect(() => {
     const loadItemKit = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/itemkit/all",{
+        const response = await axios.get("http://localhost:8000/itemkit/all", {
           withCredentials: true,
         });
         setItemKit(response.data.data);
@@ -90,40 +90,61 @@ const ItemKit = () => {
   return (
     <>
       <DefaultHandle>
-        <div>
-          <input
-            type="text"
-            className="input"
-            placeholder="Search item kit..."
-            onChange={filterKits}
+        <div style={{ marginBottom: "10px" }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <input
+              style={{ marginBottom: "12px", width: "200px" }}
+              type="text"
+              className="input"
+              placeholder="Search item kit..."
+              onChange={filterKits}
+            />
+          </div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              alignItems: "center",
+              marginBottom: "25px",
+            }}
+          >
+            <Space size={12}></Space>
+            <Link to={"/admin/inventory/kits/add"} style={{ fontSize: "16px" }}>
+              New Item Kit
+            </Link>
+          </div>
+
+          <div
+            style={{
+              fontSize: "14px",
+              boxShadow: "5px 5px 10px rgba(0, 0, 0, 0.2)", 
+              fontWeight: "bold",
+              marginBottom: "20px",
+              border: "1px solid #c9c5c2",
+              borderRadius: "10px", // Adjust the value as needed
+              padding: "5px ",
+              marginLeft:"5px",
+              textAlign:"center",
+              width:"100px"
+            }}
+          >
+            Total Kit {itemKit.length}
+          </div>
+
+          <DataTable
+            columns={columns}
+            data={filterKit}
+            selectableRows
+            fixedHeader
+            pagination
           />
         </div>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            alignItems: "center",
-            marginBottom: "25px",
-          }}
-        >
-          <Space size={12}></Space>
-          <Link to={"/admin/inventory/kits/add"} style={{ fontSize: "16px" }}>
-            New Item Kit
-          </Link>
-        </div>
-        <div
-          style={{ fontSize: "14px", fontWeight: "bold", marginBottom: "20px" }}
-        >
-          Total Kit {itemKit.length}
-        </div>
-
-        <DataTable
-          columns={columns}
-          data={filterKit}
-          selectableRows
-          fixedHeader
-          pagination
-        />
       </DefaultHandle>
     </>
   );

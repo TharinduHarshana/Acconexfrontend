@@ -1,4 +1,4 @@
-/* Login.css */
+
 *{
   box-sizing: border-box;
  }
@@ -69,12 +69,15 @@
   font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
  }
  .login-form-topic{
+  text-align: center;
+  font-size: 14px;
   font-weight: bold;
   font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  margin-bottom: 5px;
  }
  
  .login-form-title {
-  font-size: 20px;
+  font-size: 14px;
   text-align: center;
   font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif
  }

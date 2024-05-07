@@ -4,7 +4,6 @@ import DefaultHandle from "../DefaultHandle";
 import { message } from "antd";
 import { useNavigate, useParams } from "react-router-dom";
 import "../../styles/item-kit.css";
-import { SearchOutlined } from "@ant-design/icons";
 
 function ItemKitsUpdate() {
   // Extracting ID parameter from URL using useParams hook
@@ -79,45 +78,46 @@ function ItemKitsUpdate() {
     );
   };
 
-  // Function to add an item to the kit
-  const addItemToKit = (item) => {
-    // Check if the item is already in the kit
-    const itemIndex = formData.items.findIndex((i) => i._id === item._id);
-    if (itemIndex >= 0) {
-      // Remove the item from the kit
-      const newItems = formData.items.filter((_, index) => index !== itemIndex);
-      const newItemQuantities = formData.itemQuantity.filter(
-        (_, index) => index !== itemIndex
-      );
-      const newPrice = formData.price - item.sellingPrice * item.quantity;
+ // Function to add an item to the kit
+const addItemToKit = (item) => {
+  // Check if the item is already in the kit
+  const itemIndex = formData.items.findIndex((i) => i._id === item._id);
+  if (itemIndex >= 0) {
+    // Remove the item from the kit
+    const newItems = formData.items.filter((_, index) => index!== itemIndex);
+    const newItemQuantities = formData.itemQuantity.filter(
+      (_, index) => index!== itemIndex
+    );
+    const newPrice = formData.price - item.sellingPrice * item.quantity;
 
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        items: newItems,
-        itemQuantity: newItemQuantities, // Ensure this is correctly updated
-        price: newPrice,
-      }));
-    } else {
-      // Add the item to the kit
-      const itemTotalPrice = item.sellingPrice * item.quantity;
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        items: [...prevFormData.items, item],
-        itemQuantity: [...prevFormData.itemQuantity, item.quantity], // Ensure this is correctly updated
-        price: prevFormData.price + itemTotalPrice,
-      }));
-      // Deduct the item quantity from the inventory
-      setInventoryItems((prevInventoryItems) =>
-        prevInventoryItems.map((i) =>
-          i._id === item._id
-            ? { ...i, quantity: i.quantity - item.quantity }
-            : i
-        )
-      );
-    }
-    // Clear the search field after adding an item to the kit
-    setSearchItem("");
-  };
+    setFormData((prevFormData) => ({
+     ...prevFormData,
+      items: newItems,
+      itemQuantity: newItemQuantities, // This should now be an array with the correct length
+      price: newPrice,
+    }));
+  } else {
+    // Add the item to the kit
+    const itemTotalPrice = item.sellingPrice * item.quantity;
+    setFormData((prevFormData) => ({
+     ...prevFormData,
+      items: [...prevFormData.items, item],
+      itemQuantity: [...(prevFormData.itemQuantity || []), item.quantity], // Ensure itemQuantity is treated as an array
+      price: prevFormData.price + itemTotalPrice,
+    }));
+    // Deduct the item quantity from the inventory
+    setInventoryItems((prevInventoryItems) =>
+      prevInventoryItems.map((i) =>
+        i._id === item._id
+        ? {...i, quantity: i.quantity - item.quantity }
+          : i
+      )
+    );
+  }
+  // Clear the search field after adding an item to the kit
+  setSearchItem("");
+};
+
 
   //Function to check if item kit ID already exists
   const checkIfItemKitIdExists = async (itemKitId) => {
@@ -191,138 +191,169 @@ function ItemKitsUpdate() {
       message.error("Error ocurred when creating item kit..");
     }
   };
-
+  // Function to remove an item from the kit
+  const removeItemFromKit = (item) => {
+    const updatedItems = formData.items.filter((i) => i._id !== item._id);
+    const updatedQuantities = formData.itemQuantity.filter(
+      (_, index) =>
+        index !== formData.items.findIndex((i) => i._id === item._id)
+    );
+    const updatedPrice = formData.price - item.sellingPrice * item.quantity;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      items: updatedItems,
+      itemQuantity: updatedQuantities,
+      price: updatedPrice,
+    }));
+  };
   return (
     <>
-      <DefaultHandle>
-        <div className="item-kits-form">
-          <form onSubmit={handleSubmit}>
-            <p style={{ color: "red" }}>All the fields are required.</p>
-            <label htmlFor="itemKitId">Item Kit ID:</label>
-            <input
-              type="text"
-              id="itemKitId"
-              name="itemKitId"
-              className="common-field"
-              value={formData.itemKitId}
-              onChange={(e) =>
-                setFormData({ ...formData, itemKitId: e.target.value })
-              }
-            />
+      <div className="item_kit">
+        <DefaultHandle>
+          <div className="container">
+            <div className="item_kit">
+              <div className="item_kits form">
+                <form onSubmit={handleSubmit}>
+                  <p style={{ color: "red" }}>All the fields are required.</p>
+                  <label htmlFor="itemKitId">Item Kit ID:</label>
+                  <input
+                    type="text"
+                    id="itemKitId"
+                    name="itemKitId"
+                    className="common-field"
+                    value={formData.itemKitId}
+                    onChange={(e) =>
+                      setFormData({ ...formData, itemKitId: e.target.value })
+                    }
+                  />
 
-            <label htmlFor="itemKitName">Item Kit Name:</label>
-            <input
-              type="text"
-              id="itemKitName"
-              name="itemKitName"
-              value={formData.itemKitName}
-              onChange={(e) =>
-                setFormData({ ...formData, itemKitName: e.target.value })
-              }
-            />
+                  <label htmlFor="itemKitName">Item Kit Name:</label>
+                  <input
+                    type="text"
+                    id="itemKitName"
+                    name="itemKitName"
+                    value={formData.itemKitName}
+                    onChange={(e) =>
+                      setFormData({ ...formData, itemKitName: e.target.value })
+                    }
+                  />
 
-            <label htmlFor="itemDescription">Item Description:</label>
-            <input
-              type="text"
-              id="itemDescription"
-              name="itemDescription"
-              value={formData.itemDescription}
-              onChange={(e) =>
-                setFormData({ ...formData, itemDescription: e.target.value })
-              }
-            />
+                  <label htmlFor="itemDescription">Item Description:</label>
+                  <input
+                    type="text"
+                    id="itemDescription"
+                    name="itemDescription"
+                    value={formData.itemDescription}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        itemDescription: e.target.value,
+                      })
+                    }
+                  />
 
-            <label htmlFor="price">Price:</label>
-            <input
-              type="number"
-              id="price"
-              name="price"
-              value={formData.price}
-              readOnly
-            />
+                  <label htmlFor="price">Price:</label>
+                  <input
+                    type="number"
+                    id="price"
+                    name="price"
+                    value={formData.price}
+                    readOnly
+                  />
 
-            <label htmlFor="kitQuantity">Item Kit Quantity:</label>
-            <input
-              type="number"
-              id="kitQuantity"
-              name="kitQuantity"
-              value={formData.kitQuantity}
-              onChange={(e) => {
-                if (e.target.value < 0) {
-                  message.error("Kit quantity must be a positive number.");
-                  return;
-                }
-                setFormData({ ...formData, kitQuantity: e.target.value });
-              }}
-            />
-
-            <div className="search-field">
-              <SearchOutlined />
-              <input
-                type="text"
-                placeholder="Search item"
-                value={searchItem}
-                onChange={(e) => setSearchItem(e.target.value)}
-              />
+                  <label htmlFor="kitQuantity">Item Kit Quantity:</label>
+                  <input
+                    type="number"
+                    id="kitQuantity"
+                    name="kitQuantity"
+                    value={formData.kitQuantity}
+                    onChange={(e) => {
+                      if (e.target.value < 0) {
+                        message.error(
+                          "Kit quantity must be a positive number."
+                        );
+                        return;
+                      }
+                      setFormData({ ...formData, kitQuantity: e.target.value });
+                    }}
+                  />
+                  <button type="submit" className="btn">
+                    Create Item Kit
+                  </button>
+                </form>
+              </div>
             </div>
 
-            <button type="submit">Update Item Kit</button>
-          </form>
-          <table>
-            <thead>
-              <tr>
-                <th>Item</th>
-                <th>Quantity</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {inventoryItems
-                .filter((item) =>
-                  item.itemName.toLowerCase().includes(searchItem.toLowerCase())
-                )
-                .map((item) => (
-                  <tr key={item._id}>
-                    <td>{item.itemName}</td>
-                    <td>
-                      <input
-                        type="number"
-                        value={item.quantity}
-                        onChange={(e) => {
-                          if (e.target.value < 0) {
-                            message.error(
-                              "Item quantity must be a positive number."
-                            );
-                            return;
-                          }
-                          handleQuantityChange(e, item);
-                        }}
-                      />
-                    </td>
-                    <td>
-                      <button
-                        onClick={() => addItemToKit(item)}
-                        style={{
-                          padding: "5px 10px",
-                          fontSize: "12px",
-                          marginRight: "5px",
-                        }}
-                      >
-                        Add to Kit
-                      </button>
-                      <button
-                        onClick={() => addItemToKit(item)}
-                        style={{ padding: "5px 10px", fontSize: "12px" }}
-                      >
-                        Remove
-                      </button>
-                    </td>
+            <div className="item_kits table">
+              <div className="search-field">
+                <input
+                  type="text"
+                  placeholder="Search item"
+                  value={searchItem}
+                  onChange={(e) => setSearchItem(e.target.value)}
+                />
+              </div>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Item</th>
+                    <th>Quantity</th>
+                    <th>Actions</th>
                   </tr>
-                ))}
-            </tbody>
-          </table>
-        </div>
-      </DefaultHandle>
+                </thead>
+                <tbody>
+                  {inventoryItems
+                    .filter((item) =>
+                      item.itemName
+                        .toLowerCase()
+                        .includes(searchItem.toLowerCase())
+                    )
+                    .map((item) => (
+                      <tr key={item._id}>
+                        <td>{item.itemName}</td>
+                        <td>
+                          <input
+                            type="number"
+                            value={item.quantity}
+                            onChange={(e) => {
+                              if (e.target.value < 0) {
+                                message.error(
+                                  "Item quantity must be a positive number."
+                                );
+                                return;
+                              }
+                              handleQuantityChange(e, item);
+                            }}
+                          />
+                        </td>
+                        <td>
+                          <button
+                            onClick={() => addItemToKit(item)}
+                            style={{
+                              padding: "5px 10px",
+                              fontSize: "12px",
+                              marginRight: "5px",
+                            }}
+                            className="table_btn"
+                          >
+                            Add to Kit
+                          </button>
+                          <button
+                            onClick={() => removeItemFromKit(item)}
+                            style={{ padding: "5px 10px", fontSize: "12px" }}
+                            className="table_btn"
+                          >
+                            Remove
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </DefaultHandle>
+      </div>
     </>
   );
 }

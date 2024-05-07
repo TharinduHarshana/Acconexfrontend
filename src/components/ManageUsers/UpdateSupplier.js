@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import DefaultHandle from "../DefaultHandle";
-import { message, Button } from "antd";
+import { message, } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
+import "../../styles/update.user.css";
 
 function UpdateSupplier() {
   // Extracting ID parameter from URL
@@ -107,138 +108,53 @@ function UpdateSupplier() {
       setPhoneError("Please enter only numbers and a maximum of 10 digits");
     }
   };
-
+  // Function to handle close button click
+  const handleCloseButtonClick = () => {
+    // Navigate to the home page
+    navigate("/admin/supplier");
+  };
   return (
     <>
       <DefaultHandle>
-        <form
-          onSubmit={handleSubmit}
-          style={{
-            maxWidth: "400px",
-            margin: "auto",
-            marginTop: "1px",
-            padding: "20px",
-            border: "1px solid #ccc",
-            borderRadius: "16px",
-            backgroundColor: "#fff",
-            boxShadow: "0px 8px 32px rgba(0, 0, 0, 0.1)",
-          }}
-        >
-          <Button
-            type="primary"
-            icon={<CloseOutlined />}
-            onClick={() => navigate("/admin/supplier")}
-            style={{
-              color: "black", 
-              backgroundColor: "#fff", 
-              border: "none", 
-              float: "right", 
-            }}
-          ></Button>
-          <h2
-            style={{
-              fontSize: "20px",
-              fontFamily: "Arial, sans-serif",
-              textAlign: "center",
-              margin: "0 0 20px",
-              fontWeight: "bold",
-              color: "#333",
-            }}
-          ></h2>
-
-          <div style={{ marginBottom: "20px" }}>
-            <label
-              style={{
-                marginBottom: "5px",
-                display: "block",
-              }}
-            >
-              Supplier Id:
-            </label>
+        <div className="form_addContainer form">
+          <form onSubmit={handleSubmit}>
+            <div className="close-btn" onClick={handleCloseButtonClick}>
+              <CloseOutlined />
+            </div>
+            <label>Supplier Id:</label>
             <input
               type="text"
               className="form-control"
               name="supplierId"
               value={supplier.supplierId}
               onChange={handleInputChange}
-              style={{
-                width: "100%",
-                padding: "10px",
-                borderRadius: "5px",
-                border: "1px solid #ccc",
-              }}
             />
-          </div>
 
-          <div style={{ marginBottom: "20px" }}>
-            <label
-              style={{
-                marginBottom: "5px",
-                display: "block",
-              }}
-            >
-              First Name:
-            </label>
+            <label>First Name:</label>
             <input
               type="text"
               className="form-control"
               name="firstName"
               value={supplier.firstName}
               onChange={handleInputChange}
-              style={{
-                width: "100%",
-                padding: "10px",
-                borderRadius: "5px",
-                border: "1px solid #ccc",
-              }}
             />
-          </div>
 
-          <div style={{ marginBottom: "20px" }}>
-            <label
-              style={{
-                marginBottom: "5px",
-                display: "block",
-              }}
-            >
-              Company Name:
-            </label>
+            <label>Company Name:</label>
             <input
               type="text"
               className="form-control"
               name="companyName"
               value={supplier.companyName}
               onChange={handleInputChange}
-              style={{
-                width: "100%",
-                padding: "10px",
-                borderRadius: "5px",
-                border: "1px solid #ccc",
-              }}
             />
-          </div>
 
-          <div style={{ marginBottom: "20px" }}>
-            <label
-              style={{
-                marginBottom: "5px",
-                display: "block",
-              }}
-            >
-              Phone Number:
-            </label>
+            <label>Phone Number:</label>
             <input
               type="text"
               className="form-control"
               name="phoneNumber"
               value={supplier.phoneNumber}
               onChange={handlePhoneChange}
-              style={{
-                width: "100%",
-                padding: "10px",
-                borderRadius: "5px",
-                border: "1px solid #ccc",
-              }}
             />
             {phoneError && (
               <div
@@ -248,48 +164,21 @@ function UpdateSupplier() {
                 {phoneError}
               </div>
             )}
-          </div>
 
-          <div style={{ marginBottom: "20px" }}>
-            <label
-              style={{
-                marginBottom: "5px",
-                display: "block",
-              }}
-            >
-              Email:
-            </label>
+            <label>Email:</label>
             <input
               type="email"
               className="form-control"
               name="email"
               value={supplier.email}
               onChange={handleInputChange}
-              style={{
-                width: "100%",
-                padding: "10px",
-                borderRadius: "5px",
-                border: "1px solid #ccc",
-              }}
             />
-          </div>
 
-          <button
-            type="submit"
-            className="btn btn-primary"
-            style={{
-              width: "100%",
-              padding: "5px",
-              borderRadius: "5px",
-              border: "none",
-              backgroundColor: "black",
-              color: "#fff",
-              cursor: "pointer",
-            }}
-          >
-            Update
-          </button>
-        </form>
+            <button type="submit" className="btn">
+              Update
+            </button>
+          </form>
+        </div>
       </DefaultHandle>
     </>
   );

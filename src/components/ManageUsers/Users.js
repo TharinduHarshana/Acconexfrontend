@@ -119,8 +119,10 @@ function Users() {
 
   return (
     <DefaultHandle>
-      <div>
+      <div style={{ marginBottom: "10px" }}>
+      <div style={{  display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <input
+          style={{ marginBottom: "12px", width: "200px" }}
           type="text end"
           className="input"
           placeholder="Search user ..."
@@ -149,6 +151,7 @@ function Users() {
         fixedHeader
         pagination
       />
+      </div>
     </DefaultHandle>
   );
 }

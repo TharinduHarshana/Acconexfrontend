@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { CloseOutlined } from '@ant-design/icons';
 
-const BillForm = ({ handleClose, handleConfirmAddToBill, selectedItem, invoiceNo,  date, cashire }) => {
+const BillForm = ({ handleClose, handleConfirmAddToBill, selectedItem}) => {
   const [formData, setFormData] = useState({
     cashire:'',
     product: '',

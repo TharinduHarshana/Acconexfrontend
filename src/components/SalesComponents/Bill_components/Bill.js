@@ -103,8 +103,9 @@ const Bill = () => {
   };
 
   const calculateTotalCost = () => {
-    return billItems.reduce((acc, billItems) => acc + (selectedItem.costPrice * billItems.quantity), 0);
-  };
+    return billItems.reduce((acc, item) => acc + (selectedItem.costPrice * item.quantity), 0);
+};
+
 
   
   const handleCompleteSale = async () => {
@@ -115,7 +116,7 @@ const Bill = () => {
     
 
       const data = {
-        POSNO: '56',
+        POSNO:99,
         cashirename: cashier,
         datetime: date,
         customername: selectedCustomerName,

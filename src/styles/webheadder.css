@@ -20,3 +20,15 @@
     line-height: 0.2;
 
 }
+
+.loginbtn{
+    background-color: #000000;
+    color: #fffefe;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    display: inline-block;
+    padding: 5px 10px;
+    
+}

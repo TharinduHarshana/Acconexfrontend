@@ -34,8 +34,11 @@ import Daily_sales from './components/SalesComponents/Daily_sales';
 import WebHomepage from "./pages/WebHomepage";
 import CustomerForm from "./components/CustomerComponents/customerForm";
 import Category from './pages/WebCategory';
-import WebLogin from './pages/Weblogin';
-import WebRegister from './pages/WebRegister';
+import WebRegister from './components/WebComponent/WebRegister';
+import WebLogin from "./components/WebComponent/WebLogin";
+import FrogotPassword from './components/WebComponent/WebFrogotPassword';
+import ResetPassword from "./components/WebComponent/WebResetPassword";
+
 
 //import inventory 
 import InventoryAdd from './components/InventoryComponent/Inventory.AddnewItem';
@@ -54,8 +57,11 @@ function App() {
     {/* user routing path */}
     <Route path='/web/home' element={<WebHomepage/>} />
     <Route path='/web/:slug' element={<Category/>} />
-    <Route path='/web/login' element={<WebLogin/>} />
     <Route path='/web/register' element={<WebRegister/>} />
+    <Route path='/web/login' element={<WebLogin/>} />
+    <Route path ="/web/forgotpassword" element={<FrogotPassword/>} />
+    <Route path ="/web/resetPassword/:token" element={<ResetPassword/>} />
+
         
 
        {/* admin routing path */}

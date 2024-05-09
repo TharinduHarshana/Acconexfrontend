@@ -102,6 +102,9 @@ const DefaultHandle = ({ children }) => {
             <Menu.Item key="itemKits" title="item-kits">
               <Link to="/admin/inventory/item-kits">Item Kits</Link>
             </Menu.Item>
+            <Menu.Item key="categories" title="categories">
+              <Link to="/admin/inventory/categories">Categories</Link>
+            </Menu.Item>
           </Menu.SubMenu>
 
           <Menu.SubMenu

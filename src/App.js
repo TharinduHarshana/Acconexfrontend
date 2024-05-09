@@ -42,6 +42,7 @@ import Logout from "./components/LoginComponents/Logout";
 import ItemKit from "./pages/ItemKitPage";
 import ItemKitsForm from "./components/ManageInventory/ItemKits";
 import ItemKitsUpdate from "./components/ManageInventory/UpdateKits";
+import UpdateProfileForm from "./pages/UpdateProfile";
 
 function App() {
   return (
@@ -54,11 +55,12 @@ function App() {
        {/* admin routing path */}
         <Route path="/admin" element={<Login/>} />
         <Route path="admin/logout" element={<Logout/>}/>
-        <Route path="/admin/dashbord" element={< Dashboard/>} />
+        <Route path="/admin/dashboard" element={< Dashboard/>} />
         <Route path="/admin/userform" element={<CreateUser />} />
         <Route path="/admin/userform/update/:id" element={<UpdateUser />} />
         <Route path="/admin/userTable" element={<Users />} />
         <Route path="/admin/customer" element={<Customer/>}/>
+        <Route path="/admin/editprofile" element={<UpdateProfileForm />} />
        
 
 

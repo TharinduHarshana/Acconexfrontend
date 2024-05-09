@@ -35,7 +35,7 @@ function Login() {
         document.cookie = `token=${response.data.token}; path=/; Secure; HttpOnly`;
         message.success("Login successful");
         // Navigate to the admin home page
-        navigate("/admin/home");
+        navigate("/admin/dashboard");
       } else if (response.data.message === "Token expired") {
         // Handle token expiration
         message.error("Your session has expired. Please log in again.");

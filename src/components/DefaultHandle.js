@@ -21,10 +21,7 @@ import "../styles/sidebar.css";
 import "../styles/adminheader.css";
 import { Link } from "react-router-dom";
 
-
-import useLogout from '../components/LoginComponents/Logout';
-
-
+import useLogout from "../components/LoginComponents/Logout";
 
 const { Header, Sider, Content } = Layout;
 const { Search } = Input;
@@ -78,6 +75,7 @@ const DefaultHandle = ({ children }) => {
       key: "edit_profile",
       title: "Edit Profile",
       icon: <UserSwitchOutlined />,
+      linkTo: "/admin/editprofile",
     },
   ];
 
@@ -94,8 +92,8 @@ const DefaultHandle = ({ children }) => {
           selectedKeys={[selectedKey]}
           onClick={handleMenuClick}
         >
-          <Menu.Item key="/admin/dashboard" icon={<DashboardOutlined />}>
-            <Link to="admin/dashbord">Home</Link>
+          <Menu.Item key="dashboard" icon={<DashboardOutlined />}>
+            <Link to="admin/dashboard">Home</Link>
           </Menu.Item>
 
           <Menu.SubMenu
@@ -116,20 +114,19 @@ const DefaultHandle = ({ children }) => {
             title="Contacts"
             icon={<ContactsOutlined />}
           >
-          <Menu.Item key="supplier" title="Supplier">
+            <Menu.Item key="supplier" title="Supplier">
               <Link to="/admin/supplier">Supplier</Link>
-          </Menu.Item>
-
-          <Menu.Item key="customer" title="Customer">
-            <Link to="/admin/customer">Customer</Link>
-          </Menu.Item>
-
-          </Menu.SubMenu>
-            <Menu.Item key="/admin/users" icon={<UserOutlined />}>
-              <Link to="/admin/userTable">Users</Link>
             </Menu.Item>
 
-          <Menu.Item key="/admin/sale" icon={<ShoppingCartOutlined/>}>
+            <Menu.Item key="customer" title="Customer">
+              <Link to="/admin/customer">Customer</Link>
+            </Menu.Item>
+          </Menu.SubMenu>
+          <Menu.Item key="/admin/users" icon={<UserOutlined />}>
+            <Link to="/admin/userTable">Users</Link>
+          </Menu.Item>
+
+          <Menu.Item key="/admin/sale" icon={<ShoppingCartOutlined />}>
             <Link to="/admin/sale">Sales</Link>
           </Menu.Item>
 
@@ -230,7 +227,4 @@ const DefaultHandle = ({ children }) => {
   );
 };
 
-
-
 export default DefaultHandle;
-

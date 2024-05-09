@@ -5,7 +5,6 @@ import { message } from "antd";
 import { useNavigate } from "react-router-dom";
 import "../../styles/item-kit.css";
 
-
 function ItemKitsForm() {
   const navigate = useNavigate();
 
@@ -59,44 +58,46 @@ function ItemKitsForm() {
   };
 
   // Function to add an item to the kit
-  const addItemToKit = (item) => {
-    // Check if the item is already in the kit
-    const itemIndex = formData.items.findIndex((i) => i._id === item._id);
-    if (itemIndex >= 0) {
-      // Remove the item from the kit
-      const newItems = formData.items.filter((_, index) => index !== itemIndex);
-      const newItemQuantities = formData.itemQuantity.filter(
-        (_, index) => index !== itemIndex
-      );
-      const newPrice = formData.price - item.sellingPrice * item.quantity;
+const addItemToKit = async (item) => {
+  // Check if the item is already in the kit
+  const itemIndex = formData.items.findIndex((i) => i._id === item._id);
+  if (itemIndex >= 0) {
+    // Remove the item from the kit
+    const newItems = formData.items.filter((_, index) => index!== itemIndex);
+    const newItemQuantities = formData.itemQuantity.filter(
+      (_, index) => index!== itemIndex
+    );
+    const newPrice = formData.price - item.sellingPrice * item.quantity;
 
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        items: newItems,
-        itemQuantity: newItemQuantities,
-        price: newPrice,
-      }));
-    } else {
-      // Add the item to the kit
-      const itemTotalPrice = item.sellingPrice * item.quantity;
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        items: [...prevFormData.items, item],
-        itemQuantity: [...prevFormData.itemQuantity, item.quantity],
-        price: prevFormData.price + itemTotalPrice,
-      }));
-      // Deduct the item quantity from the inventory
-      setInventoryItems((prevInventoryItems) =>
-        prevInventoryItems.map((i) =>
-          i._id === item._id
-            ? { ...i, quantity: i.quantity - item.quantity }
-            : i
-        )
-      );
+    setFormData((prevFormData) => ({
+     ...prevFormData,
+      items: newItems,
+      itemQuantity: newItemQuantities,
+      price: newPrice,
+    }));
+  } else {
+    // Add the item to the kit
+    const itemTotalPrice = item.sellingPrice * item.quantity;
+    setFormData((prevFormData) => ({
+     ...prevFormData,
+      items: [...prevFormData.items, item],
+      itemQuantity: [...prevFormData.itemQuantity, item.quantity],
+      price: prevFormData.price + itemTotalPrice,
+    }));
+    // Deduct the item quantity from the inventory
+    const updatedInventoryItems = inventoryItems.map((i) =>
+      i._id === item._id? {...i, quantity: i.quantity - item.quantity } : i
+    );
+    setInventoryItems(updatedInventoryItems);
+    // Check if the item quantity is sufficient before adding to the kit
+    if (item.quantity > inventoryItems.find(i => i._id === item._id).quantity) {
+      message.error("Insufficient stock for this item.");
+      return;
     }
-    // Clear the search field after adding an item to the kit
-    setSearchItem("");
-  };
+  }
+  // Clear the search field after adding an item to the kit
+  setSearchItem("");
+};
 
   //Function to check if item kit ID already exists
   const checkIfItemKitIdExists = async (itemKitId) => {
@@ -182,19 +183,6 @@ function ItemKitsForm() {
       const updatedInventoryItems = response.data.updatedInventoryItems;
       setInventoryItems(updatedInventoryItems);
 
-      // // Update inventory items' quantities based on the items included in the kit
-      // setInventoryItems((prevInventoryItems) =>
-      //   prevInventoryItems.map((i) =>
-      //     formData.items.some((item) => item._id === i._id)
-      //       ? {
-      //           ...i,
-      //           quantity:
-      //             i.quantity -
-      //             formData.items.find((item) => item._id === i._id).quantity,
-      //         }
-      //       : i
-      //   )
-      // );
       navigate("/admin/inventory/item-kits");
     } catch (error) {
       console.error("Failed to submit item kit:", error.response.data);
@@ -367,3 +355,7 @@ function ItemKitsForm() {
 }
 
 export default ItemKitsForm;
+
+
+
+

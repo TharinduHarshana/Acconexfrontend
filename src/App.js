@@ -22,12 +22,10 @@ import UpdateSupplier from "./components/ManageUsers/UpdateSupplier";
 
 
 //import sales components
-import SalesDachboad from './components/SalesComponents/SalesDachboad';
-import Bill from './components/SalesComponents/Bill';
+import Bill from './components/SalesComponents/Bill_components/Bill';
 import Customer from './components/CustomerComponents/Customer';
 import SuspendSale from './components/SalesComponents/SuspendSale';
-
-import Daily_sales from './components/SalesComponents/Daily_sales';
+import Dailysales from './components/SalesComponents/Daily_sales';
 
 
 
@@ -76,34 +74,15 @@ function App() {
         
          
 
-        <Route path='admin/sale' element={<SalesDachboad/>}/>
-        <Route path='admin/bill' element={<Bill/>}/>
-        <Route path='/admin/customer' element={<Customer/>}/>
-        <Route path='admin/holdbill' element={<SuspendSale/>}/>
 
 
-
-
-        {/* <Route path='admin/viewcustomer' element={<ViewCutomer/>}/> */}
-
-         
-
-        
-        <Route path='/admin/sale' element={<SalesDachboad/>}/>
+        <Route path='/admin/sale' element={<Bill/>}/>
         <Route path='/admin/bill' element={<Bill/>}/>
-        <Route path='/admin/addcus' element={<Customer/>}/>
         <Route path='/admin/holdbill' element={<SuspendSale/>}/>
-        {/* <Route path='/admin/viewcustomer' element={<ViewCutomer/>}/> */}
-
-        
-        
-        
+        <Route path='/admin/dailysales' element={<Dailysales/>}/>
 
 
-        <Route path="admin/sale" element={<SalesDachboad />} />
-        <Route path="admin/bill" element={<Bill />} />
-        <Route path="admin/addcus" element={<Customer />} />
-        <Route path="admin/holdbill" element={<SuspendSale />} />
+        
         
       </Routes>
     </BrowserRouter>

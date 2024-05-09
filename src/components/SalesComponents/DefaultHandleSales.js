@@ -49,7 +49,7 @@ const DefaultHandleSales= ({children}) => {
             <br></br>
 
             <Menu.Item key="/dailysales" icon={<ReconciliationOutlined />}>
-            <Link to="/dailysales">Daily Sale</Link>
+            <Link to="/admin/dailysales">Daily Sale</Link>
             </Menu.Item>
             <br></br>
 

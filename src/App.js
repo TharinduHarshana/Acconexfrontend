@@ -4,20 +4,25 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 //login and dashboard import
 import Login from "./components/LoginComponents/Login";
 import Dashboard from "./components/SideBarComponent/DefaultHandle";
-import AdminDashboard from "./components/AdminDashboard";
+import Logout from "./components/LoginComponents/Logout";
 
 //import user components
 import CreateUser from "./components/ManageUsers/CreateUser";
 import Users from "./components/ManageUsers/Users";
 import UpdateUser from "./components/ManageUsers/UpdateUser";
+import UpdateProfileForm from "./pages/UpdateProfile";
 
 //import customer and supplier components
 
 import CreateSupplierForm from "./components/ManageUsers/CreateSupplier";
 import Supplier from "./components/ManageUsers/Supplier";
 import UpdateSupplier from "./components/ManageUsers/UpdateSupplier";
+import CustomerForm from "./components/CustomerComponents/customerForm";
 
 //import item kits
+import ItemKit from "./pages/ItemKitPage";
+import ItemKitsForm from "./components/ManageInventory/ItemKits";
+import ItemKitsUpdate from "./components/ManageInventory/UpdateKits";
 
 
 //import sales components
@@ -26,20 +31,18 @@ import Customer from './components/CustomerComponents/Customer';
 import SuspendSale from './components/SalesComponents/SuspendSale';
 import Dailysales from './components/SalesComponents/Daily_sales';
 
-// import web components
 
-import WebHomepage from "./pages/WebHomepage";
-import Logout from "./components/LoginComponents/Logout";
-import ItemKit from "./pages/ItemKitPage";
-import ItemKitsForm from "./components/ManageInventory/ItemKits";
-import ItemKitsUpdate from "./components/ManageInventory/UpdateKits";
-import UpdateProfileForm from "./pages/UpdateProfile";
-import CustomerForm from "./components/CustomerComponents/customerForm";
+
+
+
+
+// import web components
 import Category from './pages/WebCategory';
 import WebRegister from './components/WebComponent/WebRegister';
 import WebLogin from "./components/WebComponent/WebLogin";
 import FrogotPassword from './components/WebComponent/WebFrogotPassword';
 import ResetPassword from "./components/WebComponent/WebResetPassword";
+import WebHomepage from "./pages/WebHomepage";
 
 
 //import inventory 

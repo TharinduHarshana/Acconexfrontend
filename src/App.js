@@ -4,7 +4,6 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 //login and dashboard import
 import Login from "./components/LoginComponents/Login";
 import Dashboard from "./components/SideBarComponent/DefaultHandle";
-import Homepage from "./pages/Homepage";
 import AdminDashboard from "./components/AdminDashboard";
 
 //import user components
@@ -27,12 +26,6 @@ import Customer from './components/CustomerComponents/Customer';
 import SuspendSale from './components/SalesComponents/SuspendSale';
 import Dailysales from './components/SalesComponents/Daily_sales';
 
-
-
-// web imports
-
-
-
 // import web components
 
 import WebHomepage from "./pages/WebHomepage";
@@ -41,13 +34,36 @@ import ItemKit from "./pages/ItemKitPage";
 import ItemKitsForm from "./components/ManageInventory/ItemKits";
 import ItemKitsUpdate from "./components/ManageInventory/UpdateKits";
 import UpdateProfileForm from "./pages/UpdateProfile";
+import CustomerForm from "./components/CustomerComponents/customerForm";
+import Category from './pages/WebCategory';
+import WebRegister from './components/WebComponent/WebRegister';
+import WebLogin from "./components/WebComponent/WebLogin";
+import FrogotPassword from './components/WebComponent/WebFrogotPassword';
+import ResetPassword from "./components/WebComponent/WebResetPassword";
+
+
+//import inventory 
+import InventoryAdd from './components/InventoryComponent/Inventory.AddnewItem';
+import InventoryUpdate from './components/InventoryComponent/inventory.UpdateItem';
+import InventoryHome from './pages/Inventory';
+
+
+
+
+
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
     {/* user routing path */}
-    
+    <Route path='/web/home' element={<WebHomepage/>} />
+    <Route path='/web/:slug' element={<Category/>} />
+    <Route path='/web/register' element={<WebRegister/>} />
+    <Route path='/web/login' element={<WebLogin/>} />
+    <Route path ="/web/forgotpassword" element={<FrogotPassword/>} />
+    <Route path ="/web/resetPassword/:token" element={<ResetPassword/>} />
+
         
 
        {/* admin routing path */}

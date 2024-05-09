@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import { List, Card, Image, Typography, Badge, Rate } from 'antd';
+import { List, Card, Image, Typography, Badge, Rate, Button } from 'antd'; // Import Button from 'antd'
 import image from '../images/lap.jpg';
 import '../styles/webCategory.css';
 import WebHeader from '../components/WebComponent/WebHeader';
@@ -24,16 +24,13 @@ const WebCategory = (props) => {
    
     fetchItems();
    }, [slug]); // Dependency array ensures the effect runs when `slug` changes
-   
+   function handleClick() {
+    // Add logic for handling click on "Add to Cart" button
+  }
 
-function addtocartBtn(params){
-  return <Link className='addtocart'
-  onClick={() => {
-    
-  }}
-  >Add to Cart</Link> 
-}
-
+  function handleShowDetails() {
+    // Add logic for showing more details
+  }
 
   return (
     <div>
@@ -46,8 +43,9 @@ function addtocartBtn(params){
             <Card className='Itemcard' title={item.itemName} key={index}
               cover={<Image className='displaimg' alt="example" src={image} />}
               actions={[
-                <Rate allowHalf defaultValue={4} />,
-                <addtocartBtn/>
+                <Rate allowHalf defaultValue={3} />,
+                <Button onClick={handleClick}>Add to Cart</Button>, // Add Button component for "Add to Cart"
+                <Button onClick={handleShowDetails}>Show More Details</Button> // Add Button component for "Show More Details"
               ]}
             >
               <Card.Meta

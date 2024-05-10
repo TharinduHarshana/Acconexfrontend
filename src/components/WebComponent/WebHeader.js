@@ -10,7 +10,7 @@ function WebHeader() {
     const [categories, setCategories] = useState([]);
 
     useEffect(() => {
-        axios.get('http://localhost:8000/item/')
+        axios.get('http://localhost:8000/webitem/')
             .then(res => {
                 const uniqueCategories = Array.from(new Set(res.data.data.map(item => item.category)));
                 setCategories(uniqueCategories);

@@ -17,7 +17,7 @@ const Items = () =>{
     },
     {
       name: 'Display Name',
-      selector: row => row.displayName,
+      selector: row => row.itemName,
       sortable : true
     },
     {
@@ -39,6 +39,11 @@ const Items = () =>{
       name: 'Quantity',
       selector: row => row.quantity,
       sortable : true
+    },
+
+    {
+      name: 'Image',
+      cell: (row) => <img src={row.imageLink} alt="Item Image" style={{ width: '50px' }} />,
     },
 
     {
@@ -81,7 +86,7 @@ const [FilterItems, setFilterItems] = useState([]);
     fetchData();
   },[])
 
-  //data stor variable and search variable
+  //data store variable and search variable
   
   const handleDelete = async (_id) => {
     try{
@@ -91,7 +96,7 @@ const [FilterItems, setFilterItems] = useState([]);
         icon: 'success',
         title: 'Item Deleted successfully!',
         showConfirmButton: false,
-        timer: 1500,
+        timer: 500,
       });
     }).then(() => {
       window.location.reload();
@@ -102,7 +107,7 @@ const [FilterItems, setFilterItems] = useState([]);
         icon: 'error',
         title: 'Item Delete Fail!',
         showConfirmButton: false,
-        timer: 1500,
+        timer: 500,
       })
     }
     
@@ -134,9 +139,9 @@ const [FilterItems, setFilterItems] = useState([]);
       </div>
 
       <div className='text-end'>
-          <Link to="/admin/addnewitem">
-            New Item
-          </Link>
+      <Link to="/admin/addnewitem">
+        <button style={newItemBtnStyle}>New Item</button>
+      </Link>
       </div>
 
       <DataTable
@@ -151,5 +156,13 @@ const [FilterItems, setFilterItems] = useState([]);
     </DefaultHandle> 
   )
 }
+const newItemBtnStyle = {
+  //width: '100%', // Adjusted button width to fit the form container
+  theme:'dark',
+  borderRadius: '12px',
+  height: '40px',
+  fontWeight: 'bold',
+  marginBottom: '20px'
+ };
 
  export default Items;

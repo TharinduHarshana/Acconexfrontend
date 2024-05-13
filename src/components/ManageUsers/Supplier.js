@@ -8,14 +8,16 @@ import axios from "axios";
 function Supplier() {
   // State to store the list of suppliers
   const [suppliers, setSuppliers] = useState([]);
+  const [filterSupplier, setFilterSupplier] = useState([]);
 
-  //// Effect hook to fetch suppliers data when the component mounts
+  // Effect hook to fetch suppliers data when the component mounts
   useEffect(() => {
     const loadSuppliers = async () => {
       try {
         const response = await axios.get("http://localhost:8000/supplier/get");
         // Update the suppliers state with the fetched data
         setSuppliers(response.data.data);
+        setFilterSupplier(response.data.data);
         console.log(response.data); // Add this line to check the fetched data
       } catch (error) {
         console.error("Error fetching suppliers:", error);
@@ -24,14 +26,16 @@ function Supplier() {
 
     loadSuppliers();
   }, []);
-  // Function to handle deleting a supplier
 
+  // Function to handle deleting a supplier
   const handleDelete = async (_id) => {
     try {
       // Send a DELETE request to delete the supplier with the specified ID
       await axios.delete(`http://localhost:8000/supplier/delete/${_id}`);
       // Update the suppliers state by filtering out the deleted supplier
       setSuppliers(suppliers.filter((supplier) => supplier._id !== _id));
+      setFilterSupplier(filterSupplier.filter((supplier) => supplier._id !== _id));
+    
       message.success("Supplier deleted successfully!");
     } catch (error) {
       console.error("Error deleting supplier:", error);
@@ -53,6 +57,23 @@ function Supplier() {
       },
     });
   };
+
+  //Search supplier
+  const filterSuppliers = (event) => {
+    // Convert search input to lowercase for case-insensitive comparison
+    const searchValue = event.target.value.toLowerCase();
+    // Filter suppliers based on search value
+    const supplierData = suppliers.filter(
+      (row) =>
+        // Check if supplier's firstName or supplierId includes the search value
+        row.firstName.toLowerCase().includes(searchValue) ||
+        row.supplierId.toLowerCase().includes(searchValue)
+    );
+
+    setFilterSupplier(supplierData); // Update filterSupplier state with filtered data
+  };
+
+
 
   // Columns configuration for DataTable
   const columns = [
@@ -96,6 +117,17 @@ function Supplier() {
   return (
     <div>
       <DefaultHandle>
+        <div style={{ marginBottom: "10px" }}>
+        <div style={{  display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <input
+            style={{ marginBottom: "12px", width: "200px" }}
+            type="text end"
+            className="input"
+            placeholder="Search Supplier..."
+            onChange={filterSuppliers}
+          />
+        </div>
+        </div>
         <div
           style={{
             display: "flex",
@@ -114,7 +146,7 @@ function Supplier() {
         </div>
         <DataTable
           columns={columns}
-          data={suppliers}
+          data={filterSupplier} 
           selectableRows
           fixedHeader
           pagination

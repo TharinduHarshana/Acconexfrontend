@@ -2,12 +2,11 @@ import WebHeader from '../components/WebComponent/WebHeader';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import image from '../images/lap.jpg';
-import '../styles/webhomepage.css'
+import CarouselFade from '../components/WebComponent/CarouselFade'; 
+import WebFooter from '../components/WebComponent/WebFooter';
 
-//get all items from the database and display them in the homepage
 function WebHomepage() {
     const [items, setItems] = useState([]);
-    const [slideIndex, setSlideIndex] = useState(0);
 
     useEffect(() => {
         axios.get('http://localhost:8000/webitem/')
@@ -17,42 +16,10 @@ function WebHomepage() {
             .catch(err => console.log(err));
     }, []);
 
-//display sideshow images
-useEffect(() => {
-    const interval = setInterval(() => {
-    setSlideIndex(prevIndex => (prevIndex + 1) % images.length);
-    }, 2000); // Change slide every 2 seconds
-
-    return () => clearInterval(interval);
-}, []);
-
-const images = [
-    require('../images/image1.jpg'),
-    require('../images/image2.jpg'),
-    require('../images/image3.jpg')
-];
-
     return (
-        <div>
-            <WebHeader/>
-
-
-            <div>
-            <div className="slideshow-container">
-            {images.map((image, index) => (
-                <div
-                key={index}
-                className={index === slideIndex ? 'slide showing' : 'slide'}
-                >
-                <img src={image} alt={`Slide ${index + 1}`} />
-                </div>
-            ))}
-        </div>
-        </div>
-
-
-
-
+        <div >
+            <WebHeader />
+            <CarouselFade />
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px' }}>
                 {items.map(item => (
                     <div key={item._id} style={{ border: '1px solid #ddd', padding: '10px' }}>
@@ -66,6 +33,7 @@ const images = [
                     </div>
                 ))}
             </div>
+            <WebFooter/>
         </div>
     );
 }

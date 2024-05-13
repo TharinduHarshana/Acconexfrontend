@@ -78,7 +78,7 @@ function App() {
         <Route path="/admin/userform/update/:id" element={<UpdateUser />} />
         <Route path="/admin/userTable" element={<Users />} />
         <Route path="/admin/customer" element={<Customer/>}/>
-        <Route path="/admin/editprofile" element={<UpdateProfileForm />} />
+        <Route path="/admin/editprofile" element={<UpdateProfileForm />} /> 
        
 
 
@@ -86,8 +86,8 @@ function App() {
         
 
         <Route path="/admin/supplier" element={<Supplier/>}/>
-        <Route path="/admin/supplier/create" element={<UpdateProfileForm/>}/>
-        <Route path="/admin/supplier/create" element={<CreateSupplierForm/>}/>
+      
+         <Route path="/admin/supplier/create" element={<CreateSupplierForm/>}/> 
         <Route path="/admin/supplier/update/:id" element={<UpdateSupplier />} />
         <Route path="/admin/inventory/item-kits" element={<ItemKit/>}/>
         <Route path="/admin/inventory/kits/add" element={<ItemKitsForm/>}/>
@@ -108,8 +108,8 @@ function App() {
         <Route path='admin/addnewcategory' element={<AddNewCategory/>}/>
 
         
-        <Route path='/admin/sale' element={<SalesDachboad/>}/>
-        <Route path='/admin/bill' element={<Bill/>}/>
+        {/* <Route path='/admin/sale' element={<SalesDachboad/>}/> */}
+        {/* <Route path='/admin/bill' element={<Bill/>}/> */}
         <Route path='/admin/holdbill' element={<SuspendSale/>}/>
         <Route path='/admin/dailysales' element={<Dailysales/>}/>
 

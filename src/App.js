@@ -101,6 +101,12 @@ function App() {
         <Route path='/admin/dailysales' element={<Dailysales/>}/>
 
 
+        <Route path='/admin/inventory' element={<InventoryHome/>}/>
+        <Route path='/admin/inventory/addnewitem' element={<InventoryAdd/>}/>
+        <Route path='/admin/inventory/update/:id' element={<InventoryUpdate/>}/>
+        
+
+
         
         
       </Routes>

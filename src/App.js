@@ -49,7 +49,8 @@ import WebHomepage from "./pages/WebHomepage";
 import InventoryAdd from './components/InventoryComponent/Inventory.AddnewItem';
 import InventoryUpdate from './components/InventoryComponent/inventory.UpdateItem';
 import InventoryHome from './pages/Inventory';
-
+import CategoryHome from "./pages/Category";
+import AddNewCategory from "./components/CategoryComponents/Category.AddNewCategory";
 
 
 
@@ -96,6 +97,17 @@ function App() {
 
 
         <Route path='/admin/sale' element={<Bill/>}/>
+
+
+        {/* <Route path='admin/viewcustomer' element={<ViewCutomer/>}/> */}
+
+        <Route path='admin/inventory' element={<InventoryHome/>}/>
+        <Route path="admin/addnewitem" element={<InventoryAdd/>}/>
+        <Route path='admin/category' element={<CategoryHome/>}/>
+        <Route path='admin/addnewcategory' element={<AddNewCategory/>}/>
+
+        
+        <Route path='/admin/sale' element={<SalesDachboad/>}/>
         <Route path='/admin/bill' element={<Bill/>}/>
         <Route path='/admin/holdbill' element={<SuspendSale/>}/>
         <Route path='/admin/dailysales' element={<Dailysales/>}/>

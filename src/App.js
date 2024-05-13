@@ -108,8 +108,8 @@ function App() {
         <Route path='admin/addnewcategory' element={<AddNewCategory/>}/>
 
         
-        <Route path='/admin/sale' element={<SalesDachboad/>}/>
-        <Route path='/admin/bill' element={<Bill/>}/>
+        {/* <Route path='/admin/sale' element={<SalesDachboad/>}/> */}
+        {/* <Route path='/admin/bill' element={<Bill/>}/> */}
         <Route path='/admin/holdbill' element={<SuspendSale/>}/>
         <Route path='/admin/dailysales' element={<Dailysales/>}/>
 

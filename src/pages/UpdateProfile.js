@@ -220,10 +220,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import cookie from "cookie";
 import "../styles/updateprofile.css";
 import DefaultHandle from "../components/DefaultHandle";
 import { CloseOutlined } from "@ant-design/icons";
+import { message } from "antd";
 
 const UpdateProfileForm = () => {
   const navigate = useNavigate();
@@ -231,11 +231,10 @@ const UpdateProfileForm = () => {
     firstName: "",
     lastName: "",
     phoneNumber: "",
-    gmail: "",
+    gmail: "", 
     address: "",
-    dob: "",
+    dob: "", 
     idNumber: "",
-    profilePicture: null,
   });
 
   useEffect(() => {
@@ -247,31 +246,24 @@ const UpdateProfileForm = () => {
             withCredentials: true,
           }
         );
-        // Check if dob is a valid date string or a Date object
         let formattedDob = "";
         if (response.data.dob instanceof Date) {
-          // If dob is already a Date object, format it
           formattedDob = response.data.dob.toISOString().split("T")[0];
         } else if (typeof response.data.dob === "string") {
-          // If dob is a string, try to create a Date object from it
           const date = new Date(response.data.dob);
           if (!isNaN(date.getTime())) {
-            // If the date is valid, format it
             formattedDob = date.toISOString().split("T")[0];
           }
         } else {
-          // If dob is not a valid date, you might want to set it to a default value or handle it differently
           console.error(
             "dob is not a valid date or string:",
             response.data.dob
           );
-          formattedDob = ""; // Or set a default value
+          formattedDob = ""; 
         }
-        // Update the user state with the formatted dob
         setUser({
-          ...response.data,
+        ...response.data,
           dob: formattedDob,
-          profilePicture: response.data.profilePicture,
         });
       } catch (error) {
         console.error("Failed to fetch user data:", error);
@@ -290,34 +282,22 @@ const UpdateProfileForm = () => {
       formData.append("phoneNumber", user.phoneNumber);
       formData.append("gmail", user.gmail);
       formData.append("address", user.address);
-      formData.append("birthday", user.dob);
+      formData.append("dob", user.dob);
       formData.append("idNumber", user.idNumber);
-      if (user.profilePicture) {
-        formData.append("profilePicture", user.profilePicture);
-      }
-
-      const cookies = cookie.parse(document.cookie);
-      const authToken = cookies.token;
-
-      if (!authToken) {
-        console.error("Auth token not found");
-        return;
-      }
 
       const response = await axios.patch(
         "http://localhost:8000/user/profile",
         formData,
         {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${authToken}`,
-          },
+          withCredentials: true,
         }
       );
 
       if (response.status === 200) {
         console.log("Profile updated successfully");
-        // Optionally, clear the form or show a success message
+        message.success("Profile update successfully..");
+        console.log("Updated User Data:", response.data);
+        
       } else {
         console.error("Failed to update profile");
       }
@@ -325,9 +305,8 @@ const UpdateProfileForm = () => {
       console.error("Error updating profile:", error);
     }
   };
-  // Function to handle close button click
+
   const handleCloseButtonClick = () => {
-    // Navigate to the home page
     navigate("/admin/userTable");
   };
 
@@ -335,113 +314,89 @@ const UpdateProfileForm = () => {
     <>
       <DefaultHandle>
         <div className="form_addContainer_profile">
-          <div className="update-profile-form">
-            {user.profilePicture ? (
-              <img
-                src={user.profilePicture}
-                alt="Profile"
-                className="profile-image"
-              />
-            ) : (
-              <p>No Image</p>
-            )}
+          <form onSubmit={handleSubmit}>
+            <div className="close-btn" onClick={handleCloseButtonClick}>
+              <CloseOutlined />
+            </div>
+            <label htmlFor="firstName">First Name</label>
+            <input
+              type="text"
+              className="form-control"
+              id="firstName"
+              value={user.firstName}
+              onChange={(e) => setUser({...user, firstName: e.target.value })}
+              required
+            />
 
-            <form onSubmit={handleSubmit}>
-              <div className="close-btn" onClick={handleCloseButtonClick}>
-                <CloseOutlined />
-              </div>
-              <label htmlFor="firstName">First Name</label>
-              <input
-                type="text"
-                className="form-control"
-                id="firstName"
-                value={user.firstName}
-                onChange={(e) =>
-                  setUser({ ...user, firstName: e.target.value })
-                }
-                required
-              />
+            <label htmlFor="lastName">Last Name</label>
+            <input
+              type="text"
+              id="lastName"
+              className="form-control"
+              value={user.lastName}
+              onChange={(e) => setUser({...user, lastName: e.target.value })}
+              required
+            />
 
-              <label htmlFor="lastName">Last Name</label>
-              <input
-                type="text"
-                id="lastName"
-                className="form-control"
-                value={user.lastName}
-                onChange={(e) => setUser({ ...user, lastName: e.target.value })}
-                required
-              />
+            <label htmlFor="phoneNumber">Phone Number</label>
+            <input
+              type="tel"
+              id="phoneNumber"
+              className="form-control"
+              value={user.phoneNumber}
+              onChange={(e) => setUser({...user, phoneNumber: e.target.value })}
+              required
+            />
 
-              <label htmlFor="phoneNumber">Phone Number</label>
-              <input
-                type="tel"
-                id="phoneNumber"
-                className="form-control"
-                value={user.phoneNumber}
-                onChange={(e) =>
-                  setUser({ ...user, phoneNumber: e.target.value })
-                }
-                required
-              />
+            <label htmlFor="gmail">Email</label>
+            <input
+              type="email"
+              id="gmail"
+              className="form-control"
+              value={user.gmail}
+              onChange={(e) => setUser({...user, gmail: e.target.value })}
+              required
+            />
 
-              <label htmlFor="gmail">Email</label>
-              <input
-                type="email"
-                id="gmail"
-                className="form-control"
-                value={user.gmail}
-                onChange={(e) => setUser({ ...user, gmail: e.target.value })}
-                required
-              />
+            <label htmlFor="address">Address</label>
+            <input
+              type="text"
+              id="address"
+              className="form-control"
+              value={user.address}
+              onChange={(e) => setUser({...user, address: e.target.value })}
+              required
+            />
 
-              <label htmlFor="address">Address</label>
-              <input
-                type="text"
-                id="address"
-                className="form-control"
-                value={user.address}
-                onChange={(e) => setUser({ ...user, address: e.target.value })}
-                required
-              />
+            <label htmlFor="dob">Date of Birth</label>
+            <input
+              type="date"
+              id="dob"
+              className="form-control"
+              value={user.dob}
+              onChange={(e) => setUser({...user, dob: e.target.value })}
+              required
+            />
 
-              <label htmlFor="dob">Date of Birth</label>
-              <input
-                type="date"
-                id="dob"
-                className="form-control"
-                value={user.dob}
-                onChange={(e) => setUser({ ...user, dob: e.target.value })}
-                required
-              />
-
-              <label htmlFor="idNumber">ID Number</label>
-              <input
-                type="text"
-                id="idNumber"
-                className="form-control"
-                value={user.idNumber}
-                onChange={(e) => setUser({ ...user, idNumber: e.target.value })}
-                required
-              />
-
-              <label htmlFor="profilePicture">Profile Picture</label>
-              <input
-                type="file"
-                id="profilePicture"
-                className="form-control"
-                onChange={(e) =>
-                  setUser({ ...user, profilePicture: e.target.files[0] })
-                }
-              />
-
-              <button type="submit" className="btn">
-                Update Profile
-              </button>
-            </form>
-          </div>
+            <label htmlFor="idNumber">ID Number</label>
+            <input
+              type="text"
+              id="idNumber"
+              className="form-control"
+              value={user.idNumber}
+              onChange={(e) => setUser({...user, idNumber: e.target.value })}
+              required
+            />
+            <button type="submit" className="btn">
+              Update Profile
+            </button>
+          </form>
         </div>
       </DefaultHandle>
     </>
   );
 };
+
 export default UpdateProfileForm;
+
+

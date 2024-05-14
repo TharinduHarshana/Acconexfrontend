@@ -39,7 +39,7 @@ import WebHomepage from "./pages/WebHomepage";
 import Logout from "./components/LoginComponents/Logout";
 import ItemKit from "./pages/ItemKitPage";
 import ItemKitsForm from "./components/ManageInventory/ItemKits";
-import Inventory from './components/InventoryComponent/inventory.UpdateItem';
+import Inventory from './components/InventoryComponent/Inventory.AddnewItem';
 
 function App() {
   return (

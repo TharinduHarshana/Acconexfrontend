@@ -99,13 +99,14 @@ const Bill = () => {
 
   const handleChange = (item) => {
     setSelectedItem(item);
-    if(item.quantity<=2){
-      message.error('Cannot add this item,Less Quantity');
-    }
+    if(item.quantity<=2)
+      {
+        message.error('Cannot add this item , it is less quantity');
+      }
     else{
       setShowModal(true);
     }
-   
+    
   };
   const handleConfirmAddToBill = (formData) => {
     const itemToAdd = { ...formData, costPrice: selectedItem.costPrice }; // Include cost price here
@@ -233,18 +234,11 @@ const handleCompleteSale = async () => {
   };
 
   const printBillForm = () => {
-    // Clone the bill form content
     const printContents = document.getElementById('bill_form').innerHTML;
-    const printContainer = document.createElement('div');
-    printContainer.innerHTML = printContents;
-  
-    // Append the cloned content to a new window for printing
-    const printWindow = window.open('', '_blank');
-    printWindow.document.body.appendChild(printContainer);
-  
-    // Print the content and close the window after printing
-    printWindow.print();
-    printWindow.close();
+    const originalContents = document.body.innerHTML;
+    document.body.innerHTML = printContents;
+    window.print();
+    document.body.innerHTML = originalContents;
   };
 
   return (

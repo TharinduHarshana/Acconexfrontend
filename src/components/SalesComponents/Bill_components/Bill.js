@@ -3,8 +3,7 @@ import DefaultHandleSales from '../DefaultHandleSales';
 import '../../../styles/bill.css';
 import axios from 'axios';
 import BillForm from './bill_Form';
-import { jsPDF } from 'jspdf';
-import html2canvas from 'html2canvas';
+import '../../../styles/print.css';
 import TenderedPopup from './TenderedPopup';
 import CustomerForm from "../../CustomerComponents/customerForm";
 import { message } from 'antd';
@@ -33,26 +32,39 @@ const Bill = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [itemsResponse, customersResponse] = await Promise.all([
+        const [itemsResponse, customersResponse, dailySalesResponse] = await Promise.all([
           axios.get('http://localhost:8000/item/'),
-          axios.get('http://localhost:8000/customer/')
+          axios.get('http://localhost:8000/customer/'),
+          axios.get('http://localhost:8000/dailysales/')
         ]);
         setItems(itemsResponse.data.data);
         setFilteredItems(itemsResponse.data.data);
         setCustomers(customersResponse.data.data);
+        
+        // Extracting the last invoice number from the fetched daily sales
+        const lastInvoiceNumber = dailySalesResponse.data.data.length > 0 ? dailySalesResponse.data.data[dailySalesResponse.data.data.length - 1].POSNO : 0;
+        const nextInvoiceNumber = generateNextInvoiceNumber(lastInvoiceNumber);
+        setInvoiceNo(nextInvoiceNumber);
       } catch (error) {
         console.error('Error fetching items or customers:', error.message);
       }
     };
     fetchData();
-    const currentInvoiceNumber = generateInvoiceNumber();
-    setInvoiceNo(currentInvoiceNumber);
+  
     const currentDate = getCurrentDateTime();
     setDate(currentDate);
     setCashier('hiru');
   }, []);
+  
+  const generateNextInvoiceNumber = (currentInvoiceNumber) => {
+    const nextNumber = parseInt(currentInvoiceNumber.substr(3)) + 1;
+    return `inv${nextNumber.toString().padStart(3, '0')}`;
+  };
+  
 
   useEffect(() => {
+    localStorage.setItem('invoiceNumber', invoiceNo);
+
     const calculatedTotal = billItems.reduce((acc, item) => acc + ((item.price * item.quantity) - item.discount), 0);
     setTotal(calculatedTotal);
     if (tendered !== '') {
@@ -62,9 +74,7 @@ const Bill = () => {
     }
   }, [billItems, tendered]);
 
-  const generateInvoiceNumber = () => {
-    return `inv${(1000 + billItems.length + 1).toString().substr(1)}`;
-  };
+  
 
   const getCurrentDateTime = () => {
     const date = new Date();
@@ -89,78 +99,80 @@ const Bill = () => {
 
   const handleChange = (item) => {
     setSelectedItem(item);
-    setShowModal(true);
+    if(item.quantity<=2){
+      message.error('Cannot add this item,Less Quantity');
+    }
+    else{
+      setShowModal(true);
+    }
+   
   };
-
   const handleConfirmAddToBill = (formData) => {
-    const itemToAdd = { ...formData };
+    const itemToAdd = { ...formData, costPrice: selectedItem.costPrice }; // Include cost price here
     setBillItems([...billItems, itemToAdd]);
     setShowModal(false);
   };
-
+  
   const calculateTotalQuantity = () => {
     return billItems.reduce((acc, item) => acc + parseInt(item.quantity), 0);
   };
 
   const calculateTotalCost = () => {
-    return billItems.reduce((acc, item) => acc + (selectedItem.costPrice * item.quantity), 0);
+    return billItems.reduce((acc, item) => acc + (item.costPrice*item.quantity), 0);
 };
 
 
   
-  const handleCompleteSale = async () => {
-    try {
-      const totalQuantity = calculateTotalQuantity();
-      const totalCost = calculateTotalCost();
-      const calculateProfit = (total - totalCost);
+const handleCompleteSale = async () => {
+  try {
+    const totalQuantity = calculateTotalQuantity();
+    const totalCost = calculateTotalCost();
+    const calculateProfit = total - totalCost;
+
+    const data = {
+      POSNO: invoiceNo,
+      cashirename: cashier,
+      datetime: date,
+      customername: selectedCustomerName,
+      itemcount: totalQuantity,
+      paymentmethod: paymentMethod,
+      totalamount: total,
+      totalcost: totalCost,
+      profit: calculateProfit
+    };
+
+    const response = await axios.post("http://localhost:8000/dailysales/add", data);
+
+    if (response.data.success) {
+      message.success("Sale completed successfully and data saved to daily sales.");
+
+      // Increment invoice number by 1 for the next sale
+      const nextInvoiceNumber = generateNextInvoiceNumber(invoiceNo);
+      setInvoiceNo(nextInvoiceNumber);
+
     
 
-      const data = {
-        POSNO:99,
-        cashirename: cashier,
-        datetime: date,
-        customername: selectedCustomerName,
-        itemcount: totalQuantity,
-        paymentmethod: paymentMethod,
-        totalamount: total,
-        totalcost: totalCost,
-        profit: calculateProfit
-      };
-
-      const response = await axios.post("http://localhost:8000/dailysales/add", data);
-
-      if (response.data.success) {
-        message.success("Sale completed successfully and data saved to daily sales.");
-      } else {
-        message.error("Failed to save data to daily sales. Please try again later.");
+      const printContents = document.getElementById('bill_form');
+      if (printContents) {
+        printContents.innerHTML = '';
       }
-    } catch (error) {
-      console.error("Error completing sale and saving data to daily sales:", error);
-      message.error("An error occurred while completing the sale. Please try again later.");
+    } else {
+      message.error("Failed to save data to daily sales. Please try again later.");
     }
-  };
+  } catch (error) {
+    console.error("Error completing sale and saving data to daily sales:", error);
+    message.error("An error occurred while completing the sale. Please try again later.");
+  }
+};
 
-  const generatePDFAndCompleteSale = () => {
-    generatePDF();
+
+
+  const printAndCompleteSale = () => {
+    printBillForm();
     handleCompleteSale();
   };
 
-  const generatePDF = () => {
-    const input = document.getElementById('print_bill');
-    const pdfWidth = input.offsetWidth;
-    const pdfHeight = input.offsetHeight;
-    html2canvas(input, { width: pdfWidth, height: pdfHeight }).then((canvas) => {
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF({
-        orientation: 'p',
-        unit: 'px',
-        format: [pdfWidth, pdfHeight]
-      });
-      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-      pdf.save('bill.pdf');
-    });
-  };
-
+ 
   const handleConfirmTendered = (tenderedAmount) => {
     setTendered(tenderedAmount);
     setShowTenderedPopup(false);
@@ -218,6 +230,21 @@ const Bill = () => {
       console.error("Error submitting form:", error);
       message.error("An error occurred while submitting the form.");
     }
+  };
+
+  const printBillForm = () => {
+    // Clone the bill form content
+    const printContents = document.getElementById('bill_form').innerHTML;
+    const printContainer = document.createElement('div');
+    printContainer.innerHTML = printContents;
+  
+    // Append the cloned content to a new window for printing
+    const printWindow = window.open('', '_blank');
+    printWindow.document.body.appendChild(printContainer);
+  
+    // Print the content and close the window after printing
+    printWindow.print();
+    printWindow.close();
   };
 
   return (
@@ -281,7 +308,7 @@ const Bill = () => {
               )}
             </div>
             <div>
-              <form className='bill_form'>
+              <form className='bill_form' id='bill_form'>
                 <div>
                   <p style={{ textAlign: 'center', fontSize: 18, fontStyle: 'oblique' }}>Acconex Computers<br /></p>
                   <p style={{ textAlign: 'center', fontSize: 11 }}>Kaburupitiya, Mathara.<br /> Mob; 0712293447 Tel: 0770897865</p>
@@ -319,6 +346,7 @@ const Bill = () => {
                           <td>{item.quantity}</td>
                           <td>{item.discount}</td>
                           <td>{formatNumber(((item.price * item.quantity) - item.discount))}</td>
+                         
                         </tr>
                       ))}
                     </tbody>
@@ -350,7 +378,6 @@ const Bill = () => {
                 </div>
                 <hr />
                 <p style={{ textAlign: 'center' }}>Thank You {selectedCustomerName && `${selectedCustomerName}`}..! Come Again.</p>
-                <p>Total Quantity: {calculateTotalQuantity()}</p>
               </form>
             </div>
           </div>
@@ -373,7 +400,7 @@ const Bill = () => {
             <CustomerForm handleSubmit={handleFormSubmit} handleClose={() => setShowForm(false)} />
           )}
           <div className='bill_btn'>
-            <button className='complete_sale' onClick={generatePDFAndCompleteSale}>Complete Sell</button>
+            <button className='complete_sale' onClick={printAndCompleteSale}>Complete Sell</button>
             <button className='add_customer' onClick={handleAddCustomer}>Add Customer</button>
             <button className='suspend_sale'>Suspend Sale</button>
           </div>

@@ -40,7 +40,7 @@ function DailySales() {
         <div style={{ marginBottom: "10px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <Input
-              placeholder="Search sales"
+              placeholder="Search sales by customer name or date"
               value={searchValue}
               onChange={handleSearch}
               style={{ marginBottom: "12px", width: "300px" }}
@@ -59,7 +59,7 @@ function DailySales() {
             { name: "Total Amount", selector: (row) => row.totalamount, sortable: true },
             { name: "Total Cost", selector: (row) => row.totalcost, sortable: true },
             { name: "Profit", selector: (row) => row.profit, sortable: true },
-            // Add more columns as needed
+            {name:"bill"}
           ]}
           data={filteredDataList}
           selectableRows

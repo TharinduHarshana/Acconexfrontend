@@ -30,7 +30,7 @@ import Dailysales from './components/SalesComponents/Daily_sales';
 
 
 // web imports
-
+import ItemKitsUpdate from './components/ManageInventory/UpdateKits';
 
 
 // import web components
@@ -39,7 +39,7 @@ import WebHomepage from "./pages/WebHomepage";
 import Logout from "./components/LoginComponents/Logout";
 import ItemKit from "./pages/ItemKitPage";
 import ItemKitsForm from "./components/ManageInventory/ItemKits";
-import ItemKitsUpdate from "./components/ManageInventory/UpdateKits";
+import Inventory from './components/InventoryComponent/inventory.UpdateItem';
 
 function App() {
   return (
@@ -68,7 +68,7 @@ function App() {
         <Route path="/admin/supplier/update/:id" element={<UpdateSupplier />} />
         <Route path="/admin/inventory/item-kits" element={<ItemKit/>}/>
         <Route path="/admin/inventory/kits/add" element={<ItemKitsForm/>}/>
-
+        <Route path="/admin/inventory" element={<Inventory/>}/>
         <Route path="/admin/inventory/kits/update/:id" element={<ItemKitsUpdate/>} />
         
          

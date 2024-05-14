@@ -1,0 +1,41 @@
+@media print {
+    @page {
+      size: A4; /* Change paper size */
+      margin: 20mm; /* Set margins */
+    }
+    
+    body {
+      background-color: #fff; /* Set background color */
+      color: #000; /* Set text color */
+      font-family: Arial, sans-serif; /* Set font family */
+    }
+    
+    .bill_form {
+      text-align: center; /* Align form content to center */
+      font-size: 12px; /* Set font size */
+    }
+    
+    .print_bill_table {
+      width: 100%; /* Set table width to 100% */
+      border-collapse: collapse; /* Collapse table borders */
+    }
+    
+    .print_bill_table th, .print_bill_table td {
+      border: 1px solid #000; /* Set border for table cells */
+      padding: 8px; /* Set cell padding */
+    }
+    
+    .payment-method-container {
+      display: flex; /* Use flexbox for payment method container */
+      justify-content: center; /* Center align payment methods */
+    }
+    
+    .payment-method {
+      margin: 0 10px; /* Set margin between payment methods */
+    }
+    
+    .payment-method input[type="radio"] {
+      margin-right: 5px; /* Set margin for radio buttons */
+    }
+  }
+  

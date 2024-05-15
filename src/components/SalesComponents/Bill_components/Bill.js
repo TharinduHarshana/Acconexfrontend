@@ -171,6 +171,7 @@ const handleCompleteSale = async () => {
   const printAndCompleteSale = () => {
     printBillForm();
     handleCompleteSale();
+    window.location.reload(); 
   };
 
  
@@ -236,10 +237,24 @@ const handleCompleteSale = async () => {
   const printBillForm = () => {
     const printContents = document.getElementById('bill_form').innerHTML;
     const originalContents = document.body.innerHTML;
-    document.body.innerHTML = printContents;
+  
+    // Get the selected payment method
+    const selectedPaymentMethod = paymentMethod === 'cash' ? 'Cash' : 'Bank Transfer';
+  
+    // Include the payment method in the printed content
+    const billContentWithPaymentMethod = `
+      ${printContents}
+      <div>Payment Method: ${selectedPaymentMethod}</div>
+    `;
+  
+    // Replace the document body with the modified content and print
+    document.body.innerHTML = billContentWithPaymentMethod;
     window.print();
+  
+    // Restore the original document body
     document.body.innerHTML = originalContents;
   };
+  
 
   return (
     <div className='bill_container'>

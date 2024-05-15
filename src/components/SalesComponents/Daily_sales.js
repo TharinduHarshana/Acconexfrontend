@@ -58,8 +58,7 @@ function DailySales() {
             { name: "Payment Method", selector: (row) => row.paymentmethod, sortable: true },
             { name: "Total Amount", selector: (row) => row.totalamount, sortable: true },
             { name: "Total Cost", selector: (row) => row.totalcost, sortable: true },
-            { name: "Profit", selector: (row) => row.profit, sortable: true },
-            {name:"bill"}
+            { name: "Profit", selector: (row) => row.profit, sortable: true }
           ]}
           data={filteredDataList}
           selectableRows

@@ -1,13 +1,17 @@
+
 import React, { useState, useEffect } from "react";
-import { Input } from "antd";
+import { Input , Modal } from "antd";
 import DataTable from "react-data-table-component";
 import DefaultHandle from "../DefaultHandle";
 import axios from "axios";
 import "../../styles/customer.css";
 
-function DailySales() {
+function DailySales({ billItems }) {
   const [dailySales, setDailySales] = useState([]);
   const [searchValue, setSearchValue] = useState("");
+  const [selectedSale, setSelectedSale] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
+  
 
   const fetchDailySales = async () => {
     try {
@@ -34,6 +38,12 @@ function DailySales() {
       row.datetime.toLowerCase().includes(searchValue.toLowerCase())
   );
 
+  // Function to handle click on item count and show item details
+  const handleItemClick = (sale) => {
+    setSelectedSale(sale);
+    setModalVisible(true);
+  };
+
   return (
     <div>
       <DefaultHandle>
@@ -54,7 +64,7 @@ function DailySales() {
             { name: "Cashier Name", selector: (row) => row.cashirename, sortable: true },
             { name: "Date", selector: (row) => row.datetime, sortable: true },
             { name: "Customer Name", selector: (row) => row.customername, sortable: true },
-            { name: "Item Count ", selector: (row) => row.itemcount, sortable: true },
+            { name: "Item Count ", selector: (row) => <button onClick={() => handleItemClick(row)}>{row.itemcount}</button>, sortable: true },
             { name: "Payment Method", selector: (row) => row.paymentmethod, sortable: true },
             { name: "Total Amount", selector: (row) => row.totalamount, sortable: true },
             { name: "Total Cost", selector: (row) => row.totalcost, sortable: true },
@@ -66,6 +76,33 @@ function DailySales() {
           pagination
         />
       </DefaultHandle>
+      <Modal
+        title="Item Details"
+        visible={modalVisible}
+        onCancel={() => setModalVisible(false)}
+        footer={null}
+      >
+        {selectedSale && (
+          <table className='bill_data'>
+            <thead>
+              <tr>
+                <th>Product Id</th>
+                <th>Product</th>
+                <th>Qty</th>
+              </tr>
+            </thead>
+            <tbody>
+              {billItems.map((item, index) => (
+                <tr key={index}>
+                  <td>{item.productID}</td>
+                  <td>{item.product}</td>
+                  <td>{item.quantity}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </Modal>
     </div>
   );
 }

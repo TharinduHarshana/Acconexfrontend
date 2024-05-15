@@ -7,6 +7,7 @@ import '../../../styles/print.css';
 import TenderedPopup from './TenderedPopup';
 import CustomerForm from "../../CustomerComponents/customerForm";
 import { message } from 'antd';
+import DailySales from '../Daily_sales';
 
 const Bill = () => {
   const [billItems, setBillItems] = useState([]);
@@ -28,6 +29,7 @@ const Bill = () => {
   const [filteredCustomers, setFilteredCustomers] = useState([]);
   const [selectedCustomerName, setSelectedCustomerName] = useState('');
   const [showForm, setShowForm] = useState(false);
+ 
 
   useEffect(() => {
     const fetchData = async () => {
@@ -414,7 +416,9 @@ const handleCompleteSale = async () => {
             <button className='suspend_sale'>Suspend Sale</button>
           </div>
         </div>
+        
       </DefaultHandleSales>
+    
     </div>
   );
 }

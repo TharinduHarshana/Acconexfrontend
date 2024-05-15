@@ -253,11 +253,11 @@ const handleCompleteSale = async () => {
                   <thead>
                     <tr>
                       <th style={{ width: '50px' }}>Item ID</th>
-                      <th style={{ width: '150px' }}>Item Name</th>
+                      <th style={{ width: '170px' }}>Item Name</th>
                       <th style={{ width: '20px' }}>Qnt</th>
-                      <th style={{ width: '50px' }}>Price</th>
-                      <th style={{ width: '50px' }}> Cost</th>
-                      <th>Action</th>
+                      <th style={{ width: '40px' }}>Price</th>
+                      <th style={{ width: '40px' }}> Cost</th>
+                      <th style={{ width: '40px' }}>Action</th>
                     </tr>
                   </thead>
                   <tbody>

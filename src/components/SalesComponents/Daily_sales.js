@@ -4,13 +4,16 @@ import DataTable from "react-data-table-component";
 import DefaultHandle from "../DefaultHandle";
 import axios from "axios";
 import "../../styles/customer.css";
+import BillForm from './Bill_components/bill_Form';
 
-function DailySales({ billItems }) {
+
+function DailySales() {
   const [dailySales, setDailySales] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const [showviewModal, setShowViewModal] = useState(false);
+  const [billItems, setBillItems] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
-  const [selectedBillItems, setSelectedBillItems] = useState([]);
+  const [showModal, setShowModal] = useState(false);
 
   const fetchDailySales = async () => {
     try {
@@ -22,10 +25,8 @@ function DailySales({ billItems }) {
   };
 
   const handleItemClick = (item) => {
-    setSelectedItem(item);
+    setBillItems([...billItems, item]); // Add item to billItems
     setShowViewModal(true);
-    // Assuming item.billItems contains the bill items associated with this daily sale
-    setSelectedBillItems(item.billItems);
   };
 
   useEffect(() => {
@@ -34,6 +35,12 @@ function DailySales({ billItems }) {
 
   const handleSearch = (e) => {
     setSearchValue(e.target.value);
+  };
+
+  const handleConfirmAddToBill = (formData) => {
+    const itemToAdd = { ...formData, costPrice: selectedItem.costPrice, productID: selectedItem.productID }; // Include product ID here
+    setBillItems([...billItems, itemToAdd]);
+    setShowModal(false);
   };
 
   const filteredDataList = dailySales.filter(
@@ -73,23 +80,26 @@ function DailySales({ billItems }) {
           fixedHeader
           pagination
         />
+
+        
       </DefaultHandle>
+
       <Modal
-        title="Bill Items"
-        visible={showviewModal}
-        onCancel={() => setShowViewModal(false)}
-        footer={null}
-      >
+          title="Bill Items"
+          visible={showviewModal}
+          onCancel={() => setShowViewModal(false)}
+          footer={null}
+        >
+        {/* Table to display bill items */}
         <Table
-          dataSource={selectedBillItems}
+          dataSource={billItems}
           columns={[
             { title: 'Product Name', dataIndex: 'product', key: 'product' },
-            { title: 'Product ID', dataIndex: 'productID', key: 'productID' },
+            { title: 'Product ID', dataIndex: 'productID', key: 'productID' }, // Access product ID here
             { title: 'Quantity', dataIndex: 'quantity', key: 'quantity' },
           ]}
         />
       </Modal>
-
     </div>
   );
 }

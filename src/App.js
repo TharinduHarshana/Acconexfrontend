@@ -1,4 +1,4 @@
-import React from "react";
+import React , { useState }from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 //login and dashboard import
@@ -42,7 +42,12 @@ import ItemKitsForm from "./components/ManageInventory/ItemKits";
 import Inventory from './components/InventoryComponent/Inventory.AddnewItem';
 
 function App() {
+
+  const [billItems, setBillItems] = useState([]);
+
   return (
+   
+
     <BrowserRouter>
       <Routes>
     {/* user routing path */}
@@ -84,7 +89,9 @@ function App() {
         
         
       </Routes>
+      
     </BrowserRouter>
+    
   );
 }
 

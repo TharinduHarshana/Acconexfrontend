@@ -1,6 +1,5 @@
-
 import React, { useState, useEffect } from "react";
-import { Input , Modal } from "antd";
+import { Input, Modal, Table } from "antd";
 import DataTable from "react-data-table-component";
 import DefaultHandle from "../DefaultHandle";
 import axios from "axios";
@@ -9,9 +8,9 @@ import "../../styles/customer.css";
 function DailySales({ billItems }) {
   const [dailySales, setDailySales] = useState([]);
   const [searchValue, setSearchValue] = useState("");
-  const [selectedSale, setSelectedSale] = useState(null);
-  const [modalVisible, setModalVisible] = useState(false);
-  
+  const [showviewModal, setShowViewModal] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [selectedBillItems, setSelectedBillItems] = useState([]);
 
   const fetchDailySales = async () => {
     try {
@@ -22,27 +21,26 @@ function DailySales({ billItems }) {
     }
   };
 
+  const handleItemClick = (item) => {
+    setSelectedItem(item);
+    setShowViewModal(true);
+    // Assuming item.billItems contains the bill items associated with this daily sale
+    setSelectedBillItems(item.billItems);
+  };
+
   useEffect(() => {
     fetchDailySales();
   }, []);
 
-  // Handle search input change
   const handleSearch = (e) => {
     setSearchValue(e.target.value);
   };
 
-  // Filter daily sales based on search input
   const filteredDataList = dailySales.filter(
     (row) =>
       row.customername.toLowerCase().includes(searchValue.toLowerCase()) ||
       row.datetime.toLowerCase().includes(searchValue.toLowerCase())
   );
-
-  // Function to handle click on item count and show item details
-  const handleItemClick = (sale) => {
-    setSelectedSale(sale);
-    setModalVisible(true);
-  };
 
   return (
     <div>
@@ -77,32 +75,21 @@ function DailySales({ billItems }) {
         />
       </DefaultHandle>
       <Modal
-        title="Item Details"
-        visible={modalVisible}
-        onCancel={() => setModalVisible(false)}
+        title="Bill Items"
+        visible={showviewModal}
+        onCancel={() => setShowViewModal(false)}
         footer={null}
       >
-        {selectedSale && (
-          <table className='bill_data'>
-            <thead>
-              <tr>
-                <th>Product Id</th>
-                <th>Product</th>
-                <th>Qty</th>
-              </tr>
-            </thead>
-            <tbody>
-              {billItems.map((item, index) => (
-                <tr key={index}>
-                  <td>{item.productID}</td>
-                  <td>{item.product}</td>
-                  <td>{item.quantity}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
+        <Table
+          dataSource={selectedBillItems}
+          columns={[
+            { title: 'Product Name', dataIndex: 'product', key: 'product' },
+            { title: 'Product ID', dataIndex: 'productID', key: 'productID' },
+            { title: 'Quantity', dataIndex: 'quantity', key: 'quantity' },
+          ]}
+        />
       </Modal>
+
     </div>
   );
 }

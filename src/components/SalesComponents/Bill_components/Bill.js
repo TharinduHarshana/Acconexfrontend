@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import DefaultHandleSales from '../DefaultHandleSales';
 import '../../../styles/bill.css';
@@ -6,8 +7,9 @@ import BillForm from './bill_Form';
 import '../../../styles/print.css';
 import TenderedPopup from './TenderedPopup';
 import CustomerForm from "../../CustomerComponents/customerForm";
-import { message } from 'antd';
-import DailySales from '../Daily_sales';
+import { message ,Table} from 'antd';
+import Modal from 'antd/es/modal/Modal';
+
 
 const Bill = () => {
   const [billItems, setBillItems] = useState([]);
@@ -29,6 +31,8 @@ const Bill = () => {
   const [filteredCustomers, setFilteredCustomers] = useState([]);
   const [selectedCustomerName, setSelectedCustomerName] = useState('');
   const [showForm, setShowForm] = useState(false);
+  const [showviewModal,setShowViewModal] =useState(false);
+  
  
 
   useEffect(() => {
@@ -111,10 +115,11 @@ const Bill = () => {
     
   };
   const handleConfirmAddToBill = (formData) => {
-    const itemToAdd = { ...formData, costPrice: selectedItem.costPrice }; // Include cost price here
+    const itemToAdd = { ...formData, costPrice: selectedItem.costPrice, productID: selectedItem.productID }; // Include product ID here
     setBillItems([...billItems, itemToAdd]);
     setShowModal(false);
   };
+  
   
   const calculateTotalQuantity = () => {
     return billItems.reduce((acc, item) => acc + parseInt(item.quantity), 0);
@@ -123,9 +128,12 @@ const Bill = () => {
   const calculateTotalCost = () => {
     return billItems.reduce((acc, item) => acc + (item.costPrice*item.quantity), 0);
 };
-
-
   
+
+const handleView = () => {
+  setShowViewModal(true);
+};
+
 const handleCompleteSale = async () => {
   try {
     const totalQuantity = calculateTotalQuantity();
@@ -153,7 +161,6 @@ const handleCompleteSale = async () => {
       const nextInvoiceNumber = generateNextInvoiceNumber(invoiceNo);
       setInvoiceNo(nextInvoiceNumber);
 
-    
 
       const printContents = document.getElementById('bill_form');
       if (printContents) {
@@ -170,12 +177,12 @@ const handleCompleteSale = async () => {
 
 
 
-  const printAndCompleteSale = () => {
-    printBillForm();
-    handleCompleteSale();
-    window.location.reload(); 
-  };
-
+const printAndCompleteSale = () => {
+  printBillForm();
+  handleCompleteSale();
+  
+  window.location.reload();
+};
  
   const handleConfirmTendered = (tenderedAmount) => {
     setTendered(tenderedAmount);
@@ -245,7 +252,7 @@ const handleCompleteSale = async () => {
   
     // Include the payment method in the printed content
     const billContentWithPaymentMethod = `
-      ${printContents}
+      ${printContents} <br/>
       <div>Payment Method: ${selectedPaymentMethod}</div>
     `;
   
@@ -357,7 +364,6 @@ const handleCompleteSale = async () => {
                           <td>{item.quantity}</td>
                           <td>{item.discount}</td>
                           <td>{formatNumber(((item.price * item.quantity) - item.discount))}</td>
-                         
                         </tr>
                       ))}
                     </tbody>
@@ -414,11 +420,28 @@ const handleCompleteSale = async () => {
             <button className='complete_sale' onClick={printAndCompleteSale}>Complete Sell</button>
             <button className='add_customer' onClick={handleAddCustomer}>Add Customer</button>
             <button className='suspend_sale'>Suspend Sale</button>
+            <button className='view' onClick={handleView}>View</button>
           </div>
         </div>
         
       </DefaultHandleSales>
-    
+   <Modal
+        title="Bill Items"
+        visible={showviewModal}
+        onCancel={() => setShowViewModal(false)}
+        footer={null}
+      >
+        {/* Table to display bill items */}
+        <Table
+  dataSource={billItems}
+  columns={[
+    { title: 'Product Name', dataIndex: 'product', key: 'product' },
+    { title: 'Product ID', dataIndex: 'productID', key: 'productID' }, // Access product ID here
+    { title: 'Quantity', dataIndex: 'quantity', key: 'quantity' },
+  ]}
+/>
+
+      </Modal>
     </div>
   );
 }

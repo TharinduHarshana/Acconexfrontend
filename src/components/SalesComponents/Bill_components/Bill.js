@@ -181,7 +181,7 @@ const handleSuspendSale = async () => {
     const quntities = billItems.map(item => item.quantity).join(',');
 
     const suspendData ={
-      suspend_id:'sup008',
+      suspend_id:'sup010',
       Cashire_Name: cashier,
       Date:date ,
       customer_id: selectedCustomerId,

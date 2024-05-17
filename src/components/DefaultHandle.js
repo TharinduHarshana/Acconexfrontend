@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+
 import { Layout, Menu, Badge, Typography, Space, Dropdown, Input } from "antd";
 import {
   DashboardOutlined,
@@ -20,10 +21,16 @@ import "../styles/sidebar.css";
 import "../styles/adminheader.css";
 import { Link } from "react-router-dom";
 
+
+import useLogout from '../components/LoginComponents/Logout';
+
+
+
 const { Header, Sider, Content } = Layout;
 const { Search } = Input;
 
 const DefaultHandle = ({ children }) => {
+  const logout = useLogout();
   const [collapsed] = useState(false);
   const [selectedKey, setSelectedKey] = useState(window.location.pathname);
 
@@ -88,7 +95,7 @@ const DefaultHandle = ({ children }) => {
           onClick={handleMenuClick}
         >
           <Menu.Item key="/admin/dashboard" icon={<DashboardOutlined />}>
-            <Link to="/admin/home">Home</Link>
+            <Link to="admin/dashbord">Home</Link>
           </Menu.Item>
 
           <Menu.SubMenu
@@ -109,28 +116,33 @@ const DefaultHandle = ({ children }) => {
             title="Contacts"
             icon={<ContactsOutlined />}
           >
-            <Menu.Item key="supplier" title="Supplier">
+          <Menu.Item key="supplier" title="Supplier">
               <Link to="/admin/supplier">Supplier</Link>
-            </Menu.Item>
-            <Menu.Item key="customer" title="Customer">
-              <Link to="/admin/addcus">Customer</Link>
-            </Menu.Item>
-          </Menu.SubMenu>
-
-          <Menu.Item key="/admin/users" icon={<UserOutlined />}>
-            <Link to="/admin/userTable">Users</Link>
           </Menu.Item>
 
-          <Menu.Item key="/sales" icon={<ShoppingCartOutlined />}>
-            <Link to="/sales">Sales</Link>
+          <Menu.Item key="customer" title="Customer">
+            <Link to="/admin/customer">Customer</Link>
+          </Menu.Item>
+
+          </Menu.SubMenu>
+            <Menu.Item key="/admin/users" icon={<UserOutlined />}>
+              <Link to="/admin/userTable">Users</Link>
+            </Menu.Item>
+
+          <Menu.Item key="/admin/sale" icon={<ShoppingCartOutlined/>}>
+            <Link to="/admin/sale">Sales</Link>
           </Menu.Item>
 
           <Menu.Item key="/admin/reports" icon={<LineChartOutlined />}>
             <Link to="/admin/reports">Reports</Link>
           </Menu.Item>
 
-          <Menu.Item key="/admin/logout" icon={<LogoutOutlined />}>
-            <Link to="/admin">Logout</Link>
+          <Menu.Item
+            key="/admin/logout"
+            icon={<LogoutOutlined />}
+            onClick={logout}
+          >
+            Logout
           </Menu.Item>
         </Menu>
       </Sider>

@@ -33,23 +33,23 @@ const DefaultHandleSales= ({children}) => {
           selectedKeys={selectedKey}
           onClick={handleMenuClick}
           >
-            <Menu.Item key="/home" icon={<RollbackOutlined />}>
-            <Link to="/home">Back</Link>
+            <Menu.Item key="home" icon={<RollbackOutlined />}>
+            <Link to="/admin/dashbord">Back</Link>
             </Menu.Item>
 
 
             <Menu.Item key="/bill" icon={<FileDoneOutlined />}>
-            <Link to="/bill">Bill</Link>
+            <Link to="/admin/bill">Bill</Link>
             </Menu.Item>
 
 
-            <Menu.Item key="/holdclose" icon={<ReconciliationOutlined />}>
-            <Link to="/holdbill">Suspend Sale</Link>
+            <Menu.Item key="/admin/holdclose" icon={<ReconciliationOutlined />}>
+            <Link to="/admin/holdbill">Suspend Sale</Link>
             </Menu.Item>
             <br></br>
 
             <Menu.Item key="/dailysales" icon={<ReconciliationOutlined />}>
-            <Link to="/dailysales">Daily Sale</Link>
+            <Link to="/admin/dailysales">Daily Sale</Link>
             </Menu.Item>
             <br></br>
 

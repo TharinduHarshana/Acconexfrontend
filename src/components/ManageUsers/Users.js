@@ -2,44 +2,61 @@ import React, { useState, useEffect } from "react";
 import DataTable from "react-data-table-component";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { Modal, message, Space, Button, Tooltip,Input } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
+import { Modal, message, Space } from "antd";
 import DefaultHandle from "../DefaultHandle";
 
 function Users() {
   // State to store the list of users
   const [users, setUsers] = useState([]);
- 
+  const [filterUser, setFilterUser] = useState([]);
+  const [loading, setLoading] = useState(false);
+
   //Effect hook to fetch users data when the component mounts
   useEffect(() => {
     const loadUsers = async () => {
+      setLoading(true);
       try {
-        const response = await axios.get("http://localhost:8000/user/all");
+        const response = await axios.get("http://localhost:8000/user/all", {
+          withCredentials: true,
+        });
+        console.log(response.data);
+
         // Set the users state with the data from the response
         setUsers(response.data.data);
         //console.log(response.data);
+        setFilterUser(response.data.data);
+        console.log(response.data);
       } catch (error) {
         console.error("Error fetching users:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
     loadUsers();
   }, []);
-  
 
-
+  if (loading) {
+    return <div>Loading...</div>; // Show a loading indicator while data is being fetched
+  }
   // Function to handle user deletion
+
   const handleDelete = async (_id) => {
     try {
-      await axios.delete(`http://localhost:8000/user/delete/${_id}`);
+      await axios.delete(`http://localhost:8000/user/delete/${_id}`, {
+        withCredentials: true,
+      });
       // Filter out the deleted user from the users state
-      setUsers(users.filter((user) => user._id !== _id));
+      const updatedUsers = users.filter((user) => user._id !== _id);
+      setUsers(updatedUsers);
+      setFilterUser(updatedUsers); // Update filterUser state as well
       message.success("User deleted successfully!");
     } catch (error) {
       console.error("Error deleting user:", error);
       message.error("An error occurred while deleting the user.");
     }
   };
+
   // Function to display a confirmation modal before deleting a user
   const showDeleteConfirmation = (_id) => {
     Modal.confirm({
@@ -53,6 +70,19 @@ function Users() {
         handleDelete(_id);
       },
     });
+  };
+
+  // Search users
+  const filterUsers = (event) => {
+    const searchValue = event.target.value.toLowerCase();
+
+    const userData = users.filter(
+      (row) =>
+        row.firstName.toLowerCase().includes(searchValue) ||
+        row.userId.toLowerCase().includes(searchValue)
+    );
+
+    setFilterUser(userData); // Update filterUser state with filtered data
   };
 
   const columns = [
@@ -89,19 +119,26 @@ function Users() {
 
   return (
     <DefaultHandle>
-      
+      <div style={{ marginBottom: "10px" }}>
+      <div style={{  display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <input
+          style={{ marginBottom: "12px", width: "200px" }}
+          type="text end"
+          className="input"
+          placeholder="Search user ..."
+          onChange={filterUsers}
+        />
+      </div>
+
       <div
         style={{
           display: "flex",
           justifyContent: "flex-end",
           alignItems: "center",
           marginBottom: "25px",
-          
         }}
       >
-        <Space size={12}>
-          
-        </Space>
+        <Space size={12}></Space>
         <Link to={"/admin/userform"} style={{ fontSize: "16px" }}>
           Add User
         </Link>
@@ -109,11 +146,12 @@ function Users() {
 
       <DataTable
         columns={columns}
-        data={users}
+        data={filterUser}
         selectableRows
         fixedHeader
         pagination
       />
+      </div>
     </DefaultHandle>
   );
 }

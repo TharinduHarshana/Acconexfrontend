@@ -219,8 +219,8 @@ body {
 
 /* Edit and delete button styles */
 .btn-edit,
-.btn-delete,
-.bill_btn{
+.btn-delete
+{
     font-size: 15px;
     padding: 5px 10px;
     margin: 0px 10px;
@@ -253,18 +253,11 @@ body {
     margin-top: 5px;
 }
 /*bill button */
-.bill_btn{
-    justify-content: space-between;
-    padding-left: 10px;
-    gap: 20px;
-    margin-top: 30px;
-}
+
 .add_cus_btn{
     margin-right: 10px;
 }
-.puase_btn{
-    margin-right: 10px;
-}
+
 .linebrake{
     margin-top: 20px;
 }

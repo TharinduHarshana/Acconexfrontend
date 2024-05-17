@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import {useNavigate } from 'react-router-dom';
 import '../../styles/customer.css';
 import DefaultHandleSales from './DefaultHandleSales';
 import axios from 'axios';
@@ -12,7 +12,7 @@ function SuspendSale() {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedSale, setSelectedSale] = useState(null);
   const [restoredItems, setRestoredItems] = useState([]);
-  const history = useHistory();
+  const navigate  = useNavigate();
 
 
   const fetchSuspendSale = async () => {
@@ -23,6 +23,7 @@ function SuspendSale() {
       console.log('Error Fetching Data', error);
     }
   };
+ 
 
   useEffect(() => {
     fetchSuspendSale();
@@ -31,23 +32,34 @@ function SuspendSale() {
   const handleRowClick = (row) => {
     setSelectedSale(row);
     setModalVisible(true);
+   
   };
 
   const handleRestore = () => {
     if (selectedSale) {
+      const itemIds = selectedSale.Item_IDs.split(',');
       const itemNames = selectedSale.Item_Names.split(',');
       const quantities = selectedSale.Qnt.split(',');
-
-      const items = itemNames.map((itemName, index) => ({
-        product: itemName,
+  
+      const items = itemIds.map((itemId, index) => ({
+        itemId: itemId,
+        productName: itemNames[index],
         quantity: quantities[index]
       }));
-
+  
       setRestoredItems(items);
       setModalVisible(false);
-      history.push('/admin/bill');
+  
+      navigate('/admin/bill', { 
+        state: { 
+          selectedSale, 
+          restoredItems: items 
+        } 
+      });
     }
   };
+  
+
 
   const handleCancel = () => {
     setModalVisible(false);
@@ -111,32 +123,9 @@ function SuspendSale() {
             <p><strong>Total Amount:</strong> {selectedSale.total}</p>
           </div>
         )}
+       
       </Modal>
 
-      {restoredItems.length > 0 && (
-        <div>
-          <h2>Restored Items</h2>
-          <table>
-            <thead>
-              <tr>
-                <th>Product</th>
-                <th>Price</th>
-                <th>Quantity</th>
-
-              </tr>
-            </thead>
-            <tbody>
-              {restoredItems.map((item, index) => (
-                <tr key={index}>
-                  <td>{item.product}</td>
-                  <td>{item.sellingPrice}</td>
-                  <td>{item.quantity}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
     </div>
   );
 }

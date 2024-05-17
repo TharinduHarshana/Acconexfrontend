@@ -7,8 +7,8 @@ import BillForm from './bill_Form';
 import '../../../styles/print.css';
 import TenderedPopup from './TenderedPopup';
 import CustomerForm from "../../CustomerComponents/customerForm";
-import { message ,Table} from 'antd';
-import Modal from 'antd/es/modal/Modal';
+import { message } from 'antd';
+
 
 
 const Bill = () => {
@@ -30,8 +30,8 @@ const Bill = () => {
   const [customers, setCustomers] = useState([]);
   const [filteredCustomers, setFilteredCustomers] = useState([]);
   const [selectedCustomerName, setSelectedCustomerName] = useState('');
+  const [selectedCustomerId, setSelectedCustomerId] = useState('');
   const [showForm, setShowForm] = useState(false);
-  const [showviewModal,setShowViewModal] =useState(false);
   
  
 
@@ -130,9 +130,7 @@ const Bill = () => {
 };
   
 
-const handleView = () => {
-  setShowViewModal(true);
-};
+
 
 const handleCompleteSale = async () => {
   try {
@@ -175,6 +173,37 @@ const handleCompleteSale = async () => {
   }
 };
 
+const handleSuspendSale = async () => {
+  try {
+
+    const itemIds =billItems.map(item => item.productID).join(',');
+    const itemNames =billItems.map(item => item.product).join(',');
+    const quntities = billItems.map(item => item.quantity).join(',');
+
+    const suspendData ={
+      suspend_id:'sup008',
+      Cashire_Name: cashier,
+      Date:date ,
+      customer_id: selectedCustomerId,
+      customer_name: selectedCustomerName,
+      Item_ID: itemIds,
+      Item_Name: itemNames,
+      Qnt:quntities,
+      total: total
+    };
+
+    const response = await axios.post("http://localhost:8000/suspendsale/add", suspendData);
+
+    if (response.data.success) {
+      message.success("Sale suspended successfully.");
+    } else {
+      message.error("Failed to suspend sale. Please try again later.");
+    }
+  } catch (error) {
+    console.error("Error suspending sale:", error);
+    message.error("An error occurred while suspending the sale. Please try again later.");
+  }
+};
 
 
 const printAndCompleteSale = () => {
@@ -216,6 +245,7 @@ const printAndCompleteSale = () => {
 
   const handleCustomerItemClick = (customer) => {
     setSelectedCustomerName(customer.name);
+    setSelectedCustomerId(customer.cusid);
     setSearchCustomerValue("");
   };
 
@@ -245,25 +275,16 @@ const printAndCompleteSale = () => {
 
   const printBillForm = () => {
     const printContents = document.getElementById('bill_form').innerHTML;
-    const originalContents = document.body.innerHTML;
-  
-    // Get the selected payment method
-    const selectedPaymentMethod = paymentMethod === 'cash' ? 'Cash' : 'Bank Transfer';
-  
-    // Include the payment method in the printed content
-    const billContentWithPaymentMethod = `
-      ${printContents} <br/>
-      <div>Payment Method: ${selectedPaymentMethod}</div>
-    `;
-  
-    // Replace the document body with the modified content and print
-    document.body.innerHTML = billContentWithPaymentMethod;
-    window.print();
-  
-    // Restore the original document body
-    document.body.innerHTML = originalContents;
+    const printWindow = window.open('', '', 'height=500, width=500');
+    printWindow.document.write('<html><head><title>Bill Form</title>');
+    printWindow.document.write('</head><body>');
+    printWindow.document.write(printContents);
+    printWindow.document.write('</body></html>');
+    printWindow.document.close();
+    printWindow.print();
   };
   
+
 
   return (
     <div className='bill_container'>
@@ -411,6 +432,7 @@ const printAndCompleteSale = () => {
               date={date}
               setDate={setDate}
               handleCompleteSale={handleCompleteSale}
+              handleSuspendSale ={handleSuspendSale}
             />
           )}
           {showForm && (
@@ -419,29 +441,13 @@ const printAndCompleteSale = () => {
           <div className='bill_btn'>
             <button className='complete_sale' onClick={printAndCompleteSale}>Complete Sell</button>
             <button className='add_customer' onClick={handleAddCustomer}>Add Customer</button>
-            <button className='suspend_sale'>Suspend Sale</button>
-            <button className='view' onClick={handleView}>View</button>
+            <button className='suspend_sale'onClick={handleSuspendSale}>Suspend Sale</button>
+            
           </div>
         </div>
         
       </DefaultHandleSales>
-   <Modal
-        title="Bill Items"
-        visible={showviewModal}
-        onCancel={() => setShowViewModal(false)}
-        footer={null}
-      >
-        {/* Table to display bill items */}
-        <Table
-  dataSource={billItems}
-  columns={[
-    { title: 'Product Name', dataIndex: 'product', key: 'product' },
-    { title: 'Product ID', dataIndex: 'productID', key: 'productID' }, // Access product ID here
-    { title: 'Quantity', dataIndex: 'quantity', key: 'quantity' },
-  ]}
-/>
-
-      </Modal>
+   
     </div>
   );
 }

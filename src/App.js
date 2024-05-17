@@ -1,11 +1,10 @@
-import React , { useState }from "react";
+import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 //login and dashboard import
 import Login from "./components/LoginComponents/Login";
 import Dashboard from "./components/SideBarComponent/DefaultHandle";
-import Homepage from "./pages/Homepage";
-import AdminDashboard from "./components/AdminDashboard";
+
 
 //import user components
 import CreateUser from "./components/ManageUsers/CreateUser";
@@ -35,15 +34,15 @@ import ItemKitsUpdate from './components/ManageInventory/UpdateKits';
 
 // import web components
 
-import WebHomepage from "./pages/WebHomepage";
+
 import Logout from "./components/LoginComponents/Logout";
 import ItemKit from "./pages/ItemKitPage";
 import ItemKitsForm from "./components/ManageInventory/ItemKits";
-import Inventory from './components/InventoryComponent/Inventory.AddnewItem';
+import Inventory from './components/InventoryComponent/inventory.UpdateItem';
 
 function App() {
 
-  const [billItems, setBillItems] = useState([]);
+
 
   return (
    

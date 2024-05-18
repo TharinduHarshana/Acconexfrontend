@@ -1,29 +1,26 @@
+
 import React, { useEffect, useState } from 'react';
-import {useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import '../../styles/customer.css';
 import DefaultHandleSales from './DefaultHandleSales';
 import axios from 'axios';
 import DataTable from "react-data-table-component";
 import { Input, Modal, Button } from "antd";
 
-
 function SuspendSale() {
-  const [suspendsale, setSuspendsale] = useState([]);
+  const [suspendSale, setSuspendSale] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedSale, setSelectedSale] = useState(null);
-  const [restoredItems, setRestoredItems] = useState([]);
-  const navigate  = useNavigate();
-
+  const navigate = useNavigate();
 
   const fetchSuspendSale = async () => {
     try {
       const response = await axios.get('http://localhost:8000/suspendsale/');
-      setSuspendsale(response.data.data); // Adjust this line based on actual response structure
+      setSuspendSale(response.data.data); // Adjust this line based on actual response structure
     } catch (error) {
       console.log('Error Fetching Data', error);
     }
   };
- 
 
   useEffect(() => {
     fetchSuspendSale();
@@ -32,7 +29,6 @@ function SuspendSale() {
   const handleRowClick = (row) => {
     setSelectedSale(row);
     setModalVisible(true);
-   
   };
 
   const handleRestore = () => {
@@ -40,33 +36,33 @@ function SuspendSale() {
       const itemIds = selectedSale.Item_IDs.split(',');
       const itemNames = selectedSale.Item_Names.split(',');
       const quantities = selectedSale.Qnt.split(',');
-  
+      const prices = selectedSale.Prices.split(',');
+      const discounts = selectedSale.Discounts.split(',');
+
       const items = itemIds.map((itemId, index) => ({
-        itemId: itemId,
-        productName: itemNames[index],
-        quantity: quantities[index]
+        productID: itemId,
+        product: itemNames[index],
+        quantity: quantities[index],
+        price: prices[index],
+        discount: discounts[index],
       }));
-  
-      setRestoredItems(items);
+
+      sessionStorage.setItem('restoredSale', JSON.stringify({
+        selectedSale,
+        items
+      }));
+
       setModalVisible(false);
-  
-      navigate('/admin/bill', { 
-        state: { 
-          selectedSale, 
-          restoredItems: items 
-        } 
-      });
+      navigate('/admin/bill');
     }
   };
-  
-
 
   const handleCancel = () => {
     setModalVisible(false);
   };
 
   return (
-    <div className='suspendsale_table'>
+    <div className='suspendSale_table'>
       <DefaultHandleSales>
         <div style={{ marginBottom: "10px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -87,9 +83,11 @@ function SuspendSale() {
             { name: 'Item ID', selector: (row) => row.Item_IDs, sortable: true },
             { name: 'Item Name', selector: (row) => row.Item_Names, sortable: true },
             { name: 'Quantity', selector: (row) => row.Qnt, sortable: true },
+            { name: 'Price', selector: (row) => row.Prices, sortable: true },
+            { name: 'Discount', selector: (row) => row.Discounts, sortable: true },
             { name: 'Total Amount', selector: (row) => row.total, sortable: true },
           ]}
-          data={suspendsale}
+          data={suspendSale}
           selectableRows
           fixedHeader
           pagination
@@ -120,12 +118,12 @@ function SuspendSale() {
             <p><strong>Item ID:</strong> {selectedSale.Item_IDs}</p>
             <p><strong>Item Name:</strong> {selectedSale.Item_Names}</p>
             <p><strong>Quantity:</strong> {selectedSale.Qnt}</p>
+            <p><strong>Price:</strong> {selectedSale.Prices}</p>
+            <p><strong>Discount:</strong> {selectedSale.Discounts}</p>
             <p><strong>Total Amount:</strong> {selectedSale.total}</p>
           </div>
         )}
-       
       </Modal>
-
     </div>
   );
 }

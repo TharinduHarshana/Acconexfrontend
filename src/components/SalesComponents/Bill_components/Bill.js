@@ -8,7 +8,7 @@ import '../../../styles/print.css';
 import TenderedPopup from './TenderedPopup';
 import CustomerForm from "../../CustomerComponents/customerForm";
 import { message } from 'antd';
-
+import { useLocation } from 'react-router-dom';
 
 
 const Bill = () => {
@@ -33,25 +33,57 @@ const Bill = () => {
   const [selectedCustomerId, setSelectedCustomerId] = useState('');
   const [showForm, setShowForm] = useState(false);
   
-  
+  const location = useLocation();
  
-
   useEffect(() => {
+    // Fetch initial data
     const fetchData = async () => {
       try {
+        // Fetch items, customers, and daily sales
         const [itemsResponse, customersResponse, dailySalesResponse] = await Promise.all([
           axios.get('http://localhost:8000/item/'),
           axios.get('http://localhost:8000/customer/'),
           axios.get('http://localhost:8000/dailysales/')
         ]);
-        setItems(itemsResponse.data.data);
-        setFilteredItems(itemsResponse.data.data);
+        // Update state with fetched data
+        const itemsData = itemsResponse.data.data;
+        setItems(itemsData);
+        setFilteredItems(itemsData);
         setCustomers(customersResponse.data.data);
-        
-        // Extracting the last invoice number from the fetched daily sales
+  
+        // Extract last invoice number and generate next invoice number
         const lastInvoiceNumber = dailySalesResponse.data.data.length > 0 ? dailySalesResponse.data.data[dailySalesResponse.data.data.length - 1].POSNO : 0;
         const nextInvoiceNumber = generateNextInvoiceNumber(lastInvoiceNumber);
         setInvoiceNo(nextInvoiceNumber);
+  
+        // Restore sale data if available
+        const restoredSaleData = sessionStorage.getItem('restoredSale');
+        if (restoredSaleData) {
+          try {
+            const { selectedSale, items } = JSON.parse(restoredSaleData);
+            console.log("Restored Sale Data:", selectedSale); // Log the selectedSale object
+            console.log("Restored Sale Items:", items); // Log the items array
+  
+            setSelectedCustomerName(selectedSale.customer_name);
+            setSelectedCustomerId(selectedSale.customer_id);
+  
+            // Map over the restored items and add costPrice from itemsData
+            const updatedBillItems = items.map(item => {
+              const itemDetails = itemsData.find(i => i.productID === item.productID);
+              return {
+                ...item,
+                costPrice: itemDetails ? itemDetails.costPrice : 0,
+                total: item.quantity * item.price * (1 - item.discount / 100),
+                totalCost:item.costPrice *item.quantity
+              };
+            });
+  
+            setBillItems(updatedBillItems);
+            sessionStorage.removeItem('restoredSale');
+          } catch (error) {
+            console.error('Error parsing restored sale data:', error.message);
+          }
+        }
       } catch (error) {
         console.error('Error fetching items or customers:', error.message);
       }
@@ -63,6 +95,8 @@ const Bill = () => {
     setCashier('hiru');
   }, []);
   
+  
+
   const generateNextInvoiceNumber = (currentInvoiceNumber) => {
     const nextNumber = parseInt(currentInvoiceNumber.substr(3)) + 1;
     return `inv${nextNumber.toString().padStart(3, '0')}`;
@@ -151,6 +185,7 @@ const handleCompleteSale = async () => {
       profit: calculateProfit
     };
 
+    console.log("Attempting to complete sale with data:", data);
     const response = await axios.post("http://localhost:8000/dailysales/add", data);
 
     if (response.data.success) {
@@ -160,13 +195,13 @@ const handleCompleteSale = async () => {
       const nextInvoiceNumber = generateNextInvoiceNumber(invoiceNo);
       setInvoiceNo(nextInvoiceNumber);
 
-
       const printContents = document.getElementById('bill_form');
       if (printContents) {
         printContents.innerHTML = '';
       }
     } else {
       message.error("Failed to save data to daily sales. Please try again later.");
+      console.log("fail to add data ");
     }
   } catch (error) {
     console.error("Error completing sale and saving data to daily sales:", error);
@@ -174,15 +209,18 @@ const handleCompleteSale = async () => {
   }
 };
 
+
 const handleSuspendSale = async () => {
   try {
 
     const itemIds =billItems.map(item => item.productID).join(',');
     const itemNames =billItems.map(item => item.product).join(',');
     const quntities = billItems.map(item => item.quantity).join(',');
+    const prices = billItems.map(item => item.price).join(',');
+    const discounts = billItems.map(item => item.discount).join(',');
 
     const suspendData ={
-      suspend_id:'sup010',
+      suspend_id:'sup099',
       Cashire_Name: cashier,
       Date:date ,
       customer_id: selectedCustomerId,
@@ -190,6 +228,8 @@ const handleSuspendSale = async () => {
       Item_ID: itemIds,
       Item_Name: itemNames,
       Qnt:quntities,
+      Prices: prices,
+      Discounts: discounts,
       total: total
     };
 
@@ -200,19 +240,22 @@ const handleSuspendSale = async () => {
     } else {
       message.error("Failed to suspend sale. Please try again later.");
     }
+    
   } catch (error) {
     console.error("Error suspending sale:", error);
     message.error("An error occurred while suspending the sale. Please try again later.");
   }
-};
-
-
-const printAndCompleteSale = () => {
-  printBillForm();
-  handleCompleteSale();
-  
   window.location.reload();
 };
+
+
+const printAndCompleteSale = async () => {
+  printBillForm();
+  await handleCompleteSale();
+  
+   window.location.reload();
+};
+
  
   const handleConfirmTendered = (tenderedAmount) => {
     setTendered(tenderedAmount);
@@ -273,16 +316,12 @@ const printAndCompleteSale = () => {
       message.error("An error occurred while submitting the form.");
     }
   };
-
   const printBillForm = () => {
     const printContents = document.getElementById('bill_form').innerHTML;
-    const printWindow = window.open('', '', 'height=500, width=500');
-    printWindow.document.write('<html><head><title>Bill Form</title>');
-    printWindow.document.write('</head><body>');
-    printWindow.document.write(printContents);
-    printWindow.document.write('</body></html>');
-    printWindow.document.close();
-    printWindow.print();
+    const originalContents = document.body.innerHTML;
+    document.body.innerHTML = printContents;
+    window.print();
+    document.body.innerHTML = originalContents;
   };
   
 

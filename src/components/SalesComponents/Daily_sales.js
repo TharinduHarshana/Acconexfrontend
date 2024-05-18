@@ -1,19 +1,23 @@
 import React, { useState, useEffect } from "react";
-import { Input, Modal, Table } from "antd";
+import { Input, Modal, Button } from "antd";
 import DataTable from "react-data-table-component";
 import DefaultHandle from "../DefaultHandle";
 import axios from "axios";
 import "../../styles/customer.css";
-import BillForm from './Bill_components/bill_Form';
+
 
 
 function DailySales() {
   const [dailySales, setDailySales] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const [showviewModal, setShowViewModal] = useState(false);
-  const [billItems, setBillItems] = useState([]);
-  const [selectedItem, setSelectedItem] = useState(null);
-  const [showModal, setShowModal] = useState(false);
+  const [selectedSale, setSelectedSale] = useState(null);
+
+
+  
+  useEffect(() => {
+    fetchDailySales();
+  }, []);
 
   const fetchDailySales = async () => {
     try {
@@ -24,28 +28,22 @@ function DailySales() {
     }
   };
 
-  const handleItemClick = (item) => {
-    setBillItems([...billItems, item]); // Add item to billItems
-    setShowViewModal(true);
-  };
-
-  useEffect(() => {
-    fetchDailySales();
-  }, []);
-
+ 
   const handleSearch = (e) => {
     setSearchValue(e.target.value);
   };
 
-  const handleConfirmAddToBill = (formData) => {
-    const itemToAdd = { ...formData, costPrice: selectedItem.costPrice, productID: selectedItem.productID }; // Include product ID here
-    setBillItems([...billItems, itemToAdd]);
-    setShowModal(false);
+  const handleCancel = () => {
+    setShowViewModal(false);
+  };
+  const handleRowClick = async (row) => {
+      setSelectedSale(row);
+      setShowViewModal(true);
   };
 
   const filteredDataList = dailySales.filter(
     (row) =>
-      row.customername.toLowerCase().includes(searchValue.toLowerCase()) ||
+      row.paymentmethod.toLowerCase().includes(searchValue.toLowerCase()) ||
       row.datetime.toLowerCase().includes(searchValue.toLowerCase())
   );
 
@@ -55,7 +53,7 @@ function DailySales() {
         <div style={{ marginBottom: "10px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <Input
-              placeholder="Search sales by customer name or date"
+              placeholder="Search sales by payment method or date"
               value={searchValue}
               onChange={handleSearch}
               style={{ marginBottom: "12px", width: "300px" }}
@@ -69,7 +67,7 @@ function DailySales() {
             { name: "Cashier Name", selector: (row) => row.cashirename, sortable: true },
             { name: "Date", selector: (row) => row.datetime, sortable: true },
             { name: "Customer Name", selector: (row) => row.customername, sortable: true },
-            { name: "Item Count ", selector: (row) => <button onClick={() => handleItemClick(row)}>{row.itemcount}</button>, sortable: true },
+            { name: "Item Count ", selector: (row) => row.itemcount, sortable: true },
             { name: "Payment Method", selector: (row) => row.paymentmethod, sortable: true },
             { name: "Total Amount", selector: (row) => row.totalamount, sortable: true },
             { name: "Total Cost", selector: (row) => row.totalcost, sortable: true },
@@ -79,27 +77,40 @@ function DailySales() {
           selectableRows
           fixedHeader
           pagination
+          onRowClicked={handleRowClick}
         />
-
+           <Modal
+                title={'Invoice Details' }
+                visible={showviewModal}
+                onCancel={handleCancel}
+                footer={[
+                  <Button key="back" onClick={handleCancel}>
+                    Cancel
+                  </Button>
+                ]}
+              >
+                {selectedSale && (
+                  <div>
+                    <p><strong>Invoice number:</strong>{selectedSale.POSNO}</p>
+                    {/* <p>Cashier Name: {selectedSale.cashirename}</p> */}
+                    {/* <p>Date: {selectedSale.datetime}</p> */}
+                    {/* <p>Customer Name: {selectedSale.customername}</p> */}
+                    {/* <p>Item Count: {selectedSale.itemcount}</p> */}
+                    <p><strong>Item_ID:</strong><br/>{selectedSale.Item_IDs}</p>
+                    <p><strong>Item Name:</strong> <br/>{selectedSale.Item_Names}</p>
+                    <p><strong>Item Quantity:</strong><br/>{selectedSale.Qnt}</p>
+                    <p><strong>Item Prices:</strong><br/>{selectedSale.Prices}</p>
+                    <p><strong>Item discounts:</strong><br/>{selectedSale.Discounts}</p>
+                    {/* <p>payment Method:{selectedSale.paymentmethod}</p> */}
+                    {/* <p>Net Amount: {selectedSale.totalamount}</p> */}
+                    {/* <p>tota Cost :{selectedSale.totalcost}</p> */}
+                    {/* <p>Profit:{selectedSale.profit}</p> */}
+                  </div>
+                )}
+            </Modal>
         
       </DefaultHandle>
 
-      <Modal
-          title="Bill Items"
-          visible={showviewModal}
-          onCancel={() => setShowViewModal(false)}
-          footer={null}
-        >
-        {/* Table to display bill items */}
-        <Table
-          dataSource={billItems}
-          columns={[
-            { title: 'Product Name', dataIndex: 'product', key: 'product' },
-            { title: 'Product ID', dataIndex: 'productID', key: 'productID' }, // Access product ID here
-            { title: 'Quantity', dataIndex: 'quantity', key: 'quantity' },
-          ]}
-        />
-      </Modal>
     </div>
   );
 }

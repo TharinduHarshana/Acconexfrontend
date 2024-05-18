@@ -5,14 +5,16 @@ import '../../styles/customer.css';
 import DefaultHandleSales from './DefaultHandleSales';
 import axios from 'axios';
 import DataTable from "react-data-table-component";
-import { Input, Modal, Button } from "antd";
+import { Input, Modal, Button ,message} from "antd";
+import '../../styles/suspendsale.css';
+import { Link } from "react-router-dom";
 
 function SuspendSale() {
   const [suspendSale, setSuspendSale] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
   const [selectedSale, setSelectedSale] = useState(null);
   const navigate = useNavigate();
-
   const fetchSuspendSale = async () => {
     try {
       const response = await axios.get('http://localhost:8000/suspendsale/');
@@ -31,7 +33,7 @@ function SuspendSale() {
     setModalVisible(true);
   };
 
-  const handleRestore = () => {
+  const handleRestore = async  () => {
     if (selectedSale) {
       const itemIds = selectedSale.Item_IDs.split(',');
       const itemNames = selectedSale.Item_Names.split(',');
@@ -52,47 +54,103 @@ function SuspendSale() {
         items
       }));
 
+      try {
+        await axios.delete(`http://localhost:8000/suspendsale/delete/${selectedSale.suspend_id}`);
+        message.success('Suspended sale restored and deleted successfully');
+        fetchSuspendSale(); // Refresh the suspended sale list
+      } catch (error) {
+        message.error('Error deleting suspended sale');
+        console.log('Error Deleting Data', error);
+      }
+
       setModalVisible(false);
       navigate('/admin/bill');
     }
   };
 
+  const handleDelete = async (suspend_id) => {
+    try {
+      await axios.delete(`http://localhost:8000/suspendsale/delete/${suspend_id}`);
+      message.success('Suspended sale deleted successfully');
+      fetchSuspendSale(); // Refresh the suspended sale list
+    } catch (error) {
+      message.error('Error deleting suspended sale');
+      console.error('Error Deleting Data', error);
+    }
+  };
+
+  
+  //delete confirmation masg
+  const showDeleteConfirmation = (suspend_id) => {
+    Modal.confirm({
+      title: "Confirm Delete",
+      content: "Are you sure you want to delete this suspend sale?",
+      okText: "Yes",
+      okType: "danger",
+      cancelText: "No",
+      onOk() {
+        handleDelete(suspend_id);
+      },
+    });
+  };
   const handleCancel = () => {
     setModalVisible(false);
   };
+  const filteredDataList = suspendSale.filter(
+    (row) =>
+      (row.customer_name && row.customer_name.toLowerCase().includes(searchValue.toLowerCase())) ||
+      (row.datetime && row.datetime.toLowerCase().includes(searchValue.toLowerCase()))
+  );
+  
+
+  const handleSearch = (e) => {
+    setSearchValue(e.target.value);
+  };
 
   return (
-    <div className='suspendSale_table'>
+    <div className='suspendSale_content'>
       <DefaultHandleSales>
-        <div style={{ marginBottom: "10px" }}>
+        <div className='suspend_search'>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <Input
-              placeholder="Search sales by customer name or date"
+              placeholder="Search sales by customer name or date"value={searchValue} onChange={handleSearch}
               style={{ marginBottom: "12px", width: "300px" }}
             />
           </div>
         </div>
-
-        <DataTable
+        <div className='suspendSale_table'>
+        <DataTable 
           columns={[
-            { name: 'Suspend_Id', selector: (row) => row.suspend_id, sortable: true },
-            { name: 'Cashier Name', selector: (row) => row.Cashire_Name, sortable: true },
-            { name: 'Date', selector: (row) => row.Date, sortable: true },
-            { name: 'Customer ID', selector: (row) => row.customer_id, sortable: true },
-            { name: 'Customer Name', selector: (row) => row.customer_name, sortable: true },
-            { name: 'Item ID', selector: (row) => row.Item_IDs, sortable: true },
-            { name: 'Item Name', selector: (row) => row.Item_Names, sortable: true },
-            { name: 'Quantity', selector: (row) => row.Qnt, sortable: true },
-            { name: 'Price', selector: (row) => row.Prices, sortable: true },
-            { name: 'Discount', selector: (row) => row.Discounts, sortable: true },
-            { name: 'Total Amount', selector: (row) => row.total, sortable: true },
+            { name: 'Suspend_Id', selector: (row) => row.suspend_id, sortable: true ,width: '110px'},
+            { name: 'Cashier Name', selector: (row) => row.Cashire_Name, sortable: true,width: '110px'},
+            { name: 'Date', selector: (row) => row.Date, sortable: true,width: '135px' },
+            { name: 'Customer ID', selector: (row) => row.customer_id, sortable: true,width:'110px' },
+            { name: 'Customer Name', selector: (row) => row.customer_name, sortable: true,width:'125px' },
+            { name: 'Item ID', selector: (row) => row.Item_IDs, sortable: true,width:'90px' },
+            { name: 'Item Name', selector: (row) => row.Item_Names, sortable: true,width: '220px' },
+            { name: 'Qnt', selector: (row) => row.Qnt, sortable: true,width: '80px' },
+            // { name: 'Price', selector: (row) => row.Prices, sortable: true,width: '90px' },
+            // { name: 'Discount', selector: (row) => row.Discounts, sortable: true ,width: '68px'},
+            { name: 'Amount', selector: (row) => row.total, sortable: true ,width: '90px'},
+            {
+              name: 'Actions',
+              cell: (row) => (
+                <Link 
+                  onClick={() => showDeleteConfirmation(row.suspend_id)}
+                >
+                  Delete
+                </Link>
+              )
+            }
           ]}
-          data={suspendSale}
+          data={filteredDataList}
           selectableRows
           fixedHeader
           pagination
           onRowClicked={handleRowClick}
         />
+        </div>
+        
       </DefaultHandleSales>
 
       <Modal

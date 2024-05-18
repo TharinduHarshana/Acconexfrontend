@@ -19,6 +19,7 @@ const Bill = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [invoiceNo, setInvoiceNo] = useState('');
+  const [suspendId, setSuspendId] = useState('');
   const [cashier, setCashier] = useState('');
   const [date, setDate] = useState('');
   const [total, setTotal] = useState(0);
@@ -40,10 +41,11 @@ const Bill = () => {
     const fetchData = async () => {
       try {
         // Fetch items, customers, and daily sales
-        const [itemsResponse, customersResponse, dailySalesResponse] = await Promise.all([
+        const [itemsResponse, customersResponse, dailySalesResponse,suspendSalesResponse] = await Promise.all([
           axios.get('http://localhost:8000/item/'),
           axios.get('http://localhost:8000/customer/'),
-          axios.get('http://localhost:8000/dailysales/')
+          axios.get('http://localhost:8000/dailysales/'),
+          axios.get('http://localhost:8000/suspendsale/')
         ]);
         // Update state with fetched data
         const itemsData = itemsResponse.data.data;
@@ -56,6 +58,11 @@ const Bill = () => {
         const nextInvoiceNumber = generateNextInvoiceNumber(lastInvoiceNumber);
         setInvoiceNo(nextInvoiceNumber);
   
+          // Extract last suspend ID and generate next suspend ID
+        const lastSuspendId = suspendSalesResponse.data.data.length > 0 ? suspendSalesResponse.data.data[suspendSalesResponse.data.data.length - 1].suspend_id : 'sps000';
+        const nextSuspendId = generateNextSuspendId(lastSuspendId);
+        setSuspendId(nextSuspendId);
+      
         // Restore sale data if available
         const restoredSaleData = sessionStorage.getItem('restoredSale');
         if (restoredSaleData) {
@@ -96,12 +103,18 @@ const Bill = () => {
   }, []);
   
   
-
+//generate the invoice number
   const generateNextInvoiceNumber = (currentInvoiceNumber) => {
     const nextNumber = parseInt(currentInvoiceNumber.substr(3)) + 1;
     return `inv${nextNumber.toString().padStart(3, '0')}`;
   };
   
+//generate the suspendsale number
+const generateNextSuspendId = (currentSuspendId) => {
+  const nextNumber = parseInt(currentSuspendId.substr(3)) + 1;
+  return `sps${nextNumber.toString().padStart(3, '0')}`;
+};
+
 
   useEffect(() => {
     localStorage.setItem('invoiceNumber', invoiceNo);
@@ -166,12 +179,19 @@ const Bill = () => {
   
 
 
-
 const handleCompleteSale = async () => {
   try {
     const totalQuantity = calculateTotalQuantity();
     const totalCost = calculateTotalCost();
     const calculateProfit = total - totalCost;
+    
+
+    // Extract and prepare item details as comma-separated strings
+    const itemIds = billItems.map(item => item.productID).join(',');
+    const itemNames = billItems.map(item => item.product).join(',');
+    const quantities = billItems.map(item => item.quantity).join(',');
+    const prices = billItems.map(item => item.price).join(',');
+    const discounts = billItems.map(item => item.discount).join(',');
 
     const data = {
       POSNO: invoiceNo,
@@ -179,10 +199,16 @@ const handleCompleteSale = async () => {
       datetime: date,
       customername: selectedCustomerName,
       itemcount: totalQuantity,
+      Item_IDs: itemIds,
+      Item_Names: itemNames,
+      Qnt: quantities,
+      Prices: prices,
+      Discounts: discounts,
       paymentmethod: paymentMethod,
       totalamount: total,
       totalcost: totalCost,
-      profit: calculateProfit
+      profit: calculateProfit,
+      
     };
 
     console.log("Attempting to complete sale with data:", data);
@@ -195,19 +221,24 @@ const handleCompleteSale = async () => {
       const nextInvoiceNumber = generateNextInvoiceNumber(invoiceNo);
       setInvoiceNo(nextInvoiceNumber);
 
+      // Clear the bill items
+      setBillItems([]);
+
+      // Clear the print contents
       const printContents = document.getElementById('bill_form');
       if (printContents) {
         printContents.innerHTML = '';
       }
     } else {
       message.error("Failed to save data to daily sales. Please try again later.");
-      console.log("fail to add data ");
+      console.log("Failed to add data");
     }
   } catch (error) {
     console.error("Error completing sale and saving data to daily sales:", error);
     message.error("An error occurred while completing the sale. Please try again later.");
   }
 };
+
 
 
 const handleSuspendSale = async () => {
@@ -220,7 +251,7 @@ const handleSuspendSale = async () => {
     const discounts = billItems.map(item => item.discount).join(',');
 
     const suspendData ={
-      suspend_id:'sup099',
+      suspend_id:suspendId,
       Cashire_Name: cashier,
       Date:date ,
       customer_id: selectedCustomerId,
@@ -237,6 +268,13 @@ const handleSuspendSale = async () => {
 
     if (response.data.success) {
       message.success("Sale suspended successfully.");
+
+       // Generate next suspend ID and update state
+       const nextSuspendId = generateNextSuspendId(suspendId);
+       setSuspendId(nextSuspendId);
+
+        // Clear the bill items
+        setBillItems([]);
     } else {
       message.error("Failed to suspend sale. Please try again later.");
     }
@@ -245,12 +283,13 @@ const handleSuspendSale = async () => {
     console.error("Error suspending sale:", error);
     message.error("An error occurred while suspending the sale. Please try again later.");
   }
+  
   window.location.reload();
 };
 
 
 const printAndCompleteSale = async () => {
-  printBillForm();
+ printBillForm();
   await handleCompleteSale();
   
    window.location.reload();

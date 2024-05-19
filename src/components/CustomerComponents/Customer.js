@@ -12,11 +12,18 @@ function Customer() {
   const [showForm, setShowForm] = useState(false);
   const [editingCustomer, setEditingCustomer] = useState(null);
   const [searchValue, setSearchValue] = useState("");
+  const [customerId, setCustomerId] = useState("");
 
   const fetchCustomers = async () => {
     try {
       const response = await axios.get("http://localhost:8000/customer");
       setCustomers(response.data.data);
+
+      // Get last customer ID and generate next customer ID
+      const lastCustomerId = response.data.data.length > 0 ? response.data.data[response.data.data.length - 1].cusid : 'cus000';
+      const nextCustomerId = generateNextCustomerId(lastCustomerId);
+      setCustomerId(nextCustomerId);
+
     } catch (error) {
       console.error("Error fetching customers:", error);
     }
@@ -26,6 +33,11 @@ function Customer() {
     fetchCustomers();
   }, []);
 
+ // Generate next customer ID
+ const generateNextCustomerId = (currentCustomerId) => {
+  const nextNumber = parseInt(currentCustomerId.substr(3)) + 1;
+  return `cus${nextNumber.toString().padStart(3, '0')}`;
+};
 
   //delete customer
   const handleDelete = async (cusid) => {
@@ -54,6 +66,7 @@ function Customer() {
   };
 
   const handleAddCustomer = () => {
+
     setShowForm(true);
     setEditingCustomer(null);
   };
@@ -161,7 +174,7 @@ function Customer() {
         {showForm && (
           <CustomerForm
             handleClose={() => setShowForm(false)}
-            formData={editingCustomer || {}}
+            formData={editingCustomer || { cusid: customerId }}
             handleSubmit={editingCustomer ? handleUpdate : handleFormSubmit}
             editing={!!editingCustomer}
           />

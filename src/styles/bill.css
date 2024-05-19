@@ -216,3 +216,31 @@ color: aliceblue;
   width: 420px;
 
 }
+@media print {
+  /* Set paper size to A4 */
+  @page {
+    size: A4;
+  }
+
+  /* Optionally, you can also set margins */
+  body {
+    margin: 0.5in;
+  }
+
+  /* Hide payment method radio buttons */
+  .payment-method-container {
+    display: none;
+  }
+
+  /* Increase spacing between lines */
+  .print_bill_table td,
+  .print_bill_table th {
+    padding: 10px 0; /* Increase vertical padding */
+    line-height: 1.5; /* Increase line height */
+  }
+
+  /* Add additional styles for print layout */
+  .bill_form {
+    /* Adjust styles for print layout */
+  }
+}

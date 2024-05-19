@@ -7,7 +7,7 @@ import BillForm from './bill_Form';
 import '../../../styles/print.css';
 import TenderedPopup from './TenderedPopup';
 import CustomerForm from "../../CustomerComponents/customerForm";
-import { message } from 'antd';
+import { message,Modal } from 'antd';
 import { useLocation } from 'react-router-dom';
 
 
@@ -33,7 +33,11 @@ const Bill = () => {
   const [selectedCustomerName, setSelectedCustomerName] = useState('');
   const [selectedCustomerId, setSelectedCustomerId] = useState('');
   const [showForm, setShowForm] = useState(false);
-  
+  const [nextCustomerId, setNextCustomerId] = useState('');
+  const [deleteRowIndex, setDeleteRowIndex] = useState(null); // State to track the index of the row to delete
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false); 
+
+
   const location = useLocation();
  
   useEffect(() => {
@@ -63,6 +67,10 @@ const Bill = () => {
         const nextSuspendId = generateNextSuspendId(lastSuspendId);
         setSuspendId(nextSuspendId);
       
+        //get the last customer id and generate next customer id
+        const lastCustomerId =customersResponse.data.data.length > 0 ? customersResponse.data.data[customersResponse.data.data.length - 1].cusid:'cus000';
+        const nextCustomerId = generateNextCustomerId(lastCustomerId);
+        setSelectedCustomerId(nextCustomerId);
         // Restore sale data if available
         const restoredSaleData = sessionStorage.getItem('restoredSale');
         if (restoredSaleData) {
@@ -115,6 +123,10 @@ const generateNextSuspendId = (currentSuspendId) => {
   return `sps${nextNumber.toString().padStart(3, '0')}`;
 };
 
+const generateNextCustomerId = (currentCustomerId) => {
+  const nextNumber = parseInt(currentCustomerId.substr(3)) + 1;
+  return `cus${nextNumber.toString().padStart(3, '0')}`;
+};
 
   useEffect(() => {
     localStorage.setItem('invoiceNumber', invoiceNo);
@@ -178,7 +190,7 @@ const generateNextSuspendId = (currentSuspendId) => {
 };
   
 
-
+//function for complete the sale
 const handleCompleteSale = async () => {
   try {
     const totalQuantity = calculateTotalQuantity();
@@ -240,7 +252,7 @@ const handleCompleteSale = async () => {
 };
 
 
-
+//function for suspend sale
 const handleSuspendSale = async () => {
   try {
 
@@ -287,7 +299,7 @@ const handleSuspendSale = async () => {
   window.location.reload();
 };
 
-
+//function for print tha bill
 const printAndCompleteSale = async () => {
  printBillForm();
   await handleCompleteSale();
@@ -295,26 +307,30 @@ const printAndCompleteSale = async () => {
    window.location.reload();
 };
 
- 
+ //add tendered amount
   const handleConfirmTendered = (tenderedAmount) => {
     setTendered(tenderedAmount);
     setShowTenderedPopup(false);
   };
 
+  //fomat the nummber to 0.00
   const formatNumber = (number) => {
     return parseFloat(number).toFixed(2);
   };
 
+  //handle payment method
   const handleCashRadioChange = () => {
     setShowTenderedPopup(true);
     setPaymentMethod('cash');
   };
 
+  //handle payment method
   const handleBankTransferRadioChange = () => {
     setTendered(formatNumber(total));
     setPaymentMethod('bank');
   };
 
+  //search the customer 
   const filterCustomer = (event) => {
     const value = event.target.value.toLowerCase();
     setSearchCustomerValue(value);
@@ -326,16 +342,28 @@ const printAndCompleteSale = async () => {
     setFilteredCustomers(filteredData);
   };
 
+  //ad customer to the bill
   const handleCustomerItemClick = (customer) => {
     setSelectedCustomerName(customer.name);
     setSelectedCustomerId(customer.cusid);
     setSearchCustomerValue("");
   };
 
-  const handleAddCustomer = () => {
-    setShowForm(true);
+  //add customer form
+  const handleAddCustomer = async () => {
+    try {
+      const customersResponse = await axios.get('http://localhost:8000/customer/');
+      const lastCustomerId = customersResponse.data.data.length > 0 ? customersResponse.data.data[customersResponse.data.data.length - 1].cusid : 'cus000';
+      const nextCustomerId = generateNextCustomerId(lastCustomerId);
+      setNextCustomerId(nextCustomerId);
+      setShowForm(true);
+    } catch (error) {
+      console.error('Error fetching customers:', error.message);
+      message.error('Error fetching customer data.');
+    }
   };
 
+//add customer to the databse
   const handleFormSubmit = async (formData) => {
     try {
       const existingCustomer = customers.find((customer) => customer.cusid === formData.cusid);
@@ -355,6 +383,8 @@ const printAndCompleteSale = async () => {
       message.error("An error occurred while submitting the form.");
     }
   };
+
+  //print the bill
   const printBillForm = () => {
     const printContents = document.getElementById('bill_form').innerHTML;
     const originalContents = document.body.innerHTML;
@@ -362,8 +392,24 @@ const printAndCompleteSale = async () => {
     window.print();
     document.body.innerHTML = originalContents;
   };
-  
 
+    // Function to handle click on a row to delete
+  const handleRowClickToDelete = (index) => {
+    setDeleteRowIndex(index);
+    setShowDeleteConfirmation(true);
+  };
+
+  // Function to confirm delete action
+  const handleConfirmDelete = () => {
+    // Remove the row from billItems based on deleteRowIndex
+    const updatedBillItems = [...billItems];
+    updatedBillItems.splice(deleteRowIndex, 1);
+    setBillItems(updatedBillItems);
+
+    // Reset deleteRowIndex and hide the confirmation modal
+    setDeleteRowIndex(null);
+    setShowDeleteConfirmation(false);
+  };
 
   return (
     <div className='bill_container'>
@@ -458,7 +504,7 @@ const printAndCompleteSale = async () => {
                     </thead>
                     <tbody>
                       {billItems.map((item, index) => (
-                        <tr key={index}>
+                        <tr key={index}onClick={() => handleRowClickToDelete(index)}>
                           <td>{item.product}</td>
                           <td>{formatNumber(item.price)}</td>
                           <td>{item.quantity}</td>
@@ -515,7 +561,11 @@ const printAndCompleteSale = async () => {
             />
           )}
           {showForm && (
-            <CustomerForm handleSubmit={handleFormSubmit} handleClose={() => setShowForm(false)} />
+            <CustomerForm 
+              handleSubmit={handleFormSubmit} 
+              handleClose={() => setShowForm(false)} 
+              formData={{ cusid: nextCustomerId }} // Pass the next customer ID
+            />
           )}
           <div className='bill_btn'>
             <button className='complete_sale' onClick={printAndCompleteSale}>Complete Sell</button>
@@ -524,7 +574,14 @@ const printAndCompleteSale = async () => {
             
           </div>
         </div>
-        
+        <Modal
+              title='Confirm Remove'
+              visible={showDeleteConfirmation}
+              onOk={handleConfirmDelete}
+              onCancel={() => setShowDeleteConfirmation(false)}
+            >
+              <p>Are you sure you want to remove this item?</p>
+            </Modal>
       </DefaultHandleSales>
    
     </div>

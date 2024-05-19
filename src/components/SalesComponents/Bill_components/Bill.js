@@ -9,7 +9,7 @@ import TenderedPopup from './TenderedPopup';
 import CustomerForm from "../../CustomerComponents/customerForm";
 import { message,Modal } from 'antd';
 import { useLocation } from 'react-router-dom';
-
+import printBill from './printBill'; 
 
 const Bill = () => {
   const [billItems, setBillItems] = useState([]);
@@ -299,12 +299,15 @@ const handleSuspendSale = async () => {
   window.location.reload();
 };
 
+const handlePrint = () => {
+  printBill(invoiceNo, cashier, date, paymentMethod, billItems, total, tendered, balance,selectedCustomerName);
+};
+
 //function for print tha bill
 const printAndCompleteSale = async () => {
- printBillForm();
+  handlePrint();
   await handleCompleteSale();
-  
-   window.location.reload();
+  window.location.reload();
 };
 
  //add tendered amount
@@ -326,9 +329,11 @@ const printAndCompleteSale = async () => {
 
   //handle payment method
   const handleBankTransferRadioChange = () => {
-    setTendered(formatNumber(total));
+    const formattedTotal = formatNumber(total); // Ensure that the total is formatted correctly
+    setTendered(parseFloat(formattedTotal)); // Convert the formatted total to a number
     setPaymentMethod('bank');
   };
+  
 
   //search the customer 
   const filterCustomer = (event) => {
@@ -384,14 +389,14 @@ const printAndCompleteSale = async () => {
     }
   };
 
-  //print the bill
-  const printBillForm = () => {
-    const printContents = document.getElementById('bill_form').innerHTML;
-    const originalContents = document.body.innerHTML;
-    document.body.innerHTML = printContents;
-    window.print();
-    document.body.innerHTML = originalContents;
-  };
+  // //print the bill
+  // const printBillForm = () => {
+  //   const printContents = document.getElementById('bill_form').innerHTML;
+  //   const originalContents = document.body.innerHTML;
+  //   document.body.innerHTML = printContents;
+  //   window.print();
+  //   document.body.innerHTML = originalContents;
+  // };
 
     // Function to handle click on a row to delete
   const handleRowClickToDelete = (index) => {
@@ -497,7 +502,7 @@ const printAndCompleteSale = async () => {
                       <tr>
                         <th>Product</th>
                         <th>Price</th>
-                        <th>Qty</th>
+                        <th >Qty</th>
                         <th>Discount</th>
                         <th>Amount</th>
                       </tr>

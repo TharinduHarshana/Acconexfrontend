@@ -3,7 +3,9 @@ import { Input, Modal, Button } from "antd";
 import DataTable from "react-data-table-component";
 import DefaultHandle from "../DefaultHandle";
 import axios from "axios";
+import Chart from "chart.js/auto";
 import "../../styles/customer.css";
+import GenerateSales from './GenerateSales'; 
 
 
 
@@ -12,8 +14,10 @@ function DailySales() {
   const [searchValue, setSearchValue] = useState("");
   const [showviewModal, setShowViewModal] = useState(false);
   const [selectedSale, setSelectedSale] = useState(null);
-
-
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [chartData, setChartData] = useState(null);
+  const [showGenerateBillForm, setShowGenerateBillForm] = useState(false);
   
   useEffect(() => {
     fetchDailySales();
@@ -35,6 +39,7 @@ function DailySales() {
 
   const handleCancel = () => {
     setShowViewModal(false);
+    setShowGenerateBillForm(false);
   };
   const handleRowClick = async (row) => {
       setSelectedSale(row);
@@ -47,6 +52,11 @@ function DailySales() {
       row.datetime.toLowerCase().includes(searchValue.toLowerCase())
   );
 
+  const handleGenerateBill = () => {
+    setShowGenerateBillForm(true); 
+};
+    
+
   return (
     <div>
       <DefaultHandle>
@@ -58,6 +68,9 @@ function DailySales() {
               onChange={handleSearch}
               style={{ marginBottom: "12px", width: "300px" }}
             />
+            <Button style={{ backgroundColor:'rgb(11, 2, 51)', color:'white',fontWeight:'bold'}}type="primary" onClick={handleGenerateBill}>
+              Generate Bill
+            </Button>
           </div>
         </div>
 
@@ -110,7 +123,7 @@ function DailySales() {
             </Modal>
         
       </DefaultHandle>
-
+      {showGenerateBillForm && <GenerateSales handleCancel={handleCancel} />}
     </div>
   );
 }

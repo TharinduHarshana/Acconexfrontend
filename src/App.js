@@ -32,10 +32,6 @@ import SuspendSale from './components/SalesComponents/SuspendSale';
 import Dailysales from './components/SalesComponents/Daily_sales';
 
 
-
-
-
-
 // import web components
 import Category from './pages/WebCategory';
 import WebRegister from './components/WebComponent/WebRegister';
@@ -57,7 +53,12 @@ import AddNewCategory from "./components/CategoryComponents/Category.AddNewCateg
 
 
 function App() {
+
+
+
   return (
+   
+
     <BrowserRouter>
       <Routes>
     {/* user routing path */}
@@ -91,25 +92,18 @@ function App() {
         <Route path="/admin/supplier/update/:id" element={<UpdateSupplier />} />
         <Route path="/admin/inventory/item-kits" element={<ItemKit/>}/>
         <Route path="/admin/inventory/kits/add" element={<ItemKitsForm/>}/>
+        <Route path="/admin/inventory" element={<Inventory/>}/>
         <Route path="/admin/inventory/kits/update/:id" element={<ItemKitsUpdate/>} />
         
-         
-
-
-
-        <Route path='/admin/sale' element={<Bill/>}/>
-
-
-        {/* <Route path='admin/viewcustomer' element={<ViewCutomer/>}/> */}
 
         <Route path='admin/inventory' element={<InventoryHome/>}/>
         <Route path="admin/addnewitem" element={<InventoryAdd/>}/>
         <Route path='admin/category' element={<CategoryHome/>}/>
         <Route path='admin/addnewcategory' element={<AddNewCategory/>}/>
 
-        
-        {/* <Route path='/admin/sale' element={<SalesDachboad/>}/> */}
-        {/* <Route path='/admin/bill' element={<Bill/>}/> */}
+
+        {/* sales routes */}
+        <Route path='/admin/sale' element={<Bill/>}/>
         <Route path='/admin/holdbill' element={<SuspendSale/>}/>
         <Route path='/admin/dailysales' element={<Dailysales/>}/>
 
@@ -117,7 +111,9 @@ function App() {
         
         
       </Routes>
+      
     </BrowserRouter>
+    
   );
 }
 

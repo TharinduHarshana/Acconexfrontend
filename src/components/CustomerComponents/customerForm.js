@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect} from 'react';
 import { CloseOutlined } from '@ant-design/icons';
 import "../../styles/customer.css";
+import { message } from 'antd';
 
 
 const CustomerForm = ({ handleSubmit, handleClose, formData = {}, editing, handleUpdate }) => {
@@ -12,6 +13,10 @@ const CustomerForm = ({ handleSubmit, handleClose, formData = {}, editing, handl
     mobile: formData.mobile || '',
   });
   
+  useEffect(() => {
+    setCustomerData(formData);
+  }, [formData]);
+
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -27,6 +32,7 @@ const CustomerForm = ({ handleSubmit, handleClose, formData = {}, editing, handl
     value = value.replace(/\D/g, '');
 
     if (!/^[0-9]+$/.test(value)) {
+      message.error('Only numbers are allowed');
       setMobileError('Only numbers are allowed');
     } else if (value.length !== 10) {
       setMobileError('Please enter a valid 10-digit mobile number');
@@ -37,6 +43,7 @@ const CustomerForm = ({ handleSubmit, handleClose, formData = {}, editing, handl
     // Truncate the value if it exceeds 10 digits
     if (value.length > 10) {
       value = value.slice(0, 10);
+     
     }
 
     // Update the form data
@@ -46,8 +53,23 @@ const CustomerForm = ({ handleSubmit, handleClose, formData = {}, editing, handl
     });
   };
 
+  const validateForm = () => {
+    if (!customerData.cusid || !customerData.name || !customerData.address || !customerData.mobile) {
+      message.error('Please fill in all the required fields.');
+      return false;
+    }
+    if (mobileError) {
+      message.error('Please correct the mobile number field.');
+      return false;
+    }
+    return true;
+  };
+
   const onSubmit = (e) => {
     e.preventDefault();
+    if (!validateForm()) {
+      return;
+    }
     handleSubmit(customerData);
   };
 
@@ -59,16 +81,16 @@ const CustomerForm = ({ handleSubmit, handleClose, formData = {}, editing, handl
         </div>
 
         <label htmlFor='cusid'>Customer ID :</label>
-        <input type='text' id='cusid' name='cusid' value={customerData.cusid} onChange={handleInputChange} required disabled={editing}/>
+        <input type='text' id='cusid' name='cusid' value={customerData.cusid} onChange={handleInputChange}  disabled={editing}/>
 
         <label htmlFor='name'>Customer Name :</label>
-        <input type='text' id='name' name='name' value={customerData.name} onChange={handleInputChange} required />
+        <input type='text' id='name' name='name' value={customerData.name} onChange={handleInputChange} />
 
         <label htmlFor='address'>Customer Address :</label>
-        <input type='text' id='address' name='address' value={customerData.address} onChange={handleInputChange} required />
+        <input type='text' id='address' name='address' value={customerData.address} onChange={handleInputChange}  />
 
         <label htmlFor='mobile'>Contact NO :</label>
-        <input type='tel' id='mobile' name='mobile' onChange={handleMobileChange} value={customerData.mobile} maxLength={10} minLength={10} required pattern='[0-9]+' title='Only numbers are allowed' />
+        <input type='tel' id='mobile' name='mobile' onChange={handleMobileChange} value={customerData.mobile} maxLength={10} minLength={10}  pattern='[0-9]+' title='Only numbers are allowed' />
         {mobileError && <p className="error">{mobileError}</p>}
 
         <button className='btn'>Submit</button>

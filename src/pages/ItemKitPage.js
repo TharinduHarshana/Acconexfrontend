@@ -76,6 +76,12 @@ const ItemKit = () => {
       sortable: true,
     },
     {
+      name:"Price(LKR)",
+      selector:(row)=>row.price,
+      sortable:true,
+    },
+
+    {
       name: "Actions",
       cell: (row) => (
         <div>
@@ -128,7 +134,7 @@ const ItemKit = () => {
               marginBottom: "20px",
               border: "1px solid #c9c5c2",
               borderRadius: "10px", // Adjust the value as needed
-              padding: "5px ",
+              padding: "5px 10px ",
               marginLeft:"5px",
               textAlign:"center",
               width:"100px"

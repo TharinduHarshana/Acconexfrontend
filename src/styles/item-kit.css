@@ -68,15 +68,17 @@
   border-radius: 5px 5px 5px 5px;
   margin-left: 10px;
 }
+
 .table_btn {
   background-color: black;
   color: white;
   border: none;
-  padding: 7px 15px;
+  padding: 5px 10px;
   font-size: 12px;
   border-radius: 5px;
   cursor: pointer;
   margin-top: 10px;
+  width: 100px;
 }
 
 .table_btn:hover {

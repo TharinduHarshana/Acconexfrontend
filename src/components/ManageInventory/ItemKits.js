@@ -326,18 +326,14 @@ const addItemToKit = async (item) => {
                       <td>
                         <button
                           onClick={() => addItemToKit(item)}
-                          style={{
-                            padding: "5px 10px",
-                            fontSize: "12px",
-                            marginRight: "5px",
-                          }}
+                         
                           className="table_btn"
                         >
                           Add to Kit
                         </button>
                         <button
                           onClick={() => removeItemFromKit(item)} 
-                          style={{ padding: "5px 10px", fontSize: "12px" }}
+                          
                           className="table_btn"
                         >
                           Remove
@@ -355,6 +351,8 @@ const addItemToKit = async (item) => {
 }
 
 export default ItemKitsForm;
+
+
 
 
 

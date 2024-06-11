@@ -19,6 +19,8 @@ const { Option } = Select;
 const CreateUserForm = () => {
   const navigate = useNavigate();
 
+// Layout settings for the form items
+
   const formItemLayout = {
     labelCol: {
       xs: { span: 24 },
@@ -29,7 +31,7 @@ const CreateUserForm = () => {
       sm: { span: 18 },
     },
   };
-
+// State to hold form data
   const [formData, setFormData] = useState({
     userId: "",
     userName: "",
@@ -44,14 +46,18 @@ const CreateUserForm = () => {
     gender: "",
     role: "",
   });
+
+  // State for validation errors
   const [phoneError, setPhoneError] = useState("");
   const [idNumberError, setIdNumberError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
+  // Toggle password visibility
   const handleTogglePassword = () => {
     setShowPassword(!showPassword);
   };
 
+   // Check if user ID already exists
   const checkUserIdExists = async (userId) => {
     try {
       const response = await axios.get(
@@ -64,10 +70,11 @@ const CreateUserForm = () => {
       return false;
     }
   };
-
+ // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+  // Check if all fields are filled  
     const allFieldsFilled = Object.values(formData).every(
       (field) => field.trim() !== ""
     );

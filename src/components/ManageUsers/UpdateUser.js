@@ -17,6 +17,7 @@ function UpdateUser() {
     phoneNumber: "",
     role: "",
   });
+  
   // State to handle phone number input validation
   const [phoneError, setPhoneError] = useState("");
   // Hook to navigate to different pages

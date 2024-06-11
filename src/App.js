@@ -30,6 +30,7 @@ import Bill from './components/SalesComponents/Bill_components/Bill';
 import Customer from './components/CustomerComponents/Customer';
 import SuspendSale from './components/SalesComponents/SuspendSale';
 import Dailysales from './components/SalesComponents/Daily_sales';
+import SalesDachboad from './components/SalesComponents/DefaultHandleSales';
 
 
 // import web components
@@ -39,6 +40,14 @@ import WebLogin from "./components/WebComponent/WebLogin";
 import FrogotPassword from './components/WebComponent/WebFrogotPassword';
 import ResetPassword from "./components/WebComponent/WebResetPassword";
 import WebHomepage from "./pages/WebHomepage";
+import SearchResults from "./components/WebComponent/web.SearchResult";
+import Checkout from "./pages/WebCkeckout";
+import AboutUs from "./pages/WebAboutUs";
+import Services from './pages/WebServicesPage';
+import PaymentMethods from './pages/WebPaymentMethodPage'
+import ContactUs from './pages/WebContactUs';
+import ConfirmCODOrders from './pages/WebCODorders';
+
 
 
 //import inventory 
@@ -68,6 +77,14 @@ function App() {
     <Route path='/web/login' element={<WebLogin/>} />
     <Route path ="/web/forgotpassword" element={<FrogotPassword/>} />
     <Route path ="/web/resetPassword/:token" element={<ResetPassword/>} />
+    <Route path ="/web/search/:value" element={<SearchResults/>} />
+    <Route path ="/web/checkout" element={<Checkout/>} />
+    <Route path ="/web/about" element={<AboutUs/>} />
+    <Route path ="/web/services" element={<Services/>} />
+    <Route path ="/web/payment" element={<PaymentMethods/>} />
+    <Route path ="/web/contact" element={<ContactUs/>} />
+    <Route path ="admin/cashondelevery" element={<ConfirmCODOrders/>} />
+
 
         
 
@@ -106,6 +123,12 @@ function App() {
         <Route path='/admin/sale' element={<Bill/>}/>
         <Route path='/admin/holdbill' element={<SuspendSale/>}/>
         <Route path='/admin/dailysales' element={<Dailysales/>}/>
+
+
+        <Route path='/admin/inventory' element={<InventoryHome/>}/>
+        <Route path='/admin/inventory/addnewitem' element={<InventoryAdd/>}/>
+        <Route path='/admin/inventory/update/:id' element={<InventoryUpdate/>}/>
+        
 
 
         

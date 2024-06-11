@@ -1,33 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { List, Card, Image, Typography, Badge, Button, message } from 'antd';
 import { ShoppingCartOutlined } from '@ant-design/icons';
-import '../styles/webCategory.css';
-import WebHeader from '../components/WebComponent/WebHeader';
-import Footer from '../components/WebComponent/WebFooter';
-import ItemDetails from '../components/WebComponent/WebItemDetails';
-import Banner from '../images/baner.jpeg';
+import WebHeader from '../WebComponent/WebHeader';
+import Footer from '../WebComponent/WebFooter';
+import ItemDetails from '../WebComponent/WebItemDetails';
+import Banner from '../../images/baner.jpeg';
 
-const WebCategory = (props) => {
-  const [items, setItems] = useState([]);
-  const { slug } = useParams();
-  const [selectedItem, setSelectedItem] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+function SearchResults() {
+  const [results, setResults] = useState([]);
+  const { value } = useParams();
+  const navigate = useNavigate(); // Correctly destructure navigate from useNavigate
+  const [selectedItem, setSelectedItem] = useState(null); // State to store selected item
+  const [isModalOpen, setIsModalOpen] = useState(false); // State to control modal visibility
 
   useEffect(() => {
-    const fetchItems = async () => {
-      try {
-        const response = await axios.get(`http://localhost:8000/webitem/${slug}`);
-        setItems(response.data.data);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    fetchItems();
-  }, [slug]);
-
+    if (value && value.trim().length > 0) {
+      axios.get(`http://localhost:8000/webitem/search/${value}`)
+      .then(res => {
+        setResults(res.data.data);
+      })
+      .catch(err => console.log(err));
+    }
+  }, [value]);
 
   //functon in save item to the cart 
   const handleAddToCart = async (item) => {
@@ -54,8 +50,8 @@ const WebCategory = (props) => {
   };
 
   const handleShowDetails = (item) => {
-    setSelectedItem(item);
-    setIsModalOpen(true);
+    setSelectedItem(item); // Set the selected item
+    setIsModalOpen(true); // Open the modal
   };
 
   return (
@@ -67,7 +63,7 @@ const WebCategory = (props) => {
       <div >
         <List
           grid={{ column: 3 }}
-          dataSource={items}
+          dataSource={results}
           renderItem={(item, index) => (
             <Badge.Ribbon className={item.quantity === 0 ? "out-of-stock" : "in-stock"} text={item.quantity === 0 ? "Out of Stock" : "In Stock"}>
               <Card className='Itemcard' title={item.itemName} key={index}
@@ -104,4 +100,4 @@ const WebCategory = (props) => {
   );
 }
 
-export default WebCategory;
+export default SearchResults;

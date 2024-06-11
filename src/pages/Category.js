@@ -26,9 +26,8 @@ const Categories = () => {
         sortable: true
       },
       {
-        name: 'Image URL',
-        selector: row => row.imgLink,
-        sortable: true
+        name: 'Image',
+        cell: (row) => <img src={row.imageLink} alt="Item Image" style={{ width: '50px' }} />,
       },
       {
         name: 'Actions',
@@ -83,10 +82,11 @@ const Categories = () => {
     // Search function
     const filterCategories = (event) => {
       const searchValue = event.target.value.toLowerCase();
-      const filteredData = filteredCategories.filter((row) =>
+
+      const categories = filteredCategories.filter((row) =>
         row.name.toLowerCase().includes(searchValue)
       );
-      setCategories(filteredData);
+      setCategories(categories);
     };
   
     // Render the component

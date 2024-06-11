@@ -16,7 +16,7 @@ const WebRegister = () => {
         axios.post('http://localhost:8000/webuser/register', values)
             .then(res => {
                 console.log(res);
-                if (res.data.status === 'succes') { // Correct the status spelling to 'success'
+                if (res.data.status === 'succes') { 
                     Swal.fire({
                         icon: 'success',
                         title: 'Register Success',
@@ -47,7 +47,7 @@ const WebRegister = () => {
     return (
         <div>
         <WebHeader/>
-        <div className="login-container">
+        <div className="login-container" style={{ paddingTop: '90px' }}>
             <div className="login-content">
                 <h2>Register</h2>
                 <Form
@@ -58,6 +58,32 @@ const WebRegister = () => {
                     }}
                     scrollToFirstError
                 >
+                    <Form.Item
+                        name="fname"
+                        label="First Name"
+                        rules={[
+                            {
+                                required: true,
+                                message: 'Please input your first name!',
+                            },
+                        ]}
+                    >
+                        <Input />
+                    </Form.Item>
+
+                    <Form.Item
+                        name="lname"
+                        label="Last Name"
+                        rules={[
+                            {
+                                required: true,
+                                message: 'Please input your last name!',
+                            },
+                        ]}
+                    >
+                        <Input />
+                    </Form.Item>
+                
                     <Form.Item
                         name="username"
                         label="Username"
@@ -96,11 +122,14 @@ const WebRegister = () => {
                                 required: true,
                                 message: 'Please input your password!',
                             },
+                            {
+                                min: 8,
+                                message: 'Password must be at least 8 characters long.',
+                            },
                         ]}
-                        hasFeedback
-                    >
-                        <Input.Password />
-                    </Form.Item>
+                        >
+                    <Input.Password />
+            </Form.Item>
 
                     <Form.Item
                         name="address"

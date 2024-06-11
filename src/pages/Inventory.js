@@ -77,7 +77,7 @@ const [FilterItems, setFilterItems] = useState([]);
     axios.get('http://localhost:8000/item/')
     .then(res =>{
         setItems(res.data.data)
-        console.log(items)
+        console.log(items) 
         setFilterItems(res.data.data)
     
     })

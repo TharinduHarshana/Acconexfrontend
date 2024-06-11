@@ -106,13 +106,14 @@ const DefaultHandle = ({ children }) => {
             <Menu.Item key="inventory" title="inventory">
               <Link to="/admin/inventory">Inventory</Link>
             </Menu.Item>
+
             <Menu.Item key="itemKits" title="item-kits">
               <Link to="/admin/inventory/item-kits">Item Kits</Link>
             </Menu.Item>
+
             <Menu.Item key="category" title="category">
               <Link to="/admin/category">Category</Link>
             </Menu.Item>
-            
           </Menu.SubMenu>
 
           <Menu.SubMenu
@@ -135,6 +136,25 @@ const DefaultHandle = ({ children }) => {
           <Menu.Item key="/admin/sale" icon={<ShoppingCartOutlined />}>
             <Link to="/admin/sale">Sales</Link>
           </Menu.Item>
+
+
+
+          {/* add submenu for website complete sales to display */}
+          <Menu.SubMenu
+            key="websiteSubMenu"
+            title="Website"
+            icon={<ProductOutlined />}
+          >
+            <Menu.Item key="cashondelevery" title="cashondelevery">
+              <Link to="/admin/cashondelevery">Cash On Delivery</Link>
+            </Menu.Item>
+            <Menu.Item key="paidsales" title="paidsales">
+              <Link to="/admin/paidsales">Paid Sales</Link>
+            </Menu.Item>
+            
+          </Menu.SubMenu>
+
+
 
           <Menu.Item key="/admin/reports" icon={<LineChartOutlined />}>
             <Link to="/admin/reports">Reports</Link>

@@ -1,39 +1,85 @@
-import WebHeader from '../components/WebComponent/WebHeader';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import image from '../images/lap.jpg';
-import CarouselFade from '../components/WebComponent/CarouselFade'; 
+import { Link } from 'react-router-dom';
+import WebHeader from '../components/WebComponent/WebHeader';
+import Card from 'react-bootstrap/Card';
 import WebFooter from '../components/WebComponent/WebFooter';
+import CarouselFade from '../components/WebComponent/CarouselFade'; 
+import '../styles/webhomepage.css';
 
 function WebHomepage() {
+    const [categories, setCategories] = useState([]);
     const [items, setItems] = useState([]);
+
+    useEffect(() => {
+        axios.get('http://localhost:8000/category/')
+            .then(res => {
+                setCategories(res.data.data);
+            })
+            .catch(err => console.log(err));
+    }, []);
 
     useEffect(() => {
         axios.get('http://localhost:8000/webitem/')
             .then(res => {
-                setItems(res.data.data);
+                const sortedItems = res.data.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 10);
+                setItems(sortedItems);
             })
             .catch(err => console.log(err));
     }, []);
 
     return (
-        <div >
+        <div className="web-homepage">
             <WebHeader />
             <CarouselFade />
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px' }}>
+            <div className="container">
+                <div className="row">
+                    {categories.map(category => (
+                        <div className="col-md-3 mb-4" key={category._id}>
+                            <Link to={`/web/${category.categoryname}`} className="category-link">
+                                <Card className="category-card">
+                                    <div 
+                                        className="category-card-img"
+                                        style={{ backgroundImage: `url(${category.imageLink})` }}
+                                    >
+                                        <div className='card-text' >
+                                            <Card.Body>
+                                                <Card.Title>{category.categoryname}</Card.Title>
+                                                <Card.Text className="category-card-overlay">
+                                                    {category.description}
+                                                </Card.Text>
+                                            </Card.Body>
+                                        </div>
+                                    </div>
+                                </Card>
+                            </Link>
+                        </div>
+                    ))}
+                </div>
+            </div>
+            <div className='row'>
+                <div className='col-md-12'>
+                    <h3 className='text-center'>LATEST PRODUCTS</h3>
+                    <p className='text-center'>BEST - LOWEST PRICE FOR ALL PRODUCTS</p>
+                </div>
                 {items.map(item => (
-                    <div key={item._id} style={{ border: '1px solid #ddd', padding: '10px' }}>
-                        <img src={image} alt='item' style={{ width: '100%', height: '200px' }} />
-                        <h5>{item.itemName}</h5>
-                        <p>Rs: ${item.sellingPrice}</p>
-                        <p>Warranty: {item.warranty}</p>
-                        <p>Category: {item.category}</p>
-                        <button className='btn btn-sm btn-warning' style={{ marginRight: '10px' }}>Add to Cart</button>
-                        <button className='btn btn-sm btn-primary'>Buy Now</button>
+                    <div className="col-md-3 mb-4" key={item._id}>
+                        {/* Wrap the entire Card component with a Link component */}
+                        <Link to={`/web/search/${item.displayName}`} className="product-link">
+                            <Card className="product-card">
+                                <Card.Img variant="top" src={item.imageLink} />
+                                <Card.Body>
+                                    <Card.Title>{item.displayName}</Card.Title>
+                                    <Card.Text>
+                                        {/* Display item details as needed */}
+                                    </Card.Text>
+                                </Card.Body>
+                            </Card>
+                        </Link>
                     </div>
                 ))}
             </div>
-            <WebFooter/>
+            <WebFooter />
         </div>
     );
 }

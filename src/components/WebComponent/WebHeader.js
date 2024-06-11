@@ -1,26 +1,125 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, Input } from 'antd';
+import { Menu, AutoComplete, Input, message } from 'antd';
 import { ShoppingCartOutlined } from '@ant-design/icons';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios';
+import Swal from 'sweetalert2';
 import logo from '../../images/logo.jpg';
+import DisplayCart from '../WebComponent/Web.DisplayCart'; // Adjust the import path as needed
+
+const { Option } = AutoComplete;
 
 function WebHeader() {
   const [categories, setCategories] = useState([]);
-  const { Search } = Input;
+  const [searchValue, setSearchValue] = useState('');
+  const [dataSource, setDataSource] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
+  const [cartVisible, setCartVisible] = useState(false);
+  const [cartCount, setCartCount] = useState(0);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [hasRefreshed, setHasRefreshed] = useState(false); // Track if the page has been refreshed
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios.get('http://localhost:8000/webitem/')
       .then(res => {
         const uniqueCategories = Array.from(new Set(res.data.data.map(item => item.category)));
         setCategories(uniqueCategories);
+
+        const itemNames = res.data.data.map(item => item.displayName);
+        setDataSource(itemNames);
       })
       .catch(err => console.log(err));
   }, []);
 
+  useEffect(() => {
+    getCartCount();
+    checkLoginStatus();
+  }, []);
+
   const onMenuClick = (item) => {
-    window.location.href = '/web/' + item.key;
-  }
+    if (item.key === 'cart') {
+      setCartVisible(true);
+    } else if (item.key === 'logout') {
+      navigate('/web/home');
+      window.location.reload();
+    } else if (item.key !== 'search') {
+      navigate(`/web/${item.key}`); // Use navigate for internal navigation
+    }
+  };
+
+  // Check if user is logged in
+  const checkLoginStatus = () => {
+    const token = localStorage.getItem('token');
+    setIsLoggedIn(!!token); // Set isLoggedIn to true if token exists
+  };
+
+  // Handle logout
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'; // Remove token from cookies
+    setIsLoggedIn(false);
+    Swal.fire({
+      icon: 'success',
+      title: 'Success',
+      text: 'Logged out successfully',
+    });
+    navigate('/web/home');
+  };
+
+  // Get cart count with login user 
+  const getCartCount = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (token) {
+        const res = await axios.get('http://localhost:8000/cart/count', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        setCartCount(res.data.count); // Assume the response contains a 'count' field
+      }
+    } catch (error) {
+      console.error(error);
+      setCartCount(0); // Default to 0 if there is an error
+    }
+  };
+
+  const handleSearch = (value) => {
+    setSearchValue(value);
+    if (value.trim().length > 0) {
+      axios.get(`http://localhost:8000/webitem/search/${value}`)
+        .then(res => {
+          const filtered = res.data.data.map(item => item.displayName);
+          setFilteredData(filtered);
+        })
+        .catch(err => {
+          console.log(err);
+          setFilteredData([]);
+        });
+    } else {
+      setFilteredData([]);
+    }
+  };
+
+  const handleSelect = (value) => {
+    setSearchValue(value);
+    navigate(`/web/search/${value}`);
+  };
+
+  const handleSearchSubmit = (value) => {
+    if (value.trim().length > 0) {
+      navigate(`/web/search/${value}`);
+    }
+  };
+
+  const handleCartClose = () => {
+    setCartVisible(false);
+    if (!hasRefreshed) {
+      setHasRefreshed(true);
+      window.location.reload(); // Refresh the page when the cart is closed for the first time
+    }
+  };
 
   return (
     <div className='header-container'>
@@ -28,9 +127,8 @@ function WebHeader() {
         <Menu
           mode='horizontal'
           theme='dark'
+          style={{ width: '100%', display: 'flex', justifyContent: 'space-between', position: 'fixed', zIndex: '10' }}
           onClick={onMenuClick}
-          style={{ width: '100%', display: 'flex', justifyContent: 'space-between', position: 'fixed', zIndex: '10'}
-        }
         >
           <Menu.Item key='home' style={{ padding: '0' }}>
             <img src={logo} alt='acconex logo' style={{ width: '100px', height: '40px' }} />
@@ -42,32 +140,43 @@ function WebHeader() {
               </Menu.Item>
             ))}
           </Menu.SubMenu>
-          <Menu.Item key='about'>
-            ABOUT US
+          <Menu.Item key='about'>ABOUT US</Menu.Item>
+          <Menu.Item key='services'>SERVICES</Menu.Item>
+          <Menu.Item key='payment'>PAYMENT METHODS</Menu.Item>
+          <Menu.Item key='contact'>CONTACT US</Menu.Item>
+
+          <Menu.Item key='search' style={{ width: '325px' }}>
+            <AutoComplete
+              style={{ width: 300 }}
+              options={filteredData.map(item => ({ value: item }))}
+              value={searchValue}
+              onSearch={handleSearch}
+              onSelect={handleSelect}
+            >
+              <Input.Search
+                placeholder='Search for products...'
+                onSearch={handleSearchSubmit}
+                onPressEnter={() => handleSearchSubmit(searchValue)}
+              />
+            </AutoComplete>
           </Menu.Item>
-          <Menu.Item key='services'>
-            SERVICES
-          </Menu.Item>
-          <Menu.Item key='payment'>
-            PAYMENT METHODS
-          </Menu.Item>
-          <Menu.Item key='contact'>
-            CONTACT US
-          </Menu.Item>
-            <Menu.Item key='search'>
-                <Search placeholder='Search' style={{ width: '300px',paddingTop:'10px'}} />
-            </Menu.Item>
-          <Menu.Item key='login' >
-            <Link to="/web/login">LOGIN</Link>
-          </Menu.Item>
-          <Menu.Item key='register'>
-            <Link to="/web/register">REGISTER</Link>
-          </Menu.Item>
-          <Menu.Item key='cart' icon={<ShoppingCartOutlined />}>
-            CART (0)
-          </Menu.Item>
+          {!isLoggedIn && (
+            <>
+              <Menu.Item key='login'>
+                <Link to="/web/login">LOGIN</Link>
+              </Menu.Item>
+              <Menu.Item key='register'>
+                <Link to="/web/register">REGISTER</Link>
+              </Menu.Item>
+            </>
+          )}
+          {isLoggedIn && (
+            <Menu.Item key='logout' onClick={handleLogout}>LOGOUT</Menu.Item>
+          )}
+          <Menu.Item key='cart' icon={<ShoppingCartOutlined />}>CART ({cartCount})</Menu.Item>
         </Menu>
       </div>
+      <DisplayCart show={cartVisible} handleClose={handleCartClose} />
     </div>
   );
 }

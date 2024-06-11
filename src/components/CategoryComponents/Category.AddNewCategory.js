@@ -83,7 +83,7 @@ const AddNewCategory = () => {
             showConfirmButton: false,
             timer: 1500,
           });
-          navigate('/categories'); // Navigate to categories page after successful addition
+          navigate('/category'); // Navigate to categories page after successful addition
         })
        .catch((err) => {
           console.error(err);

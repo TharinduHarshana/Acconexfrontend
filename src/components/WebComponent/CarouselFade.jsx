@@ -6,6 +6,7 @@ import image1 from '../../images/image1.jpg'; // Import your images
 import image2 from '../../images/image2.jpg';
 import image3 from '../../images/image3.jpg';
 import image4 from '../../images/image4.jpg';
+
 const CarouselFade = () => {
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -13,12 +14,13 @@ const CarouselFade = () => {
     setActiveIndex(selectedIndex);
   };
   return (
-    <Carousel fade>
+    <Carousel >
       <Carousel.Item>
         <img
-          className="img"
+          className="d-block w-100"
           src={image1}
           alt="First slide"
+          style={{ height: '500px', objectFit: 'cover' }}
         />
         <Carousel.Caption>
           <h1 className='mainheadding' >CCTV & ACCESSORIES </h1>
@@ -26,10 +28,11 @@ const CarouselFade = () => {
         </Carousel.Caption>
       </Carousel.Item>
       <Carousel.Item>
-        <img
-          className="img"
+      <img
+          className="d-block w-100"
           src={image2}
-          alt="Second slide"
+          alt="First slide"
+          style={{ height: '500px', objectFit: 'cover' }}
         />
         <Carousel.Caption>
         <h1 className='mainheadding' >LAPTOP &  ACCESSORIES</h1>
@@ -37,10 +40,11 @@ const CarouselFade = () => {
         </Carousel.Caption>
       </Carousel.Item>
       <Carousel.Item>
-        <img
-          className="img"
+      <img
+          className="d-block w-100"
           src={image3}
-          alt="Third slide"
+          alt="First slide"
+          style={{ height: '500px', objectFit: 'cover' }}
         />
         <Carousel.Caption>
         <h1 className='mainheadding' >PRINTER & ACCESSORIES </h1>
@@ -48,10 +52,11 @@ const CarouselFade = () => {
         </Carousel.Caption>
       </Carousel.Item>
       <Carousel.Item>
-        <img
-          className="img"
+      <img
+          className="d-block w-100"
           src={image4}
-          alt="Fourth slide"
+          alt="First slide"
+          style={{ height: '500px', objectFit: 'cover' }}
         />
         <Carousel.Caption>
         <h1 className='mainheadding' >DESKTOP & DESKTOP ACCESSORIES</h1>

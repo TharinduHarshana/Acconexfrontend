@@ -25,7 +25,9 @@ const AddNewItem = () => {
   const [percent, setPercent] = useState(0);
   const [categories, setCategories] = useState([]);
   const [suppliers, setSuppliers] = useState([]);
+  const [description , setDescription] = useState('');
   const [loading, setLoading] = useState(true);
+ 
   
 
 
@@ -98,7 +100,8 @@ const AddNewItem = () => {
       supplierID === '' ||
       category === '' ||
       warranty === '' ||
-      imageLink === ''
+      imageLink === ''||
+      description === ''
     ) {
       Swal.fire({
         icon: 'error',
@@ -127,6 +130,7 @@ const AddNewItem = () => {
       category,
       warranty,
       imageLink,
+      description,
     };
     console.log(newItem);
     axios
@@ -157,6 +161,10 @@ const AddNewItem = () => {
             <label className='label'> 
               Item Name:
               <input type="text"  placeholder="Cutting Wheel 5''" onChange={(e) => setItemName(e.target.value)} value={itemName} required className='input' />
+            </label>
+            <label>
+              Description:
+              <textarea className="form-control" placeholder="Category Description" onChange={(e) => setDescription(e.target.value)} value={description}></textarea>
             </label>
             <label className='label' >
               Product ID:
@@ -221,9 +229,10 @@ const AddNewItem = () => {
               <input type="text" placeholder="AK2928582-9582" onChange={(e) => setItemSerial(e.target.value)} value={itemSereal} className='input' />
             </label>
 
-            {/* Your form inputs */}
+      {/* Your form inputs */}
       <label className='label'>Select Supplier:</label>
       <select onChange={(e) => setSupplierID(e.target.value)} value={supplierID} className='input'>
+      <option value="">Select Supplier</option>
         {suppliers.map((supplier) => (
           <option key={supplier._id} value={supplier.supplierId}>{supplier.firstName}</option>
         ))}
@@ -231,6 +240,7 @@ const AddNewItem = () => {
 
       <label className='label'>Select Category:</label>
       <select onChange={(e) => setCategory(e.target.value)} value={category} className='input'>
+      <option value="">Select Category</option>
         {categories.map((category) => (
           <option key={category._id} value={category.categoryname}>{category.categoryname}</option>
         ))}

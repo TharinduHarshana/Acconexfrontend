@@ -109,7 +109,7 @@ function App() {
         <Route path="/admin/supplier/update/:id" element={<UpdateSupplier />} />
         <Route path="/admin/inventory/item-kits" element={<ItemKit/>}/>
         <Route path="/admin/inventory/kits/add" element={<ItemKitsForm/>}/>
-        <Route path="/admin/inventory" element={<Inventory/>}/>
+        {/* <Route path="/admin/inventory" element={<Inventory/>}/> */}
         <Route path="/admin/inventory/kits/update/:id" element={<ItemKitsUpdate/>} />
         
 

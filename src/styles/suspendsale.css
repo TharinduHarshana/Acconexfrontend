@@ -1,0 +1,21 @@
+.suspendSale_table {
+    
+    width: 600px auto;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-top: 40px;
+  }
+  
+  
+  .suspendSale_table .rdt_TableHeadRow, .suspendSale_table .rdt_TableRow {
+    padding: 0px 10px !important; /* Override default padding */
+  }
+  
+  .suspendSale_table .rdt_TableCol, .suspendSale_table .rdt_TableCell {
+    padding: 0px  10px !important; /* Override default padding */
+  }
+  
+.suspend_search{
+    margin-top: 30px;
+    margin-left: 20px;
+}

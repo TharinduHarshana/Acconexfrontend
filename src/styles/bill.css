@@ -21,14 +21,13 @@
   margin-top: 40px;
   margin-left: 20px;
 }
-
 .print_bill_table
 {
   width: 370px;
   border-color: #c9c5c2;
 }
 .print_bill_table thead tr th{
-background-color: rgb(16, 3, 73);
+ background-color: rgb(11, 2, 51);
 color: aliceblue;
 }
 
@@ -82,9 +81,12 @@ color: aliceblue;
 }
 
 .bill_table thead tr th{
-  background-color:beige;
+  background-color: rgb(11, 2, 51);
+  color: aliceblue;
   padding :2% 20px;
   align-items: center;
+  font-size: 12px;
+  font-weight: bolder;
 
 
 }
@@ -92,8 +94,9 @@ color: aliceblue;
 .bill_table   tbody td{
   
   height: 200px  auto;
-  padding: 10px 30px;
+  padding: 10px 20px;
   text-align: center;
+  font-size: 12px;
 }
 
 .bill_table_container input{
@@ -106,11 +109,10 @@ color: aliceblue;
   border-radius: 5px;
   margin-left: 20px;
   margin-top: 40px;
-  width: 600px ;
 
 }
 .btn{
-  background-color: rgb(1, 1, 41);
+  background-color: rgb(11, 2, 51);
   color: white;
   border: none;
   padding: 7px 15px;
@@ -146,18 +148,16 @@ color: aliceblue;
   height: 30px ;
   width: 120px;
 }
-.complete_sale{
-  background-color: rgb(141, 237, 149);
-}
-.suspend_sale{
-  background-color: rgb(240, 103, 103);
+.complete_sale,
+.suspend_sale,
+.add_customer{
+  background-color: rgb(11, 2, 51);
+  color: rgb(255, 255, 255);
 }
 
-.add_customer{
-  background-color: rgb(136, 116, 237);
-}
 .payment-method-container
 {
+
   display: flex;
   justify-content: space-around;
   
@@ -215,4 +215,32 @@ color: aliceblue;
 .customer-list table tbody tr td{
   width: 420px;
 
+}
+@media print {
+  /* Set paper size to A4 */
+  @page {
+    size: A4;
+  }
+
+  /* Optionally, you can also set margins */
+  body {
+    margin: 0.5in;
+  }
+
+  /* Hide payment method radio buttons */
+  .payment-method-container {
+    display: none;
+  }
+
+  /* Increase spacing between lines */
+  .print_bill_table td,
+  .print_bill_table th {
+    padding: 10px 0; /* Increase vertical padding */
+    line-height: 1.5; /* Increase line height */
+  }
+
+  /* Add additional styles for print layout */
+  .bill_form {
+    /* Adjust styles for print layout */
+  }
 }

@@ -333,7 +333,7 @@ const addItemToKit = async (item) => {
                         </button>
                         <button
                           onClick={() => removeItemFromKit(item)} 
-                          
+                      
                           className="table_btn"
                         >
                           Remove
@@ -351,6 +351,10 @@ const addItemToKit = async (item) => {
 }
 
 export default ItemKitsForm;
+
+
+
+
 
 
 

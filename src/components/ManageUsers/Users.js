@@ -43,6 +43,13 @@ function Users() {
 
   const handleDelete = async (_id) => {
     try {
+      // Find the user by id to check the role
+      const userToDelete = users.find((user) => user._id === _id);
+
+      if (userToDelete.role === "admin") {
+        message.error("Cannot delete admin user!");
+        return;
+      }
       await axios.delete(`http://localhost:8000/user/delete/${_id}`, {
         withCredentials: true,
       });
@@ -105,6 +112,7 @@ function Users() {
       selector: (row) => row.role,
       sortable: true,
     },
+    
     {
       name: "Actions",
       cell: (row) => (

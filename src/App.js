@@ -56,6 +56,7 @@ import InventoryUpdate from './components/InventoryComponent/inventory.UpdateIte
 import InventoryHome from './pages/Inventory';
 import CategoryHome from "./pages/Category";
 import AddNewCategory from "./components/CategoryComponents/Category.AddNewCategory";
+import CreateUserForm from "./components/ManageUsers/CreateUser";
 
 
 
@@ -92,7 +93,7 @@ function App() {
         <Route path="/admin" element={<Login/>} />
         <Route path="admin/logout" element={<Logout/>}/>
         <Route path="/admin/dashboard" element={< Dashboard/>} />
-        <Route path="/admin/userform" element={<CreateUser />} />
+        <Route path="/admin/userform" element={<CreateUserForm/>} />
         <Route path="/admin/userform/update/:id" element={<UpdateUser />} />
         <Route path="/admin/userTable" element={<Users />} />
         <Route path="/admin/customer" element={<Customer/>}/>

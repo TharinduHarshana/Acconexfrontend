@@ -36,6 +36,36 @@ function ItemKitsForm() {
 
     fetchInventoryItems();
   }, []);
+  // Fetch all item kits and generate the next item kit ID
+  useEffect(() => {
+    const fetchItemKits = async () => {
+      try {
+        const response = await axios.get("http://localhost:8000/itemkit/all");
+        if (response.data.success) {
+          const lastItemKitId = response.data.data.length > 0 ? response.data.data[response.data.data.length - 1].itemKitId : "kitId000";
+          const nextItemKitId = generateNextItemKitId(lastItemKitId);
+          setFormData((prevFormData) => ({
+            ...prevFormData,
+            itemKitId: nextItemKitId,
+          }));
+        } else {
+          console.error("Failed to fetch item kits:", response.data);
+        }
+      } catch (error) {
+        console.error("Error fetching item kits:", error);
+      }
+    };
+
+    fetchItemKits();
+  }, []);
+
+  // Function to generate the next item kit ID based on the last ID fetched
+  const generateNextItemKitId = (lastItemKitId) => {
+    const numericPart = parseInt(lastItemKitId.replace("kitId", ""));
+    const nextNumericPart = numericPart + 1;
+    return `kitId${nextNumericPart.toString().padStart(3, "0")}`;
+  };
+
 
   // Handle search input
   const [searchItem, setSearchItem] = useState("");
@@ -274,7 +304,7 @@ const addItemToKit = async (item) => {
                     setFormData({ ...formData, kitQuantity: e.target.value });
                   }}
                 />
-                <button type="submit" className="btn">
+                <button type="submit" className="form_btn">
                   Create Item Kit
                 </button>
               </form>

@@ -10,6 +10,7 @@ function Users() {
   const [users, setUsers] = useState([]);
   const [filterUser, setFilterUser] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
   //Effect hook to fetch users data when the component mounts
   useEffect(() => {
@@ -39,6 +40,7 @@ function Users() {
   if (loading) {
     return <div>Loading...</div>; // Show a loading indicator while data is being fetched
   }
+
   // Function to handle user deletion
 
   const handleDelete = async (_id) => {
@@ -104,6 +106,11 @@ function Users() {
       sortable: true,
     },
     {
+      name: "Last Name",
+      selector: (row) => row.lastName,
+      sortable: true,
+    },
+    {
       name: "Phone Number",
       selector: (row) => row.phoneNumber,
     },
@@ -112,7 +119,7 @@ function Users() {
       selector: (row) => row.role,
       sortable: true,
     },
-    
+
     {
       name: "Actions",
       cell: (row) => (
@@ -128,37 +135,51 @@ function Users() {
   return (
     <DefaultHandle>
       <div style={{ marginBottom: "10px" }}>
-      <div style={{  display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <input
-          style={{ marginBottom: "12px", width: "200px" }}
-          type="text end"
-          className="input"
-          placeholder="Search user ..."
-          onChange={filterUsers}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <input
+            type="text end"
+            placeholder="Search User ..."
+            onChange={filterUsers}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+            style={{
+              marginBottom: "12px",
+              width: "300px",
+              padding: "5px",
+              border: isHovered ? "1px solid black" : "1px solid #ccc",
+              borderRadius: "5px",
+              transition: "border-color 0.3s"
+            }}
+          />
+        </div>
+
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            alignItems: "center",
+            marginBottom: "25px",
+          }}
+        >
+          <Space size={12}></Space>
+          <Link to={"/admin/userform"} style={{ fontSize: "16px" }}>
+            Add User
+          </Link>
+        </div>
+
+        <DataTable
+          columns={columns}
+          data={filterUser}
+          selectableRows
+          fixedHeader
+          pagination
         />
-      </div>
-
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "flex-end",
-          alignItems: "center",
-          marginBottom: "25px",
-        }}
-      >
-        <Space size={12}></Space>
-        <Link to={"/admin/userform"} style={{ fontSize: "16px" }}>
-          Add User
-        </Link>
-      </div>
-
-      <DataTable
-        columns={columns}
-        data={filterUser}
-        selectableRows
-        fixedHeader
-        pagination
-      />
       </div>
     </DefaultHandle>
   );

@@ -8,6 +8,7 @@ import { message, Modal, Space } from "antd";
 const ItemKit = () => {
   const [itemKit, setItemKit] = useState([]);
   const [filterKit, setFilterKit] = useState([]);
+  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     const loadItemKit = async () => {
@@ -23,6 +24,8 @@ const ItemKit = () => {
     };
     loadItemKit();
   }, []);
+
+  
 
   const handleDelete = async (_id) => {
     try {
@@ -76,9 +79,9 @@ const ItemKit = () => {
       sortable: true,
     },
     {
-      name:"Price(LKR)",
-      selector:(row)=>row.price,
-      sortable:true,
+      name: "Price(LKR)",
+      selector: (row) => row.price,
+      sortable: true,
     },
 
     {
@@ -105,11 +108,20 @@ const ItemKit = () => {
             }}
           >
             <input
-              style={{ marginBottom: "12px", width: "200px" }}
               type="text"
               className="input"
               placeholder="Search item kit..."
               onChange={filterKits}
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
+              style={{
+                marginBottom: "12px",
+                width: "300px",
+                padding: "5px",
+                border: isHovered ? "1px solid black" : "1px solid #ccc",
+                borderRadius: "5px",
+                transition: "border-color 0.3s",
+              }}
             />
           </div>
           <div
@@ -129,15 +141,14 @@ const ItemKit = () => {
           <div
             style={{
               fontSize: "14px",
-              boxShadow: "5px 5px 10px rgba(0, 0, 0, 0.2)", 
-              fontWeight: "bold",
+              boxShadow: "5px 5px 10px rgba(0, 0, 0, 0.2)",
               marginBottom: "20px",
               border: "1px solid #c9c5c2",
-              borderRadius: "10px", // Adjust the value as needed
+              borderRadius: "10px", 
               padding: "5px 10px ",
-              marginLeft:"5px",
-              textAlign:"center",
-              width:"100px"
+              marginLeft: "5px",
+              textAlign: "center",
+              width: "100px",
             }}
           >
             Total Kit {itemKit.length}

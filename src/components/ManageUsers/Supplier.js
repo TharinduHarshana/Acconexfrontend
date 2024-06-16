@@ -9,6 +9,7 @@ function Supplier() {
   // State to store the list of suppliers
   const [suppliers, setSuppliers] = useState([]);
   const [filterSupplier, setFilterSupplier] = useState([]);
+  const [isHovered, setIsHovered] = useState(false);
 
   // Effect hook to fetch suppliers data when the component mounts
   useEffect(() => {
@@ -34,8 +35,10 @@ function Supplier() {
       await axios.delete(`http://localhost:8000/supplier/delete/${_id}`);
       // Update the suppliers state by filtering out the deleted supplier
       setSuppliers(suppliers.filter((supplier) => supplier._id !== _id));
-      setFilterSupplier(filterSupplier.filter((supplier) => supplier._id !== _id));
-    
+      setFilterSupplier(
+        filterSupplier.filter((supplier) => supplier._id !== _id)
+      );
+
       message.success("Supplier deleted successfully!");
     } catch (error) {
       console.error("Error deleting supplier:", error);
@@ -72,8 +75,6 @@ function Supplier() {
 
     setFilterSupplier(supplierData); // Update filterSupplier state with filtered data
   };
-
-
 
   // Columns configuration for DataTable
   const columns = [
@@ -118,15 +119,30 @@ function Supplier() {
     <div>
       <DefaultHandle>
         <div style={{ marginBottom: "10px" }}>
-        <div style={{  display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <input
-            style={{ marginBottom: "12px", width: "200px" }}
-            type="text end"
-            className="input"
-            placeholder="Search Supplier..."
-            onChange={filterSuppliers}
-          />
-        </div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <input
+              type="text end"
+              className="input"
+              placeholder="Search Supplier..."
+              onChange={filterSuppliers}
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
+              style={{
+                marginBottom: "12px",
+                width: "300px",
+                padding: "5px",
+                border: isHovered ? "1px solid black" : "1px solid #ccc",
+                borderRadius: "5px",
+                transition: "border-color 0.3s",
+              }}
+            />
+          </div>
         </div>
         <div
           style={{
@@ -146,7 +162,7 @@ function Supplier() {
         </div>
         <DataTable
           columns={columns}
-          data={filterSupplier} 
+          data={filterSupplier}
           selectableRows
           fixedHeader
           pagination

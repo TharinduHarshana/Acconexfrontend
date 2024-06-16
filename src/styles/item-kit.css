@@ -30,7 +30,7 @@
   text-align: center;
 }
 
-.btn {
+.form_btn {
   background-color: rgb(1, 1, 41);
   color: white;
   border: none;
@@ -39,6 +39,7 @@
   border-radius: 5px;
   font-weight: bold;
   margin-top: 10px;
+  text-align: center;
 }
 
 .item_kits table tbody td {

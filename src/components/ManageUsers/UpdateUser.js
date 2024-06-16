@@ -141,6 +141,7 @@ const handleCloseButtonClick = () => {
               name="userId"
               value={user.userId}
               onChange={handleInputChange}
+              disabled
             />
 
             <label>First Name:</label>
@@ -181,7 +182,7 @@ const handleCloseButtonClick = () => {
               <option value="cashier">Cashier</option>
               <option value="sales staff">Sales Staff</option>
             </select>
-
+<br/><br/>
             <button type="submit" className="btn">
               Update
             </button>

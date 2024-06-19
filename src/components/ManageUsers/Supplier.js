@@ -10,10 +10,12 @@ function Supplier() {
   const [suppliers, setSuppliers] = useState([]);
   const [filterSupplier, setFilterSupplier] = useState([]);
   const [isHovered, setIsHovered] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   // Effect hook to fetch suppliers data when the component mounts
   useEffect(() => {
     const loadSuppliers = async () => {
+      setLoading(true);
       try {
         const response = await axios.get("http://localhost:8000/supplier/get");
         // Update the suppliers state with the fetched data
@@ -22,11 +24,17 @@ function Supplier() {
         console.log(response.data); // Add this line to check the fetched data
       } catch (error) {
         console.error("Error fetching suppliers:", error);
+      }finally{
+        setLoading(false)
       }
     };
 
     loadSuppliers();
   }, []);
+  
+  if (loading) {
+    return <div>Loading...</div>; 
+  }
 
   // Function to handle deleting a supplier
   const handleDelete = async (_id) => {
@@ -154,7 +162,7 @@ function Supplier() {
           <Space size={12}>
             <Link
               to={"/admin/supplier/create"}
-              style={{ marginTop: "20px", fontSize: "16px" }}
+              style={{ marginTop: "20px", fontSize: "14px" }}
             >
               Add Supplier
             </Link>

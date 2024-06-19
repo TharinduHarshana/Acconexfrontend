@@ -38,7 +38,7 @@ function Users() {
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>; // Show a loading indicator while data is being fetched
+    return <div>Loading...</div>; 
   }
 
   // Function to handle user deletion
@@ -168,7 +168,7 @@ function Users() {
           }}
         >
           <Space size={12}></Space>
-          <Link to={"/admin/userform"} style={{ fontSize: "16px" }}>
+          <Link to={"/admin/userform"} style={{ fontSize: "14px" }}>
             Add User
           </Link>
         </div>

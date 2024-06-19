@@ -9,9 +9,11 @@ const ItemKit = () => {
   const [itemKit, setItemKit] = useState([]);
   const [filterKit, setFilterKit] = useState([]);
   const [isHovered, setIsHovered] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const loadItemKit = async () => {
+      setLoading(true);
       try {
         const response = await axios.get("http://localhost:8000/itemkit/all", {
           withCredentials: true,
@@ -20,10 +22,16 @@ const ItemKit = () => {
         setFilterKit(response.data.data); // Initialize filterKit with fetched data
       } catch (error) {
         console.error("Error Fetching item kit: ", error);
+      }finally{
+        setLoading(false);
       }
     };
     loadItemKit();
   }, []);
+  
+  if (loading) {
+    return <div>Loading...</div>; 
+  }
 
   
 
@@ -77,6 +85,11 @@ const ItemKit = () => {
       name: "ItemKit Description",
       selector: (row) => row.itemDescription,
       sortable: true,
+    },
+    {
+      name:"Quantity",
+      selector:(row)=>row.kitQuantity,
+      sortable:true,
     },
     {
       name: "Price(LKR)",
@@ -133,7 +146,7 @@ const ItemKit = () => {
             }}
           >
             <Space size={12}></Space>
-            <Link to={"/admin/inventory/kits/add"} style={{ fontSize: "16px" }}>
+            <Link to={"/admin/inventory/kits/add"} style={{ fontSize: "14px" }}>
               New Item Kit
             </Link>
           </div>

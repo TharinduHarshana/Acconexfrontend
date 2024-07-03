@@ -387,17 +387,21 @@
 
 
 
+
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import DefaultHandle from "../DefaultHandle";
 import { message } from "antd";
 import { useNavigate } from "react-router-dom";
 import "../../styles/item-kit.css";
+import Modal from "./ItemKitModal";
+
 
 function ItemKitsForm() {
   const navigate = useNavigate();
 
   const [inventoryItems, setInventoryItems] = useState([]);
+  const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({
     itemKitId: "",
     itemKitName: "",
@@ -653,6 +657,9 @@ function ItemKitsForm() {
       );
     }
   };
+  const toggleModal = () => {
+    setShowModal(!showModal);
+  };
 
   return (
     <div className="item_kit">
@@ -722,6 +729,9 @@ function ItemKitsForm() {
                     setFormData({ ...formData, kitQuantity: e.target.value });
                   }}
                 />
+                <button type="button" onClick={toggleModal} className="see_btn">
+                  See items
+                </button>
                 <button type="submit" className="form_btn">
                   Create Item Kit
                 </button>
@@ -786,6 +796,35 @@ function ItemKitsForm() {
           </div>
         </div>
       </DefaultHandle>
+      <Modal show={showModal} handleClose={toggleModal}>
+        <div className="item_kit_items">
+          <table>
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Selected Quantity</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {formData.items.map((item, index) => (
+                <tr key={item._id}>
+                  <td>{item.itemName}</td>
+                  <td>{formData.itemQuantity[index]}</td>
+                  <td>
+                    <button
+                      onClick={() => removeItemFromKit(item)}
+                      className="table_btn"
+                    >
+                      Remove
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Modal>
     </div>
   );
 }

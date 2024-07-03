@@ -591,6 +591,7 @@ function UpdateItemKitForm() {
       message.error("Error occurred when updating item kit.");
     }
   };
+
   const toggleModal = () => {
     setShowModal(!showModal);
   };
@@ -669,11 +670,7 @@ function UpdateItemKitForm() {
                     setFormData({ ...formData, kitQuantity: e.target.value });
                   }}
                 />
-                <button
-                  type="button"
-                  onClick={toggleModal}
-                  className="see_btn"
-                >
+                <button type="button" onClick={toggleModal} className="see_btn">
                   See items
                 </button>
 
@@ -743,7 +740,6 @@ function UpdateItemKitForm() {
       </DefaultHandle>
       <Modal show={showModal} handleClose={toggleModal}>
         <div className="item_kit_items">
-          <h3>Items in this Kit</h3>
           <table>
             <thead>
               <tr>
@@ -756,7 +752,7 @@ function UpdateItemKitForm() {
               {formData.items.map((item, index) => (
                 <tr key={item._id}>
                   <td>{item.itemName}</td>
-                  <td>{formData.itemQuantity[item._id] || 0}</td>
+                  <td>{formData.itemQuantity[index]}</td>
                   <td>
                     <button
                       onClick={() => removeItemFromKit(item)}
@@ -776,3 +772,4 @@ function UpdateItemKitForm() {
 }
 
 export default UpdateItemKitForm;
+

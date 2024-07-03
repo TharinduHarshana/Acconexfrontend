@@ -359,12 +359,13 @@
 
 // export default ItemKitsUpdate;
 
+
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import DefaultHandle from "../DefaultHandle";
-import { message } from "antd";
+import { message, Modal } from "antd"; // Import Modal from antd
 import { useNavigate, useParams } from "react-router-dom";
-import Modal from "./ItemKitModal";
+import ItemKitModal from "./ItemKitModal"; // Assuming you have a custom modal component
 import "../../styles/update-kit-form.css";
 
 function UpdateItemKitForm() {
@@ -500,35 +501,42 @@ function UpdateItemKitForm() {
     setSearchItem("");
   };
 
+  // Function to remove an item from the kit with confirmation
   const removeItemFromKit = (item) => {
-    const itemIndex = formData.items.findIndex((i) => i._id === item._id);
-    if (itemIndex >= 0) {
-      const updatedItems = formData.items.filter((i) => i._id !== item._id);
-      const updatedQuantities = formData.itemQuantity.filter(
-        (_, index) => index !== itemIndex
-      );
-      const updatedPrice =
-        formData.price -
-        item.sellingPrice * (formData.itemQuantity[itemIndex] || 0);
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        items: updatedItems,
-        itemQuantity: updatedQuantities,
-        price: updatedPrice,
-      }));
+    Modal.confirm({
+      title: 'Confirm Removal',
+      content: `Are you sure you want to remove ${item.itemName} from the kit?`,
+      onOk: () => {
+        const itemIndex = formData.items.findIndex((i) => i._id === item._id);
+        if (itemIndex >= 0) {
+          const updatedItems = formData.items.filter((i) => i._id !== item._id);
+          const updatedQuantities = formData.itemQuantity.filter(
+            (_, index) => index !== itemIndex
+          );
+          const updatedPrice = formData.price - item.sellingPrice * parseInt(formData.itemQuantity[itemIndex] || 0);
 
-      setInventoryItems(
-        inventoryItems.map((i) =>
-          i._id === item._id
-            ? {
-                ...i,
-                quantity: i.quantity + (formData.itemQuantity[itemIndex] || 0),
-                selectedQuantity: "",
-              }
-            : i
-        )
-      );
-    }
+          setFormData((prevFormData) => ({
+            ...prevFormData,
+            items: updatedItems,
+            itemQuantity: updatedQuantities,
+            price: updatedPrice,
+          }));
+
+          // Return the selected quantity back to the inventory
+          setInventoryItems(
+            inventoryItems.map((i) =>
+              i._id === item._id
+                ? { ...i, quantity: i.quantity + parseInt(formData.itemQuantity[itemIndex] || 0), selectedQuantity: "" }
+                : i
+            )
+          );
+          message.success(`${item.itemName} removed from the kit.`);
+        }
+      },
+      onCancel: () => {
+        message.info('Removal canceled.');
+      }
+    });
   };
 
   const handleSubmit = async (e) => {
@@ -738,7 +746,7 @@ function UpdateItemKitForm() {
           </div>
         </div>
       </DefaultHandle>
-      <Modal show={showModal} handleClose={toggleModal}>
+      <ItemKitModal show={showModal} handleClose={toggleModal}>
         <div className="item_kit_items">
           <table>
             <thead>
@@ -766,7 +774,7 @@ function UpdateItemKitForm() {
             </tbody>
           </table>
         </div>
-      </Modal>
+      </ItemKitModal>
     </div>
   );
 }

@@ -91,30 +91,36 @@
 
 // export default Modal;
 
-import React from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
+// ItemKitModal.js
 
-const ItemKitModal = ({ show, handleClose, children }) => {
+
+import React from "react";
+import { Modal } from "react-bootstrap";
+import "../../styles/model.css";
+
+function ItemKitModal({ show, handleClose, children }) {
   return (
-    <div className={`modal fade ${show ? 'show d-block' : 'd-none'}`} tabIndex="-1" role="dialog">
-      <div className="modal-dialog" role="document">
-        <div className="modal-content">
-          <div className="modal-header bg-teal text-white">
-            <h5 className="modal-title">Items in this kit</h5>
-            <button type="button" className="close text-white" aria-label="Close" onClick={handleClose}>
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div className="modal-body">
-            {children}
-          </div>
-          <div className="modal-footer">
-            <button type="button" className="btn btn-secondary" onClick={handleClose}>Close</button>
-          </div>
-        </div>
-      </div>
-    </div>
+    <Modal
+      show={show}
+      onHide={handleClose}
+      centered
+      dialogClassName="item-kit-modal"
+    >
+      <Modal.Header closeButton>
+        <p>Items in this kit. If you don't want, you can remove it</p>
+      </Modal.Header>
+      <Modal.Body>{children}</Modal.Body>
+      <Modal.Footer>
+        <button onClick={handleClose} className="modal-close-btn">
+          Close
+        </button>
+      </Modal.Footer>
+    </Modal>
   );
-};
+}
 
 export default ItemKitModal;
+
+
+
+

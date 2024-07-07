@@ -394,6 +394,7 @@ import { message, Modal as AntdModal } from "antd";
 import { useNavigate } from "react-router-dom";
 import "../../styles/item-kit.css";
 import ItemKitModal from "./ItemKitModal"; 
+import DefaultHandle from "../DefaultHandle";
 
 function ItemKitsForm() {
   const navigate = useNavigate();
@@ -645,6 +646,7 @@ function ItemKitsForm() {
 
   return (
     <div className="item_kit">
+      <DefaultHandle>
       <div className="container">
         <div className="item_kits form">
           <form onSubmit={handleSubmit}>
@@ -710,7 +712,7 @@ function ItemKitsForm() {
               }}
             />
             <button type="button" onClick={toggleModal} className="see_btn">
-              See items
+              View Added Items
             </button>
             <button type="submit" className="form_btn">
               Create Item Kit
@@ -761,12 +763,7 @@ function ItemKitsForm() {
                       >
                         Add to Kit
                       </button>
-                      <button
-                        onClick={() => removeItemFromKit(item)}
-                        className="table_btn"
-                      >
-                        Remove
-                      </button>
+                      
                     </td>
                   </tr>
                 ))}
@@ -774,34 +771,35 @@ function ItemKitsForm() {
           </table>
         </div>
       </div>
+      </DefaultHandle>
       <ItemKitModal show={showModal} handleClose={toggleModal}>
         <div className="item_kit_items">
-          <table>
-            <thead>
-              <tr>
-                <th>Item</th>
-                <th>Selected Quantity</th>
-                <th>Actions</th>
+        <table>
+          <thead>
+            <tr>
+              <th></th>
+              <th></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {formData.items.map((item, index) => (
+              <tr key={item._id}>
+                <td>{item.itemName}</td>
+                <td>{formData.itemQuantity[index]}</td>
+                <td>
+                  <button
+                    onClick={() => removeItemFromKit(item)}
+                    className="table_btn"
+                  >
+                    Remove
+                  </button>
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {formData.items.map((item, index) => (
-                <tr key={item._id}>
-                  <td>{item.itemName}</td>
-                  <td>{formData.itemQuantity[index]}</td>
-                  <td>
-                    <button
-                      onClick={() => removeItemFromKit(item)}
-                      className="table_btn"
-                    >
-                      Remove
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+            ))}
+          </tbody>
+        </table>
+      </div>
       </ItemKitModal>
     </div>
   );

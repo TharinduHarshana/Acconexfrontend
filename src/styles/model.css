@@ -1,57 +1,66 @@
-.bg-teal {
-  background-color: teal;
-}
-
-.modal-backdrop.show {
-  opacity: 0.5;
-}
-
-.item_kit {
-  margin: 20px;
-}
-
-.container {
-  max-width: 800px;
+.item-kit-modal {
+  max-width: 600px;
   margin: auto;
+  margin-top: 20px; /* Reduce the top margin */
 }
 
-.item_kits.form {
-  background-color: #f9f9f9;
-  padding: 20px;
+.item-kit-modal .modal-body {
+  /* padding: 1rem; */
+  max-height: 100px; 
+  overflow-y: auto; 
+}
+.item-kit-modal .modal-header{
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.item-kit-modal .modal-header,
+.item-kit-modal .modal-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky; /* Fix the position */
+  top: 0; /* Stick to the top */
+  z-index: 1; /* Ensure it stays above the body content */
+  background-color: white; /* Match the background color */
+  border-bottom: 1px solid #e9ecef; /* Add a border for separation */
+}
+
+.item-kit-modal .modal-footer {
+  bottom: 0; /* Stick to the bottom */
+  border-top: 1px solid #e9ecef; /* Add a border for separation */
+}
+
+.item-kit-modal .modal-close-btn {
+  background-color:rgb(1, 1, 41);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  display: inline-block;
   border-radius: 8px;
-  margin-bottom: 20px;
 }
 
-.item_kits.table {
-  background-color: #ffffff;
-  padding: 20px;
-  border-radius: 8px;
+.item-kit-modal .modal-close-btn:hover {
+  background-color:gray;
 }
 
-.form_btn, .see_btn, .table_btn {
-  margin-top: 10px;
-  margin-right: 10px;
-}
-
-.search-field {
-  margin-bottom: 20px;
-}
-
-table {
+.item_kit_items table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 20px;
 }
 
-table, th, td {
-  border: 1px solid #ddd;
-}
-
-th, td {
+.item_kit_items th, .item_kit_items td {
   padding: 8px;
   text-align: left;
+  border-bottom: 1px solid #ddd;
 }
 
-th {
-  background-color: #f2f2f2;
+.item_kit_items th {
+  position: sticky;
+  top: 0;
+  background-color: #f1f1f1;
+  z-index: 2;
 }
+

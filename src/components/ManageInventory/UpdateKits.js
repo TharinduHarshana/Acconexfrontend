@@ -753,9 +753,9 @@ function UpdateItemKitForm() {
           <table>
             <thead>
               <tr>
-                <th>Item</th>
-                <th>Selected Quantity</th>
-                <th>Actions</th>
+                <th></th>
+                <th></th>
+                <th></th>
               </tr>
             </thead>
             <tbody>

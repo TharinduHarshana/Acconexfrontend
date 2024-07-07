@@ -97,7 +97,7 @@ function App() {
         <Route path="/admin/userform/update/:id" element={<UpdateUser />} />
         <Route path="/admin/userTable" element={<Users />} />
         <Route path="/admin/customer" element={<Customer/>}/>
-        <Route path="/admin/editprofile" element={<UpdateProfileForm />} /> 
+        <Route path="/admin/switch-profile" element={<switchProfile />} /> 
        
 
 

@@ -16,59 +16,7 @@ function Users() {
   const navigate = useNavigate();
 
   //Effect hook to fetch users data when the component mounts
-  // useEffect(() => {
-  //   const loadUsers = async () => {
-  //     setLoading(true);
-  //     try {
-  //       const response = await axios.get("http://localhost:8000/user/all", {
-  //         withCredentials: true,
-  //       });
-  //        // Check if the response indicates an unauthorized access
-  //     if (response.status === 403) {
-  //       message.error("Access Denied: You do not have permission to view this page.");
-  //       return; // Exit the function early
-  //     }
-  //       console.log(response.data);
-
-  //       // Set the users state with the data from the response
-  //       setUsers(response.data.data);
-  //       //console.log(response.data);
-  //       setFilterUser(response.data.data);
-  //       console.log(response.data);
-  //     } catch (error) {
-  //       console.error("Error fetching users:", error);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   loadUsers();
-  // }, []);
-
-  // useEffect(() => {
-  //   const loadUsers = async () => {
-  //     setLoading(true);
-  //     try {
-  //       const response = await axios.get("http://localhost:8000/user/all", {
-  //         withCredentials: true,
-  //       });
-  //       console.log(response.data);
-  //       setUsers(response.data.data);
-  //       setFilterUser(response.data.data);
-  //     } catch (error) {
-  //       if (error.response && error.response.status === 403) {
-  //         message.error("Access Denied: You do not have permission to view this page.");
-  //       } else {
-  //         console.error("Error fetching users:", error);
-  //         message.error("An error occurred while fetching users.");
-  //       }
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   loadUsers();
-  // }, []);
+ 
   useEffect(() => {
     const loadUsers = async () => {
       setLoading(true);
@@ -255,3 +203,4 @@ function Users() {
 }
 
 export default Users;
+

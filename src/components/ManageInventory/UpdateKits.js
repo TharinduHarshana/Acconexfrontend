@@ -420,8 +420,7 @@ function UpdateItemKitForm() {
             price: kitData.price,
             kitQuantity: kitData.kitQuantity,
             items: kitData.items,
-            itemQuantity:
-              kitData.itemQuantity || Array(kitData.items.length).fill(0),
+            itemQuantity: kitData.items.map(item => item.itemQuantity) || Array(kitData.items.length).fill(0),
           });
         } else {
           console.error("Failed to fetch item kit data:", response.data);
@@ -542,8 +541,18 @@ function UpdateItemKitForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    e.preventDefault();
-    console.log("Submitting form data:", formData);
+    const updatedData = {
+      itemKitId: formData.itemKitId,
+      itemKitName: formData.itemKitName,
+      itemDescription: formData.itemDescription,
+      kitQuantity: formData.kitQuantity,
+      price: formData.price,
+      items: formData.items.map((item, index) => ({
+        productID: item._id,
+        itemQuantity: formData.itemQuantity[index],
+      })),
+    };
+    console.log("Submitting form data:", updatedData);
 
     const requiredFields = [
       "itemKitId",
@@ -587,7 +596,7 @@ function UpdateItemKitForm() {
     try {
       const response = await axios.patch(
         `http://localhost:8000/itemkit/update/${id}`,
-        formData
+      
       );
       console.log("Item kit updated successfully:", response.data);
       message.success("Item kit updated successfully!");

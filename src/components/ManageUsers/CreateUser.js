@@ -135,7 +135,10 @@ const CreateUserForm = () => {
       }
       const result = await axios.post(
         "http://localhost:8000/user/add",
-        formData
+        formData,
+        {
+          withCredentials: true
+        }
       );
       if (result.data.success) {
         message.success("User created successfully!");

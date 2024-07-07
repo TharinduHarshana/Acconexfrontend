@@ -177,18 +177,37 @@ const generateNextCustomerId = (currentCustomerId) => {
         setShowModal(true);
   };
 
-  const handleConfirmAddToBill = (formData) => {
-    const existingItemIndex = billItems.findIndex(existingItem => existingItem.productID === selectedItem.productID);
-    if (existingItemIndex === -1) {
-      const itemToAdd = { ...formData, costPrice: selectedItem.costPrice, productID: selectedItem.productID };
-      setBillItems([...billItems, itemToAdd]);
-    } else {
-      // Item already exists, show warning or handle as needed
-      console.log("error duplicate");
-      message.error("This item is already in the bill.Check it.")
-    }
-    setShowModal(false);
-  };
+ const handleConfirmAddToBill = (formData) => {
+  const existingItemIndex = billItems.findIndex(existingItem => existingItem.productID === selectedItem.productID);
+
+  if (existingItemIndex === -1) {
+    const itemToAdd = { ...formData, costPrice: selectedItem.costPrice, productID: selectedItem.productID };
+
+    // Create a new array with the added item
+    const newBillItems = [...billItems, itemToAdd];
+
+    // Reduce the quantity in the `items` state
+    const updatedItems = items.map(item => {
+      if (item.productID === selectedItem.productID) {
+        return { ...item, quantity: item.quantity - formData.quantity };
+      }
+      return item;
+    });
+
+    setBillItems(newBillItems);
+    setItems(updatedItems);
+    setFilteredItems(updatedItems.filter(
+      (row) =>
+        row.displayName.toLowerCase().includes(searchValue) ||
+        row.productID.toLowerCase().includes(searchValue)
+    ));
+  } else {
+    // Item already exists, show warning or handle as needed
+    message.error("This item is already in the bill. Check it.");
+  }
+
+  setShowModal(false);
+};
 
   //calculate  totlal qnt
   const calculateTotalQuantity = () => { return billItems.reduce((acc, item) => acc + parseInt(item.quantity), 0); };
@@ -296,7 +315,7 @@ const handleSuspendSale = async () => {
     message.error("An error occurred while suspending the sale. Please try again later.");
   }
   
-  window.location.reload();
+  
 };
 
 const handlePrint = () => {

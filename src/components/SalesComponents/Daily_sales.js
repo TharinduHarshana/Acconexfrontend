@@ -3,7 +3,6 @@ import { Input, Modal, Button } from "antd";
 import DataTable from "react-data-table-component";
 import DefaultHandle from "../DefaultHandle";
 import axios from "axios";
-import Chart from "chart.js/auto";
 import "../../styles/customer.css";
 import GenerateSales from './GenerateSales'; 
 
@@ -14,9 +13,6 @@ function DailySales() {
   const [searchValue, setSearchValue] = useState("");
   const [showviewModal, setShowViewModal] = useState(false);
   const [selectedSale, setSelectedSale] = useState(null);
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [chartData, setChartData] = useState(null);
   const [showGenerateBillForm, setShowGenerateBillForm] = useState(false);
   
   useEffect(() => {
@@ -26,7 +22,8 @@ function DailySales() {
   const fetchDailySales = async () => {
     try {
       const response = await axios.get("http://localhost:8000/dailysales");
-      setDailySales(response.data.data);
+      const sortedData = response.data.data.sort((a, b) => new Date(b.datetime) - new Date(a.datetime));
+      setDailySales(sortedData);
     } catch (error) {
       console.error("Error fetching daily sales:", error);
     }

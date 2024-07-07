@@ -219,7 +219,7 @@ const CreateUserForm = () => {
                       whitespace: true,
                     },
                     {
-                      min: 8,
+                      min: 7,
                     },
                   ]}
                   hasFeedback

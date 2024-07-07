@@ -360,12 +360,13 @@
 // export default ItemKitsUpdate;
 
 
+
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import DefaultHandle from "../DefaultHandle";
-import { message, Modal } from "antd"; // Import Modal from antd
+import { message, Modal as AntdModal } from "antd"; // Renaming to avoid conflict
 import { useNavigate, useParams } from "react-router-dom";
-import ItemKitModal from "./ItemKitModal"; // Assuming you have a custom modal component
+import ItemKitModal from "./ItemKitModal";
 import "../../styles/update-kit-form.css";
 
 function UpdateItemKitForm() {
@@ -384,6 +385,7 @@ function UpdateItemKitForm() {
     itemQuantity: [],
   });
 
+  // Fetch functions here...
   useEffect(() => {
     const fetchInventoryItems = async () => {
       try {
@@ -501,9 +503,8 @@ function UpdateItemKitForm() {
     setSearchItem("");
   };
 
-  // Function to remove an item from the kit with confirmation
   const removeItemFromKit = (item) => {
-    Modal.confirm({
+    AntdModal.confirm({
       title: 'Confirm Removal',
       content: `Are you sure you want to remove ${item.itemName} from the kit?`,
       onOk: () => {
@@ -540,6 +541,7 @@ function UpdateItemKitForm() {
   };
 
   const handleSubmit = async (e) => {
+    e.preventDefault();
     e.preventDefault();
     console.log("Submitting form data:", formData);
 
@@ -758,9 +760,9 @@ function UpdateItemKitForm() {
             </thead>
             <tbody>
               {formData.items.map((item, index) => (
-                <tr key={item._id}>
+                <tr key={index}>
                   <td>{item.itemName}</td>
-                  <td>{formData.itemQuantity[index]}</td>
+                  <td>{item.selectedQuantity}</td>
                   <td>
                     <button
                       onClick={() => removeItemFromKit(item)}
@@ -780,4 +782,5 @@ function UpdateItemKitForm() {
 }
 
 export default UpdateItemKitForm;
+
 

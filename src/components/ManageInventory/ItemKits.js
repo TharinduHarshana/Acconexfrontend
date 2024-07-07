@@ -394,7 +394,7 @@ import DefaultHandle from "../DefaultHandle";
 import { message, Modal } from "antd";
 import { useNavigate } from "react-router-dom";
 import "../../styles/item-kit.css";
-import ItemKitModal from "./ItemKitModal"; // Renamed to avoid conflict with antd Modal
+import ItemKitModal from "./ItemKitModal"; 
 
 function ItemKitsForm() {
   const navigate = useNavigate();
@@ -483,61 +483,62 @@ function ItemKitsForm() {
   };
 
   // Function to add an item to the kit
-  const addItemToKit = (item) => {
-    const selectedQuantity = parseInt(item.selectedQuantity);
-    if (isNaN(selectedQuantity) || selectedQuantity <= 0) {
-      message.error("Please enter a valid quantity.");
-      return;
-    }
+const addItemToKit = (item) => {
+  const selectedQuantity = parseInt(item.selectedQuantity);
+  if (isNaN(selectedQuantity) || selectedQuantity <= 0) {
+    message.error("Please enter a valid quantity.");
+    return;
+  }
 
-    // Check if the item quantity is sufficient before adding to the kit
-    if (selectedQuantity > item.quantity) {
-      message.error("Insufficient stock for this item.");
-      return;
-    }
+  // Check if the item quantity is sufficient before adding to the kit
+  if (selectedQuantity > item.quantity) {
+    message.error("Insufficient stock for this item.");
+    return;
+  }
 
-    // Check if the item is already in the kit
-    const itemIndex = formData.items.findIndex((i) => i._id === item._id);
-    if (itemIndex >= 0) {
-      // If the item is already in the kit, update the quantity
-      const newItems = [...formData.items];
-      const newItemQuantities = [...formData.itemQuantity];
-      const oldSelectedQuantity = newItemQuantities[itemIndex];
-      const newSelectedQuantity = selectedQuantity;
+  // Check if the item is already in the kit
+  const itemIndex = formData.items.findIndex((i) => i._id === item._id);
+  if (itemIndex >= 0) {
+    // If the item is already in the kit, update the quantity
+    const newItems = [...formData.items];
+    const newItemQuantities = [...formData.itemQuantity];
+    const oldSelectedQuantity = newItemQuantities[itemIndex];
+    const newSelectedQuantity = selectedQuantity;
 
-      // Update the item quantity and price in the formData
-      newItemQuantities[itemIndex] = newSelectedQuantity;
-      const newPrice =
-        formData.price +
-        item.sellingPrice * (newSelectedQuantity - oldSelectedQuantity);
+    // Update the item quantity and price in the formData
+    newItemQuantities[itemIndex] = newSelectedQuantity;
+    const newPrice =
+      formData.price +
+      item.sellingPrice * (newSelectedQuantity - oldSelectedQuantity);
 
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        items: newItems,
-        itemQuantity: newItemQuantities,
-        price: newPrice,
-      }));
-    } else {
-      // Add the item to the kit
-      const itemTotalPrice = item.sellingPrice * selectedQuantity;
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        items: [...prevFormData.items, item],
-        itemQuantity: [...prevFormData.itemQuantity, selectedQuantity],
-        price: prevFormData.price + itemTotalPrice,
-      }));
-    }
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      items: newItems,
+      itemQuantity: newItemQuantities,
+      price: newPrice,
+    }));
+  } else {
+    // Add the item to the kit
+    const itemTotalPrice = item.sellingPrice * selectedQuantity;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      items: [...prevFormData.items, item],
+      itemQuantity: [...prevFormData.itemQuantity, selectedQuantity],
+      price: prevFormData.price + itemTotalPrice,
+    }));
+  }
 
-    // Deduct the selected quantity from the inventory
-    setInventoryItems(
-      inventoryItems.map((i) =>
-        i._id === item._id ? { ...i, quantity: i.quantity - selectedQuantity, selectedQuantity: "" } : i
-      )
-    );
+  // Deduct the selected quantity from the inventory
+  setInventoryItems(
+    inventoryItems.map((i) =>
+      i._id === item._id ? { ...i, quantity: i.quantity - selectedQuantity, selectedQuantity: "" } : i
+    )
+  );
 
-    // Clear the search field after adding an item to the kit
-    setSearchItem("");
-  };
+  // Clear the search field after adding an item to the kit
+  setSearchItem("");
+};
+
 
   // Function to check if item kit ID already exists
   const checkIfItemKitIdExists = async (itemKitId) => {
@@ -622,6 +623,7 @@ function ItemKitsForm() {
       // Update inventory items' quantities based on the items included in the kit
       const updatedInventoryItems = response.data.updatedInventoryItems;
       setInventoryItems(updatedInventoryItems);
+      
 
       navigate("/admin/inventory/item-kits");
     } catch (error) {

@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
+import {useNavigate} from "react-router-dom";
 import DataTable from "react-data-table-component";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { Modal, message, Space } from "antd";
 import DefaultHandle from "../DefaultHandle";
+import swal from 'sweetalert';
 
 function Users() {
   // State to store the list of users
@@ -11,8 +13,62 @@ function Users() {
   const [filterUser, setFilterUser] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const navigate = useNavigate();
 
   //Effect hook to fetch users data when the component mounts
+  // useEffect(() => {
+  //   const loadUsers = async () => {
+  //     setLoading(true);
+  //     try {
+  //       const response = await axios.get("http://localhost:8000/user/all", {
+  //         withCredentials: true,
+  //       });
+  //        // Check if the response indicates an unauthorized access
+  //     if (response.status === 403) {
+  //       message.error("Access Denied: You do not have permission to view this page.");
+  //       return; // Exit the function early
+  //     }
+  //       console.log(response.data);
+
+  //       // Set the users state with the data from the response
+  //       setUsers(response.data.data);
+  //       //console.log(response.data);
+  //       setFilterUser(response.data.data);
+  //       console.log(response.data);
+  //     } catch (error) {
+  //       console.error("Error fetching users:", error);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   loadUsers();
+  // }, []);
+
+  // useEffect(() => {
+  //   const loadUsers = async () => {
+  //     setLoading(true);
+  //     try {
+  //       const response = await axios.get("http://localhost:8000/user/all", {
+  //         withCredentials: true,
+  //       });
+  //       console.log(response.data);
+  //       setUsers(response.data.data);
+  //       setFilterUser(response.data.data);
+  //     } catch (error) {
+  //       if (error.response && error.response.status === 403) {
+  //         message.error("Access Denied: You do not have permission to view this page.");
+  //       } else {
+  //         console.error("Error fetching users:", error);
+  //         message.error("An error occurred while fetching users.");
+  //       }
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   loadUsers();
+  // }, []);
   useEffect(() => {
     const loadUsers = async () => {
       setLoading(true);
@@ -21,21 +77,34 @@ function Users() {
           withCredentials: true,
         });
         console.log(response.data);
-
-        // Set the users state with the data from the response
         setUsers(response.data.data);
-        //console.log(response.data);
         setFilterUser(response.data.data);
-        console.log(response.data);
       } catch (error) {
-        console.error("Error fetching users:", error);
+        if (error.response && error.response.status === 403) {
+          swal({
+            title: "Access Denied",
+            text: "You do not have permission to view this page.",
+            icon: "error",
+            button: "OK",
+          }).then(() => {
+            navigate("/admin/dashboard"); // Redirect to the home page after closing the alert
+          });
+        } else {
+          console.error("Error fetching users:", error);
+          swal({
+            title: "Error",
+            text: "An error occurred while fetching users.",
+            icon: "error",
+            button: "OK",
+          });
+        }
       } finally {
         setLoading(false);
       }
     };
 
     loadUsers();
-  }, []);
+  }, [navigate]);
 
   if (loading) {
     return <div>Loading...</div>; 

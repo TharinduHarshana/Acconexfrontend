@@ -4,26 +4,79 @@
 }
 .bill_container{
   display: flex;
+  margin: 0 auto;
+  padding: 20px;
 
 }
 
 
-/* Bill form container form styles */
-.print_bill form 
-{
-  width: 450px;
+/*item table*/
+.bill_table{
+  width: 550px ;
+  background-color: rgb(238, 238, 238);
+  margin: 20px;
+  margin-top: 50px;
+  border: 1px solid #c9c5c2; 
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); 
+  border-radius: 5px;
+  overflow: auto;
+ table-layout: auto; /* Ensures uniform column widths */
+  border-collapse: collapse;
+
+}
+.table-responsive {
+  overflow-x: auto;
+  max-width: 100%;
+}
+/*item table*/
+.bill_table thead tr th{
+  background-color: rgb(11, 2, 51);
+  color: aliceblue;
+  padding :2% 10px;
+  align-items: center;
+  font-size: 12px;
+  font-weight: bolder;
+}
+
+/*item table*/
+.bill_table   tbody td{
+  
+  height: 200px  auto;
+  padding: 5px 10px;
+  text-align: center;
+  font-size: 12px;
+}
+
+/*search item from the invetory*/
+.bill_table_container input{
   background-color: rgb(238, 238, 238);
   display: flex;
   flex-direction: column;
-  padding: 30px 40px 1px;
+  padding: 10px 40px;
+  border: 1px solid #c9c5c2; 
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); 
   border-radius: 5px;
   margin-top: 40px;
-  margin-left: 20px;
+  width: 500px ;
+
+}
+/* Bill form container form styles */
+.print_bill form 
+{
+  width: 525px;
+  height: fit-content;
+  background-color: rgb(238, 238, 238);
+  display: flex;
+  flex-direction: column;
+  padding: 20px 20px 1px;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); 
+  border-radius: 5px;
+  margin-top: 40px;
 }
 .print_bill_table
 {
-  width: 370px;
+  width: 500px;
+  height: 50px;
   border-color: #c9c5c2;
 }
 .print_bill_table thead tr th{
@@ -31,6 +84,37 @@
 color: aliceblue;
 }
 
+/*print bill - serach customer */
+.searchcustomer input {
+  background-color: rgb(238, 238, 238);
+  display: flex;
+  flex-direction: column;
+  padding: 10px 40px;
+  border: 1px solid #c9c5c2; 
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); 
+  border-radius: 5px;
+  margin-top: 40px;
+  width: 500px ;
+}
+
+/*print bill - serach customer */
+.customer-list{
+  width: 420px;
+  background-color: rgb(11, 2, 51);
+  border-color:rgb(11, 2, 51); ;
+  color: white;
+  box-shadow: 5px 5px 10px rgb(0, 0, 0,0.1);
+  border-radius: 5px;
+  margin-left: 30PX;
+  position: absolute;
+}
+/*print bill - serach customer */
+.customer-list table tbody tr td{
+  width: 420px;
+
+}
+
+/* add item to the bill form */
 .modal-content{
   width: 550px;
   background-color: rgb(238, 238, 238);
@@ -46,13 +130,14 @@ color: aliceblue;
   z-index: 2;
 }
 
+/* add item to the bill form */
 .modal-content input {
   font-size: 18px;
   padding: 5px;
   margin-top: 3px;
   margin-bottom: 10px;
 }
-
+/* add item to the bill form */
 .modal-content label {
   font-size: 15px;
 }
@@ -68,49 +153,6 @@ color: aliceblue;
   cursor: pointer;
 }
 
-.bill_table{
-  width: 600px ;
-  background-color: rgb(238, 238, 238);
-  margin: 20px;
-  margin-top: 50px;
-  border: 1px solid #c9c5c2; 
-  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); 
-  border-radius: 5px;
- 
-
-}
-
-.bill_table thead tr th{
-  background-color: rgb(11, 2, 51);
-  color: aliceblue;
-  padding :2% 20px;
-  align-items: center;
-  font-size: 12px;
-  font-weight: bolder;
-
-
-}
-
-.bill_table   tbody td{
-  
-  height: 200px  auto;
-  padding: 10px 20px;
-  text-align: center;
-  font-size: 12px;
-}
-
-.bill_table_container input{
-  background-color: rgb(238, 238, 238);
-  display: flex;
-  flex-direction: column;
-  padding: 10px 40px;
-  border: 1px solid #c9c5c2; 
-  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); 
-  border-radius: 5px;
-  margin-left: 20px;
-  margin-top: 40px;
-
-}
 .btn{
   background-color: rgb(11, 2, 51);
   color: white;
@@ -191,31 +233,7 @@ color: aliceblue;
   font-style:oblique;
   font-weight: bold;
 }
-.searchcustomer input {
-  background-color: rgb(238, 238, 238);
-  display: flex;
-  flex-direction: column;
-  padding: 10px 40px;
-  border: 1px solid #c9c5c2; 
-  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); 
-  border-radius: 5px;
-  margin-left: 20px;
-  margin-top: 40px;
-  width: 430px ;
-}
 
-.customer-list{
-  width: 420px;
-  background-color: rgb(213, 245, 212);
-  box-shadow: 5px 5px 10px rgb(0, 0, 0,0.1);
-  border-radius: 5px;
-  margin-left: 30PX;
-  position: absolute;
-}
-.customer-list table tbody tr td{
-  width: 420px;
-
-}
 @media print {
   /* Set paper size to A4 */
   @page {
@@ -244,3 +262,4 @@ color: aliceblue;
     /* Adjust styles for print layout */
   }
 }
+

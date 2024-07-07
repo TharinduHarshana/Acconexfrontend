@@ -66,7 +66,7 @@ const DefaultHandleSales= ({children}) => {
             <Space className='topbar'>
               <Link to ="/home" ><HomeOutlined /></Link>
                 <SettingFilled />
-                <SyncOutlined spin />
+                <SyncOutlined />
                <Link to ='/log'> <LogoutOutlined /></Link>
             </Space>
 

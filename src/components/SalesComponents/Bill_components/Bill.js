@@ -7,9 +7,11 @@ import BillForm from './bill_Form';
 import '../../../styles/print.css';
 import TenderedPopup from './TenderedPopup';
 import CustomerForm from "../../CustomerComponents/customerForm";
-import { message,Modal } from 'antd';
-import { useLocation } from 'react-router-dom';
+import { message,Modal} from 'antd'; 
 import printBill from './printBill'; 
+import { Link } from "react-router-dom";
+import {EditFilled ,DeleteFilled } from '@ant-design/icons';
+
 
 const Bill = () => {
   const [billItems, setBillItems] = useState([]);
@@ -36,9 +38,9 @@ const Bill = () => {
   const [nextCustomerId, setNextCustomerId] = useState('');
   const [deleteRowIndex, setDeleteRowIndex] = useState(null); // State to track the index of the row to delete
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false); 
-
-
-  const location = useLocation();
+  const [editRowIndex, setEditRowIndex] = useState(null); 
+  const [showEditModal, setShowEditModal] = useState(false); 
+  const [editQuantity, setEditQuantity] = useState(0); 
  
   useEffect(() => {
     // Fetch initial data
@@ -71,6 +73,7 @@ const Bill = () => {
         const lastCustomerId =customersResponse.data.data.length > 0 ? customersResponse.data.data[customersResponse.data.data.length - 1].cusid:'cus000';
         const nextCustomerId = generateNextCustomerId(lastCustomerId);
         setSelectedCustomerId(nextCustomerId);
+
         // Restore sale data if available
         const restoredSaleData = sessionStorage.getItem('restoredSale');
         if (restoredSaleData) {
@@ -105,6 +108,7 @@ const Bill = () => {
     };
     fetchData();
   
+    //get current date when resotre
     const currentDate = getCurrentDateTime();
     setDate(currentDate);
     setCashier('hiru');
@@ -123,6 +127,7 @@ const generateNextSuspendId = (currentSuspendId) => {
   return `sps${nextNumber.toString().padStart(3, '0')}`;
 };
 
+//generate the customer id
 const generateNextCustomerId = (currentCustomerId) => {
   const nextNumber = parseInt(currentCustomerId.substr(3)) + 1;
   return `cus${nextNumber.toString().padStart(3, '0')}`;
@@ -138,10 +143,11 @@ const generateNextCustomerId = (currentCustomerId) => {
       const calculateBalance = enteredAmount - calculatedTotal;
       setBalance(calculateBalance);
     }
-  }, [billItems, tendered]);
+  }, [billItems, tendered,invoiceNo]);
 
   
 
+  //get current date
   const getCurrentDateTime = () => {
     const date = new Date();
     const formattedDate = date.toISOString().slice(0, 10);
@@ -152,6 +158,8 @@ const generateNextCustomerId = (currentCustomerId) => {
     return `${formattedDate} ${formattedTime}`;
   };
 
+
+  //search item
   const filterItem = (event) => {
     const value = event.target.value.toLowerCase();
     setSearchValue(value);
@@ -163,40 +171,37 @@ const generateNextCustomerId = (currentCustomerId) => {
     setFilteredItems(filteredData);
   };
 
+  //check the quantity
   const handleChange = (item) => {
     setSelectedItem(item);
-    if(item.quantity<=2)
-      {
-        message.error('Cannot add this item , it is less quantity');
-      }
-    else{
-      setShowModal(true);
-    }
-    
+        setShowModal(true);
   };
+
   const handleConfirmAddToBill = (formData) => {
-    const itemToAdd = { ...formData, costPrice: selectedItem.costPrice, productID: selectedItem.productID }; // Include product ID here
-    setBillItems([...billItems, itemToAdd]);
+    const existingItemIndex = billItems.findIndex(existingItem => existingItem.productID === selectedItem.productID);
+    if (existingItemIndex === -1) {
+      const itemToAdd = { ...formData, costPrice: selectedItem.costPrice, productID: selectedItem.productID };
+      setBillItems([...billItems, itemToAdd]);
+    } else {
+      // Item already exists, show warning or handle as needed
+      console.log("error duplicate");
+      message.error("This item is already in the bill.Check it.")
+    }
     setShowModal(false);
   };
-  
-  
-  const calculateTotalQuantity = () => {
-    return billItems.reduce((acc, item) => acc + parseInt(item.quantity), 0);
-  };
 
-  const calculateTotalCost = () => {
-    return billItems.reduce((acc, item) => acc + (item.costPrice*item.quantity), 0);
-};
-  
+  //calculate  totlal qnt
+  const calculateTotalQuantity = () => { return billItems.reduce((acc, item) => acc + parseInt(item.quantity), 0); };
 
+  //calculate cost of total
+  const calculateTotalCost = () => { return billItems.reduce((acc, item) => acc + (item.costPrice*item.quantity), 0);};
+  
 //function for complete the sale
 const handleCompleteSale = async () => {
   try {
     const totalQuantity = calculateTotalQuantity();
     const totalCost = calculateTotalCost();
     const calculateProfit = total - totalCost;
-    
 
     // Extract and prepare item details as comma-separated strings
     const itemIds = billItems.map(item => item.productID).join(',');
@@ -222,8 +227,6 @@ const handleCompleteSale = async () => {
       profit: calculateProfit,
       
     };
-
-    console.log("Attempting to complete sale with data:", data);
     const response = await axios.post("http://localhost:8000/dailysales/add", data);
 
     if (response.data.success) {
@@ -243,14 +246,12 @@ const handleCompleteSale = async () => {
       }
     } else {
       message.error("Failed to save data to daily sales. Please try again later.");
-      console.log("Failed to add data");
     }
   } catch (error) {
     console.error("Error completing sale and saving data to daily sales:", error);
     message.error("An error occurred while completing the sale. Please try again later.");
   }
 };
-
 
 //function for suspend sale
 const handleSuspendSale = async () => {
@@ -292,7 +293,6 @@ const handleSuspendSale = async () => {
     }
     
   } catch (error) {
-    console.error("Error suspending sale:", error);
     message.error("An error occurred while suspending the sale. Please try again later.");
   }
   
@@ -305,8 +305,11 @@ const handlePrint = () => {
 
 //function for print tha bill
 const printAndCompleteSale = async () => {
+  //printout the bill
   handlePrint();
+  //store value to the daily sales table 
   await handleCompleteSale();
+  //refresh the page
   window.location.reload();
 };
 
@@ -363,7 +366,6 @@ const printAndCompleteSale = async () => {
       setNextCustomerId(nextCustomerId);
       setShowForm(true);
     } catch (error) {
-      console.error('Error fetching customers:', error.message);
       message.error('Error fetching customer data.');
     }
   };
@@ -380,6 +382,7 @@ const printAndCompleteSale = async () => {
       if (response.data.success) {
         message.success(response.data.message);
         setShowForm(false);
+        window.location.reload();
       } else {
         message.error(response.data.message);
       }
@@ -388,15 +391,6 @@ const printAndCompleteSale = async () => {
       message.error("An error occurred while submitting the form.");
     }
   };
-
-  // //print the bill
-  // const printBillForm = () => {
-  //   const printContents = document.getElementById('bill_form').innerHTML;
-  //   const originalContents = document.body.innerHTML;
-  //   document.body.innerHTML = printContents;
-  //   window.print();
-  //   document.body.innerHTML = originalContents;
-  // };
 
     // Function to handle click on a row to delete
   const handleRowClickToDelete = (index) => {
@@ -416,6 +410,21 @@ const printAndCompleteSale = async () => {
     setShowDeleteConfirmation(false);
   };
 
+  const handleEditQuantity = () => {
+    if (editRowIndex !== null) {
+      const updatedBillItems = [...billItems];
+      updatedBillItems[editRowIndex].quantity = editQuantity;
+      updatedBillItems[editRowIndex].total = editQuantity * updatedBillItems[editRowIndex].price * (1 - updatedBillItems[editRowIndex].discount / 100);
+      setBillItems(updatedBillItems);
+      setShowEditModal(false);
+    }
+  };
+  const handleRowClickToEdit = (index) => {
+    setEditRowIndex(index);
+    setEditQuantity(billItems[index].quantity);
+    setShowEditModal(true);
+  };
+
   return (
     <div className='bill_container'>
       <DefaultHandleSales>
@@ -423,12 +432,13 @@ const printAndCompleteSale = async () => {
           <div className='bill_container'>
             <div>
               <div className='bill_table_container'>
-                <input placeholder='Search item' value={searchValue} onChange={filterItem} />
+                <input placeholder='Search item' value={searchValue} onChange={filterItem} style={{width:'550px',marginBottom: '10px'}}/>
+                <div className='table-responsive'>
                 <table className='bill_table'>
                   <thead>
                     <tr>
-                      <th style={{ width: '50px' }}>Item ID</th>
-                      <th style={{ width: '170px' }}>Item Name</th>
+                      <th style={{ width: '10px' }}>Item ID</th>
+                      <th style={{ width: '150px' }}>Item Name</th>
                       <th style={{ width: '20px' }}>Qnt</th>
                       <th style={{ width: '40px' }}>Price</th>
                       <th style={{ width: '40px' }}> Cost</th>
@@ -453,9 +463,10 @@ const printAndCompleteSale = async () => {
               </div>
             </div>
           </div>
+          </div>
           <div className='print_bill' id='print_bill'>
             <div className='searchcustomer'>
-              <input placeholder='Search customer' value={searchCustomerValue} onChange={filterCustomer} />
+              <input placeholder='Search customer' value={searchCustomerValue} onChange={filterCustomer} style={{marginBottom: '10px'}}/>
               {searchCustomerValue && filteredCustomers.length > 0 && (
                 <div className='customer-list'>
                   {filteredCustomers.map((customer, index) => (
@@ -476,7 +487,7 @@ const printAndCompleteSale = async () => {
                 </div>
               )}
             </div>
-            <div>
+            <div className='printout'>
               <form className='bill_form' id='bill_form'>
                 <div>
                   <p style={{ textAlign: 'center', fontSize: 18, fontStyle: 'oblique' }}>Acconex Computers<br /></p>
@@ -502,19 +513,26 @@ const printAndCompleteSale = async () => {
                       <tr>
                         <th>Product</th>
                         <th>Price</th>
-                        <th >Qty</th>
-                        <th>Discount</th>
+                        <th>Qty</th>
+                        <th>Dis</th>
                         <th>Amount</th>
+                        <th>     </th>
                       </tr>
                     </thead>
                     <tbody>
                       {billItems.map((item, index) => (
-                        <tr key={index}onClick={() => handleRowClickToDelete(index)}>
+                        <tr >
                           <td>{item.product}</td>
                           <td>{formatNumber(item.price)}</td>
                           <td>{item.quantity}</td>
                           <td>{item.discount}</td>
                           <td>{formatNumber(((item.price * item.quantity) - item.discount))}</td>
+                          <td><Link onClick={() => handleRowClickToDelete(index)}>
+                              <DeleteFilled />
+                            </Link>
+                            <Link onClick={() => handleRowClickToEdit(index)}>
+                                <EditFilled />
+                             </Link></td>
                         </tr>
                       ))}
                     </tbody>
@@ -584,9 +602,22 @@ const printAndCompleteSale = async () => {
               visible={showDeleteConfirmation}
               onOk={handleConfirmDelete}
               onCancel={() => setShowDeleteConfirmation(false)}
-            >
+              
+              >
               <p>Are you sure you want to remove this item?</p>
             </Modal>
+              <Modal
+              visible={showEditModal}
+              onCancel={() => setShowEditModal(false)}
+              onOk={handleEditQuantity}
+              title="Edit Quantity?"
+            >
+  <div>
+    <label>Quantity:</label>
+    <input type='number' value={editQuantity} onChange={(e) => setEditQuantity(e.target.value)} />
+  </div>
+</Modal>
+
       </DefaultHandleSales>
    
     </div>

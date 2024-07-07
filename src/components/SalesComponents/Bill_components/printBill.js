@@ -164,7 +164,6 @@ const printBill = (invoiceNo, cashier, date, paymentMethod, billItems, total, te
   
     // Open the print window
     const printWindow = window.open('', '_blank');
-    printWindow.document.open();
     printWindow.document.write(billContent);
     printWindow.document.close();
     printWindow.print();

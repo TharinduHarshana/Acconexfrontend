@@ -6,6 +6,7 @@ import DefaultHandle from "../DefaultHandle";
 import axios from "axios";
 import CustomerForm from "./customerForm";
 import "../../styles/customer.css";
+import {EditFilled ,DeleteFilled } from '@ant-design/icons';
 
 function Customer() {
   const [customers, setCustomers] = useState([]);
@@ -158,10 +159,12 @@ function Customer() {
               cell: (row) => (
                 <div>
                   <Link to="#" onClick={() => handleEditCustomer(row)}>
-                    Edit
+                    <EditFilled />
                   </Link>
                   <span style={{ margin: "0 8px" }}>|</span>
-                  <Link onClick={() => showDeleteConfirmation(row.cusid)}>Delete</Link>
+                  <Link onClick={() => showDeleteConfirmation(row.cusid)}>
+                  <DeleteFilled />
+                  </Link>
                 </div>
               ),
             },

@@ -5,29 +5,35 @@
 .bill_container{
   display: flex;
   margin: 0 auto;
-  padding: 20px;
 
 }
 
 
 /*item table*/
 .bill_table{
-  width: 550px ;
+  width: 550px;
   background-color: rgb(238, 238, 238);
   margin: 20px;
-  margin-top: 50px;
+  margin-top: 30px;
   border: 1px solid #c9c5c2; 
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); 
   border-radius: 5px;
-  overflow: auto;
- table-layout: auto; /* Ensures uniform column widths */
-  border-collapse: collapse;
+  border-collapse: collapse; /* Ensures no gaps between table cells */
+  
+}
+.bill_table_wrapper {
+  max-height: 500px; /* Set the maximum height for the table body */
+  overflow-y: auto; /* Enable vertical scrolling */
+  margin: 0px auto 0 auto; 
+  width: 600px; /* Ensure the wrapper takes full width */
+ 
+}
 
+.bill_table thead{
+  position: sticky;
+  top: 0;
 }
-.table-responsive {
-  overflow-x: auto;
-  max-width: 100%;
-}
+
 /*item table*/
 .bill_table thead tr th{
   background-color: rgb(11, 2, 51);
@@ -42,11 +48,18 @@
 .bill_table   tbody td{
   
   height: 200px  auto;
-  padding: 5px 10px;
+  padding: 5px 5px;
   text-align: center;
   font-size: 12px;
+  font-weight: 600;
 }
 
+@media (max-width: 768px) {
+  .bill_table thead th, .bill_table tbody td {
+    padding: 5px;
+    font-size: 12px; /* Reduce font size for smaller screens */
+  }
+}
 /*search item from the invetory*/
 .bill_table_container input{
   background-color: rgb(238, 238, 238);
@@ -71,17 +84,39 @@
   padding: 20px 20px 1px;
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); 
   border-radius: 5px;
-  margin-top: 40px;
+  margin-top: 30px;
+  max-height: 560px;
+  overflow-y: auto;
+
 }
 .print_bill_table
 {
-  width: 500px;
-  height: 50px;
   border-color: #c9c5c2;
+  width: 100%;
+  max-height: 300px; /* Adjust the maximum height as per your design */
+  overflow-y: auto; /* Add vertical scrollbar when content overflows */
+  border: 1px solid #c9c5c2;
+  border-collapse: collapse; /* Ensure borders collapse properly */
 }
+
+
 .print_bill_table thead tr th{
  background-color: rgb(11, 2, 51);
 color: aliceblue;
+}
+.print_bill_table tbody  td{
+  height: 10px;
+  padding: 2px 2px 2px;
+  font-size: small;
+font-weight: 500;
+}
+
+/* Additional responsive styles */
+@media (max-width: 768px) {
+  .print_bill_table thead th, .print_bill_table tbody td {
+    padding: 5px;
+    font-size: 12px; /* Reduce font size for smaller screens */
+  }
 }
 
 /*print bill - serach customer */
@@ -257,9 +292,6 @@ color: aliceblue;
     line-height: 1.5; /* Increase line height */
   }
 
-  /* Add additional styles for print layout */
-  .bill_form {
-    /* Adjust styles for print layout */
-  }
+
 }
 

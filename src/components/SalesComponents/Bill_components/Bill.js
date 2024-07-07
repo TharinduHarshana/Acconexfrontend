@@ -433,7 +433,7 @@ const printAndCompleteSale = async () => {
             <div>
               <div className='bill_table_container'>
                 <input placeholder='Search item' value={searchValue} onChange={filterItem} style={{width:'550px',marginBottom: '10px'}}/>
-                <div className='table-responsive'>
+                <div className='bill_table_wrapper'>
                 <table className='bill_table'>
                   <thead>
                     <tr>
@@ -511,7 +511,7 @@ const printAndCompleteSale = async () => {
                   <table className='print_bill_table'>
                     <thead>
                       <tr>
-                        <th>Product</th>
+                        <th style={{ width: '220px' }}>Product</th>
                         <th>Price</th>
                         <th>Qty</th>
                         <th>Dis</th>

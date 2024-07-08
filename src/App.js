@@ -57,6 +57,7 @@ import InventoryHome from './pages/Inventory';
 import CategoryHome from "./pages/Category";
 import AddNewCategory from "./components/CategoryComponents/Category.AddNewCategory";
 import CreateUserForm from "./components/ManageUsers/CreateUser";
+import UserProfile from "./components/ManageUsers/UserProfile";
 
 
 
@@ -97,7 +98,7 @@ function App() {
         <Route path="/admin/userform/update/:id" element={<UpdateUser />} />
         <Route path="/admin/userTable" element={<Users />} />
         <Route path="/admin/customer" element={<Customer/>}/>
-        <Route path="/admin/switch-profile" element={<switchProfile />} /> 
+        <Route path="admin/editprofile" element={<UserProfile />} /> 
        
 
 

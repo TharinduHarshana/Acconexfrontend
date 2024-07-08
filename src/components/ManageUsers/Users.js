@@ -1,22 +1,21 @@
 import React, { useState, useEffect } from "react";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import DataTable from "react-data-table-component";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { Modal, message, Space } from "antd";
 import DefaultHandle from "../DefaultHandle";
-import swal from 'sweetalert';
+import "../../styles/accessmodal.css";
+import swal from 'sweetalert'; 
 
 function Users() {
-  // State to store the list of users
   const [users, setUsers] = useState([]);
   const [filterUser, setFilterUser] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const navigate = useNavigate();
+  const [isAccessDeniedVisible, setIsAccessDeniedVisible] = useState(false);
 
-  //Effect hook to fetch users data when the component mounts
- 
   useEffect(() => {
     const loadUsers = async () => {
       setLoading(true);
@@ -24,19 +23,11 @@ function Users() {
         const response = await axios.get("http://localhost:8000/user/all", {
           withCredentials: true,
         });
-        console.log(response.data);
         setUsers(response.data.data);
         setFilterUser(response.data.data);
       } catch (error) {
         if (error.response && error.response.status === 403) {
-          swal({
-            title: "Access Denied",
-            text: "You do not have permission to view this page.",
-            icon: "error",
-            button: "OK",
-          }).then(() => {
-            navigate("/admin/dashboard"); // Redirect to the home page after closing the alert
-          });
+          setIsAccessDeniedVisible(true);
         } else {
           console.error("Error fetching users:", error);
           swal({
@@ -54,17 +45,9 @@ function Users() {
     loadUsers();
   }, [navigate]);
 
-  if (loading) {
-    return <div>Loading...</div>; 
-  }
-
-  // Function to handle user deletion
-
   const handleDelete = async (_id) => {
     try {
-      // Find the user by id to check the role
-      const userToDelete = users.find((user) => user._id === _id);
-
+      const userToDelete = users.find(user => user._id === _id);
       if (userToDelete.role === "admin") {
         message.error("Cannot delete admin user!");
         return;
@@ -72,10 +55,9 @@ function Users() {
       await axios.delete(`http://localhost:8000/user/delete/${_id}`, {
         withCredentials: true,
       });
-      // Filter out the deleted user from the users state
-      const updatedUsers = users.filter((user) => user._id !== _id);
+      const updatedUsers = users.filter(user => user._id !== _id);
       setUsers(updatedUsers);
-      setFilterUser(updatedUsers); // Update filterUser state as well
+      setFilterUser(updatedUsers);
       message.success("User deleted successfully!");
     } catch (error) {
       console.error("Error deleting user:", error);
@@ -83,7 +65,6 @@ function Users() {
     }
   };
 
-  // Function to display a confirmation modal before deleting a user
   const showDeleteConfirmation = (_id) => {
     Modal.confirm({
       title: "Confirm Delete",
@@ -92,54 +73,48 @@ function Users() {
       okType: "danger",
       cancelText: "No",
       onOk() {
-        // Call handleDelete function if user confirms deletion
         handleDelete(_id);
       },
     });
   };
 
-  // Search users
   const filterUsers = (event) => {
     const searchValue = event.target.value.toLowerCase();
-
-    const userData = users.filter(
-      (row) =>
-        row.firstName.toLowerCase().includes(searchValue) ||
-        row.userId.toLowerCase().includes(searchValue)
+    const userData = users.filter(row =>
+      row.firstName.toLowerCase().includes(searchValue) ||
+      row.userId.toLowerCase().includes(searchValue)
     );
-
-    setFilterUser(userData); // Update filterUser state with filtered data
+    setFilterUser(userData);
   };
 
   const columns = [
     {
       name: "User Id",
-      selector: (row) => row.userId,
+      selector: row => row.userId,
       sortable: true,
     },
     {
       name: "First Name",
-      selector: (row) => row.firstName,
+      selector: row => row.firstName,
       sortable: true,
     },
     {
       name: "Last Name",
-      selector: (row) => row.lastName,
+      selector: row => row.lastName,
       sortable: true,
     },
     {
       name: "Phone Number",
-      selector: (row) => row.phoneNumber,
+      selector: row => row.phoneNumber,
     },
     {
       name: "User Role",
-      selector: (row) => row.role,
+      selector: row => row.role,
       sortable: true,
     },
-
     {
       name: "Actions",
-      cell: (row) => (
+      cell: row => (
         <div>
           <Link to={`/admin/userform/update/${row._id}`}>Edit</Link>
           <span style={{ margin: "0 8px" }}>|</span>
@@ -148,6 +123,15 @@ function Users() {
       ),
     },
   ];
+
+  const closeModal = () => {
+    setIsAccessDeniedVisible(false);
+    navigate("/admin/dashboard");
+  };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <DefaultHandle>
@@ -160,7 +144,7 @@ function Users() {
           }}
         >
           <input
-            type="text end"
+            type="text"
             placeholder="Search User ..."
             onChange={filterUsers}
             onMouseEnter={() => setIsHovered(true)}
@@ -171,7 +155,7 @@ function Users() {
               padding: "5px",
               border: isHovered ? "1px solid black" : "1px solid #ccc",
               borderRadius: "5px",
-              transition: "border-color 0.3s"
+              transition: "border-color 0.3s",
             }}
           />
         </div>
@@ -198,9 +182,22 @@ function Users() {
           pagination
         />
       </div>
+      <Modal
+        title="Access Denied!"
+        visible={isAccessDeniedVisible}
+        onCancel={closeModal}
+        footer={[
+          <button onClick={closeModal} key="back">
+            OK
+          </button>,
+        ]}
+      >
+        <p>You do not have permission to view this page.</p>
+      </Modal>
     </DefaultHandle>
   );
 }
 
 export default Users;
+
 

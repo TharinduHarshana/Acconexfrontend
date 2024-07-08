@@ -1,0 +1,44 @@
+/* Styles for the access denied modal */
+.ant-modal {
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  
+  .ant-modal-header {
+    background-color: #f0f2f5;
+    border-bottom: none;
+  }
+  
+  .ant-modal-title {
+    color: #ff4d4f;
+    font-weight: bold;
+    text-align: center;
+  }
+  
+  .ant-modal-body {
+    padding: 20px;
+    text-align: center;
+    font-size: 16px;
+  }
+  
+  .ant-modal-footer {
+    display: flex;
+    justify-content: center;
+    border-top: none;
+    padding: 10px 20px;
+  }
+  
+  .ant-modal-footer button {
+    background-color: #ff4d4f;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+  .ant-modal-footer button:hover {
+    background-color: #ff7875;
+  }
+  

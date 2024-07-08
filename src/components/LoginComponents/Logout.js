@@ -1,7 +1,6 @@
 // useLogout.js
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { message } from "antd";
 
 // Define the useLogout custom hook
 const useLogout = () => {
@@ -16,7 +15,6 @@ const useLogout = () => {
       });
       // Check if the response message indicates successful logout
       if (response.data.message === "Logged out successfully") {
-        message.success("Logout successful");
         console.log("Logout successful");
         // Navigate to the admin page
         navigate("/admin");

@@ -175,39 +175,46 @@ const generateNextCustomerId = (currentCustomerId) => {
   const handleChange = (item) => {
     setSelectedItem(item);
         setShowModal(true);
+        if(item.quantity<=2){
+          message.warning("This item is in Low Stock...");
+        }
   };
 
- const handleConfirmAddToBill = (formData) => {
-  const existingItemIndex = billItems.findIndex(existingItem => existingItem.productID === selectedItem.productID);
+  const handleConfirmAddToBill = async (formData) => {
+    const existingItemIndex = billItems.findIndex(existingItem => existingItem.productID === selectedItem.productID);
 
-  if (existingItemIndex === -1) {
-    const itemToAdd = { ...formData, costPrice: selectedItem.costPrice, productID: selectedItem.productID };
+    if (existingItemIndex === -1) {
+      const itemToAdd = { ...formData, costPrice: selectedItem.costPrice, productID: selectedItem.productID };
 
-    // Create a new array with the added item
-    const newBillItems = [...billItems, itemToAdd];
+      // Create a new array with the added item
+      const newBillItems = [...billItems, itemToAdd];
 
-    // Reduce the quantity in the `items` state
-    const updatedItems = items.map(item => {
-      if (item.productID === selectedItem.productID) {
-        return { ...item, quantity: item.quantity - formData.quantity };
+      try {
+        // Reduce the quantity in the `items` state
+        const updatedItems = items.map(item => {
+          if (item.productID === selectedItem.productID) {
+            return { ...item, quantity: item.quantity - formData.quantity };
+          }
+          return item;
+        });
+
+        setBillItems(newBillItems);
+        setItems(updatedItems);
+        setFilteredItems(updatedItems.filter(
+          (row) =>
+            row.displayName.toLowerCase().includes(searchValue) ||
+            row.productID.toLowerCase().includes(searchValue)
+        ));
+      } catch (error) {
+        console.error('Error updating item quantity:', error.message);
       }
-      return item;
-    });
 
-    setBillItems(newBillItems);
-    setItems(updatedItems);
-    setFilteredItems(updatedItems.filter(
-      (row) =>
-        row.displayName.toLowerCase().includes(searchValue) ||
-        row.productID.toLowerCase().includes(searchValue)
-    ));
-  } else {
-    // Item already exists, show warning or handle as needed
-    message.error("This item is already in the bill. Check it.");
-  }
-
-  setShowModal(false);
-};
+      setShowModal(false);
+    } else {
+      message.warning('This item is already added to the bill');
+      setShowModal(false);
+    }
+  };
 
   //calculate  totlal qnt
   const calculateTotalQuantity = () => { return billItems.reduce((acc, item) => acc + parseInt(item.quantity), 0); };
@@ -218,10 +225,12 @@ const generateNextCustomerId = (currentCustomerId) => {
 //function for complete the sale
 const handleCompleteSale = async () => {
   try {
+  
     const totalQuantity = calculateTotalQuantity();
     const totalCost = calculateTotalCost();
     const calculateProfit = total - totalCost;
 
+   
     // Extract and prepare item details as comma-separated strings
     const itemIds = billItems.map(item => item.productID).join(',');
     const itemNames = billItems.map(item => item.product).join(',');
@@ -248,6 +257,14 @@ const handleCompleteSale = async () => {
     };
     const response = await axios.post("http://localhost:8000/dailysales/add", data);
 
+     // Update inventory in the backend
+     await Promise.all(
+      billItems.map(item => {
+        const updatedItem = items.find(i => i.productID === item.productID);
+        return axios.patch(`http://localhost:8000/item/update/${item._id}`, updatedItem);
+      })
+    );
+
     if (response.data.success) {
       message.success("Sale completed successfully and data saved to daily sales.");
 
@@ -272,9 +289,39 @@ const handleCompleteSale = async () => {
   }
 };
 
+//function for print tha bill
+const printAndCompleteSale = async () => {
+
+  if (!selectedCustomerName || !selectedCustomerId) {
+    message.warning('Please select or add a customer before suspending the bill.');
+    return;
+  }
+
+  if (billItems.length === 0) {
+    message.warning('Please add items to the bill before suspending.');
+    return;
+  }
+  //printout the bill
+ handlePrint();
+  //store value to the daily sales table 
+  await handleCompleteSale();
+  //refresh the page
+  window.location.reload();
+};
+
 //function for suspend sale
 const handleSuspendSale = async () => {
   try {
+
+    if (!selectedCustomerName || !selectedCustomerId) {
+      message.warning('Please select or add a customer before suspending the bill.');
+      return;
+    }
+
+    if (billItems.length === 0) {
+      message.warning('Please add items to the bill before suspending.');
+      return;
+    }
 
     const itemIds =billItems.map(item => item.productID).join(',');
     const itemNames =billItems.map(item => item.product).join(',');
@@ -315,22 +362,13 @@ const handleSuspendSale = async () => {
     message.error("An error occurred while suspending the sale. Please try again later.");
   }
   
-  
 };
 
 const handlePrint = () => {
   printBill(invoiceNo, cashier, date, paymentMethod, billItems, total, tendered, balance,selectedCustomerName);
 };
 
-//function for print tha bill
-const printAndCompleteSale = async () => {
-  //printout the bill
-  handlePrint();
-  //store value to the daily sales table 
-  await handleCompleteSale();
-  //refresh the page
-  window.location.reload();
-};
+
 
  //add tendered amount
   const handleConfirmTendered = (tenderedAmount) => {
@@ -410,34 +448,70 @@ const printAndCompleteSale = async () => {
       message.error("An error occurred while submitting the form.");
     }
   };
+// Function to handle click on a row to delete
+const handleRowClickToDelete = (index) => {
+  setDeleteRowIndex(index);
+  setShowDeleteConfirmation(true);
+};
 
-    // Function to handle click on a row to delete
-  const handleRowClickToDelete = (index) => {
-    setDeleteRowIndex(index);
-    setShowDeleteConfirmation(true);
-  };
+const handleConfirmDelete = () => {
+  if (deleteRowIndex !== null) {
+    const itemToRemove = billItems[deleteRowIndex];
+    const updatedBillItems = billItems.filter((item, index) => index !== deleteRowIndex);
 
-  // Function to confirm delete action
-  const handleConfirmDelete = () => {
-    // Remove the row from billItems based on deleteRowIndex
-    const updatedBillItems = [...billItems];
-    updatedBillItems.splice(deleteRowIndex, 1);
+    // Update inventory in the `items` state
+    const updatedItems = items.map(item => {
+      if (item.productID === itemToRemove.productID) {
+        // Ensure the quantity is updated correctly
+        const newQuantity = item.quantity + itemToRemove.quantity;
+        return { ...item, quantity: newQuantity };
+      }
+      return item;
+    });
+
     setBillItems(updatedBillItems);
-
-    // Reset deleteRowIndex and hide the confirmation modal
-    setDeleteRowIndex(null);
+    setItems(updatedItems);
+    setFilteredItems(updatedItems.filter(
+      (row) =>
+        row.displayName.toLowerCase().includes(searchValue) ||
+        row.productID.toLowerCase().includes(searchValue)
+    ));
     setShowDeleteConfirmation(false);
-  };
+    setDeleteRowIndex(null);
 
-  const handleEditQuantity = () => {
+    // Optionally show a success message
+    message.success('Item deleted successfully');
+  }
+};
+  const handleEditQuantity = async() => {
     if (editRowIndex !== null) {
       const updatedBillItems = [...billItems];
-      updatedBillItems[editRowIndex].quantity = editQuantity;
-      updatedBillItems[editRowIndex].total = editQuantity * updatedBillItems[editRowIndex].price * (1 - updatedBillItems[editRowIndex].discount / 100);
+      const oldQuantity = updatedBillItems[editRowIndex].quantity;
+      const newQuantity = editQuantity;
+      const quantityDifference = newQuantity - oldQuantity;
+      updatedBillItems[editRowIndex].quantity = newQuantity;
+
+      // Update inventory in the `items` state
+      const updatedItems = items.map(item => {
+        if (item.productID === updatedBillItems[editRowIndex].productID) {
+          return { ...item, quantity: item.quantity - quantityDifference };
+        }
+        return item;
+      });
+
       setBillItems(updatedBillItems);
+      setItems(updatedItems);
+      setFilteredItems(updatedItems.filter(
+        (row) =>
+          row.displayName.toLowerCase().includes(searchValue) ||
+          row.productID.toLowerCase().includes(searchValue)
+      ));
       setShowEditModal(false);
+      setEditRowIndex(null);
+      setEditQuantity(0);
     }
   };
+
   const handleRowClickToEdit = (index) => {
     setEditRowIndex(index);
     setEditQuantity(billItems[index].quantity);

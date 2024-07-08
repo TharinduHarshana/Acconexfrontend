@@ -35,7 +35,7 @@ const Categories = () => {
         cell: (row) => (
           <div>
             <Link to={`/updatecategory/${row._id}`}>Edit</Link>
-            <Link onClick={() => handleDelete(row._id)}>Delete</Link>
+            <Link onClick={() => confirmDelete(row._id)}>Delete</Link>
           </div>
         ),
       },
@@ -59,6 +59,22 @@ const Categories = () => {
       fetchData();
     }, []);
   
+    const confirmDelete = async (_id) => {
+      const result = await Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      });
+  
+      if (result.isConfirmed) {
+        handleDelete(_id);
+      }
+    }
+
     // Handle delete action
     const handleDelete = async (_id) => {
       try {

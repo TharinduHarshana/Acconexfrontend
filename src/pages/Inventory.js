@@ -51,7 +51,7 @@ const Items = () =>{
       cell: (row) => (
         <div>
           <Link
-            to={`updateitem/${row._id}`}
+            to={`update/${row._id}`}
           >
             Edit
           </Link>

@@ -212,6 +212,7 @@ font-weight: 500;
 }
 .complete_sale,
 .suspend_sale,
+.cancel_btn,
 .add_customer{
   color: rgb(0, 0, 0);
   border: none;
@@ -227,6 +228,7 @@ font-weight: 500;
 }
 .complete_sale,
 .suspend_sale,
+.cancel_btn,
 .add_customer{
   background-color: rgb(11, 2, 51);
   color: rgb(255, 255, 255);

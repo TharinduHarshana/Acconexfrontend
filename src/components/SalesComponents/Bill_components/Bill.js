@@ -517,6 +517,10 @@ const handleConfirmDelete = () => {
     setShowEditModal(true);
   };
 
+  const handleCancelSale = () => {
+    window.location.reload();
+  };
+  
   return (
     <div className='bill_container'>
       <DefaultHandleSales>
@@ -686,6 +690,7 @@ const handleConfirmDelete = () => {
             <button className='complete_sale' onClick={printAndCompleteSale}>Complete Sell</button>
             <button className='add_customer' onClick={handleAddCustomer}>Add Customer</button>
             <button className='suspend_sale'onClick={handleSuspendSale}>Suspend Sale</button>
+            <button className='cancel_btn'onClick={handleCancelSale}>Cancel Sale</button>
             
           </div>
         </div>

@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Input, Modal, Button } from "antd";
 import DataTable from "react-data-table-component";
-import DefaultHandle from "../DefaultHandle";
+import DefaultHandleSales from './DefaultHandleSales';
 import axios from "axios";
 import "../../styles/customer.css";
 import GenerateSales from './GenerateSales'; 
+import totalSale from './TotalSale';
 
 
 
@@ -49,14 +50,14 @@ function DailySales() {
       row.datetime.toLowerCase().includes(searchValue.toLowerCase())
   );
 
-  const handleGenerateBill = () => {
-    setShowGenerateBillForm(true); 
+  const handleTatalSale = () => {
+    totalSale(true);
 };
     
 
   return (
     <div>
-      <DefaultHandle>
+      <DefaultHandleSales>
         <div style={{ marginBottom: "10px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <Input
@@ -65,8 +66,8 @@ function DailySales() {
               onChange={handleSearch}
               style={{ marginBottom: "12px", width: "300px" }}
             />
-            <Button style={{ backgroundColor:'rgb(11, 2, 51)', color:'white',fontWeight:'bold'}}type="primary" onClick={handleGenerateBill}>
-              Generate Bill
+            <Button style={{ backgroundColor:'rgb(11, 2, 51)', color:'white',fontWeight:'bold'}}type="primary" onClick={handleTatalSale}>
+              Tatal Sale
             </Button>
           </div>
         </div>
@@ -119,7 +120,7 @@ function DailySales() {
                 )}
             </Modal>
         
-      </DefaultHandle>
+      </DefaultHandleSales>
       {showGenerateBillForm && <GenerateSales handleCancel={handleCancel} />}
     </div>
   );

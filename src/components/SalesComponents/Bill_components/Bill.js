@@ -222,15 +222,15 @@ const generateNextCustomerId = (currentCustomerId) => {
   //calculate cost of total
   const calculateTotalCost = () => { return billItems.reduce((acc, item) => acc + (item.costPrice*item.quantity), 0);};
   
+  
 //function for complete the sale
 const handleCompleteSale = async () => {
   try {
-  
     const totalQuantity = calculateTotalQuantity();
     const totalCost = calculateTotalCost();
     const calculateProfit = total - totalCost;
+    
 
-   
     // Extract and prepare item details as comma-separated strings
     const itemIds = billItems.map(item => item.productID).join(',');
     const itemNames = billItems.map(item => item.product).join(',');
@@ -255,18 +255,12 @@ const handleCompleteSale = async () => {
       profit: calculateProfit,
       
     };
+
+    console.log("Attempting to complete sale with data:", data);
     const response = await axios.post("http://localhost:8000/dailysales/add", data);
 
-     // Update inventory in the backend
-     await Promise.all(
-      billItems.map(item => {
-        const updatedItem = items.find(i => i.productID === item.productID);
-        return axios.patch(`http://localhost:8000/item/update/${item._id}`, updatedItem);
-      })
-    );
-
     if (response.data.success) {
-      message.success("Sale completed successfully and data saved to daily sales.");
+     message.success("Sales complete Successfully...")
 
       // Increment invoice number by 1 for the next sale
       const nextInvoiceNumber = generateNextInvoiceNumber(invoiceNo);
@@ -282,6 +276,7 @@ const handleCompleteSale = async () => {
       }
     } else {
       message.error("Failed to save data to daily sales. Please try again later.");
+      console.log("Failed to add data");
     }
   } catch (error) {
     console.error("Error completing sale and saving data to daily sales:", error);
@@ -289,20 +284,21 @@ const handleCompleteSale = async () => {
   }
 };
 
+  
 //function for print tha bill
 const printAndCompleteSale = async () => {
 
   if (!selectedCustomerName || !selectedCustomerId) {
-    message.warning('Please select or add a customer before suspending the bill.');
+    message.warning('Please select or add a customer before complete the bill.');
     return;
   }
 
   if (billItems.length === 0) {
-    message.warning('Please add items to the bill before suspending.');
+    message.warning('Please add items to the bill before complete the bill.');
     return;
   }
   //printout the bill
- handlePrint();
+  //handlePrint();
   //store value to the daily sales table 
   await handleCompleteSale();
   //refresh the page
@@ -448,7 +444,8 @@ const handlePrint = () => {
       message.error("An error occurred while submitting the form.");
     }
   };
-// Function to handle click on a row to delete
+
+   // Function to handle click on a row to delete
 const handleRowClickToDelete = (index) => {
   setDeleteRowIndex(index);
   setShowDeleteConfirmation(true);
@@ -457,13 +454,13 @@ const handleRowClickToDelete = (index) => {
 const handleConfirmDelete = () => {
   if (deleteRowIndex !== null) {
     const itemToRemove = billItems[deleteRowIndex];
-    const updatedBillItems = billItems.filter((item, index) => index !== deleteRowIndex);
+    const updatedBillItems = billItems.filter((_, index) => index !== deleteRowIndex);
 
     // Update inventory in the `items` state
     const updatedItems = items.map(item => {
       if (item.productID === itemToRemove.productID) {
         // Ensure the quantity is updated correctly
-        const newQuantity = item.quantity + itemToRemove.quantity;
+        const newQuantity = Number(item.quantity) + Number(itemToRemove.quantity); // Convert to numbers and add
         return { ...item, quantity: newQuantity };
       }
       return item;
@@ -483,6 +480,8 @@ const handleConfirmDelete = () => {
     message.success('Item deleted successfully');
   }
 };
+
+
   const handleEditQuantity = async() => {
     if (editRowIndex !== null) {
       const updatedBillItems = [...billItems];
@@ -498,7 +497,7 @@ const handleConfirmDelete = () => {
         }
         return item;
       });
-
+      
       setBillItems(updatedBillItems);
       setItems(updatedItems);
       setFilteredItems(updatedItems.filter(

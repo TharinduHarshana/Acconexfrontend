@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { message } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
@@ -45,7 +44,7 @@ const CreateSupplierForm = () => {
       const lastSupplierId =
         response.data.data.length > 0
           ? response.data.data[response.data.data.length - 1].supplierId
-          : "cus000";
+          : "sup000";
       const nextSupplierId = generateNextSupplierId(lastSupplierId);
       setSupplierData((prevData) => ({
         ...prevData,
@@ -58,8 +57,17 @@ const CreateSupplierForm = () => {
   };
 
   const generateNextSupplierId = (currentSupplierId) => {
-    const nextNumber = parseInt(currentSupplierId.substr(3)) + 1;
-    return `sup${nextNumber.toString().padStart(3, "0")}`;
+    const prefix = "sup";
+    const numericPart = currentSupplierId.substring(prefix.length);
+    const nextNumber = parseInt(numericPart, 10) + 1;
+
+    // Ensure the next number is a valid number
+    if (isNaN(nextNumber)) {
+      console.error("Invalid supplier ID format:", currentSupplierId);
+      return `${prefix}001`;
+    }
+
+    return `${prefix}${nextNumber.toString().padStart(3, "0")}`;
   };
 
   // Function to handle form submission
@@ -188,4 +196,3 @@ const CreateSupplierForm = () => {
 };
 
 export default CreateSupplierForm;
-

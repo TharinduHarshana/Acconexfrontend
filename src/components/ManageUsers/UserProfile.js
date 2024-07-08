@@ -23,7 +23,7 @@ function UserProfile() {
           withCredentials: true,
         });
         const profileData = response.data;
-        profileData.dob = profileData.dob.split('T')[0]; // Removing time from Date of Birth
+        profileData.dob = profileData.dob.split('T')[0]; 
         setUserProfile(profileData);
       } catch (error) {
         console.error("Error fetching user profile:", error);

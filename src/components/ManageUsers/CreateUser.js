@@ -60,7 +60,9 @@ const CreateUserForm = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/user/all");
+      const response = await axios.get("http://localhost:8000/user/all",{
+        withCredentials:true,
+      });
       const lastUserId =
         response.data.data.length > 0
           ? response.data.data[response.data.data.length - 1].userId

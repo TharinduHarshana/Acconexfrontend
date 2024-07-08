@@ -434,7 +434,9 @@ function ItemKitsForm() {
   useEffect(() => {
     const fetchItemKits = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/itemkit/all");
+        const response = await axios.get("http://localhost:8000/itemkit/all",{
+          withCredentials:true,
+        });
         if (response.data.success) {
           const lastItemKitId = response.data.data.length > 0 ? response.data.data[response.data.data.length - 1].itemKitId : "kitId000";
           const nextItemKitId = generateNextItemKitId(lastItemKitId);
@@ -718,12 +720,13 @@ function ItemKitsForm() {
         </div>
 
         <div className="item_kits table">
-          <div className="search-field">
+          <div >
             <input
               type="text"
               placeholder="Search item"
               value={searchItem}
               onChange={(e) => setSearchItem(e.target.value)}
+              className="search_input"
             />
           </div>
 
@@ -738,17 +741,37 @@ function ItemKitsForm() {
                                 placeholder="Enter quantity"
                                 value={item.selectedQuantity}
                                 onChange={(e) => handleQuantityChange(e, item)}
-                                style={{ padding: '5px', marginBottom: '5px' ,marginRight:'5px',marginLeft:'5px'}}
+                                // style={{ padding: '5px', marginBottom: '5px' ,marginRight:'5px',marginLeft:'5px'}}
+                                style={{
+                                  padding: '3px',
+                                  marginBottom: '5px',
+                                  marginRight: '5px',
+                                  marginLeft: '5px',
+                                  width: '150px', // Reduced width
+                                  height: '25px', // Reduced height
+                                  borderRadius: '3px', // Border radius for a cleaner look
+                                  border: '1px solid #ccc' // Light border color
+                                }}
                             />
                             <button
                                 onClick={() => addItemToKit(item)}
+                                // style={{
+                                //     backgroundColor: 'rgb(1, 1, 41)',
+                                //     color: 'white',
+                                //     borderRadius: '5px',
+                                //     padding: '5px 10px',
+                                //     border: 'none',
+                                //     cursor: 'pointer'
+                                // }}
                                 style={{
-                                    backgroundColor: 'rgb(1, 1, 41)',
-                                    color: 'white',
-                                    borderRadius: '5px',
-                                    padding: '5px 10px',
-                                    border: 'none',
-                                    cursor: 'pointer'
+                                  backgroundColor: 'rgb(1, 1, 41)',
+                                  color: 'white',
+                                  borderRadius: '3px', // Adjusted border radius
+                                  padding: '3px 7px', // Adjusted padding to reduce size
+                                  border: 'none',
+                                  cursor: 'pointer',
+                                  fontSize: '12px', // Reduced font size
+                                  marginLeft: '5px' // Margin for spacing
                                 }}
                             >
                                 Add to Kit

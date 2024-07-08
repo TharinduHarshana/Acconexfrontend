@@ -40,7 +40,9 @@ const CreateSupplierForm = () => {
 
   const fetchLatestSupplierId = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/supplier/get");
+      const response = await axios.get("http://localhost:8000/supplier/get",{
+        withCredentials:true,
+      });
       const lastSupplierId =
         response.data.data.length > 0
           ? response.data.data[response.data.data.length - 1].supplierId
@@ -87,7 +89,9 @@ const CreateSupplierForm = () => {
     try {
       const result = await axios.post(
         "http://localhost:8000/supplier/add",
-        supplierData
+        supplierData,{
+          withCredentials:true,
+        }
       );
       if (result.data.success) {
         message.success("Supplier added successfully!");

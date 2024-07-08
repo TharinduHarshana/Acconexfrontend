@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Space, message, Modal } from "antd";
 import DataTable from "react-data-table-component";
 import DefaultHandle from "../DefaultHandle";
 import axios from "axios";
+import { Modal, message, Space } from "antd";
+import swal from 'sweetalert'; 
+import "../../styles/accessmodal.css";
 
 function Supplier() {
   // State to store the list of suppliers
@@ -11,29 +13,42 @@ function Supplier() {
   const [filterSupplier, setFilterSupplier] = useState([]);
   const [isHovered, setIsHovered] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isAccessDeniedVisible, setIsAccessDeniedVisible] = useState(false);
 
   // Effect hook to fetch suppliers data when the component mounts
   useEffect(() => {
     const loadSuppliers = async () => {
       setLoading(true);
       try {
-        const response = await axios.get("http://localhost:8000/supplier/get");
+        const response = await axios.get("http://localhost:8000/supplier/get", {
+          withCredentials: true,
+        });
         // Update the suppliers state with the fetched data
         setSuppliers(response.data.data);
         setFilterSupplier(response.data.data);
         console.log(response.data); // Add this line to check the fetched data
       } catch (error) {
-        console.error("Error fetching suppliers:", error);
-      }finally{
-        setLoading(false)
+        if (error.response && error.response.status === 403) {
+          setIsAccessDeniedVisible(true);
+        } else {
+          console.error("Error fetching suppliers:", error);
+          swal({
+            title: "Error",
+            text: "An error occurred while fetching suppliers.",
+            icon: "error",
+            button: "OK",
+          });
+        }
+      } finally {
+        setLoading(false);
       }
     };
 
     loadSuppliers();
   }, []);
-  
+
   if (loading) {
-    return <div>Loading...</div>; 
+    return <div>Loading...</div>;
   }
 
   // Function to handle deleting a supplier
@@ -49,6 +64,17 @@ function Supplier() {
 
       message.success("Supplier deleted successfully!");
     } catch (error) {
+      if (error.response && error.response.status === 403) {
+        setIsAccessDeniedVisible(true);
+      } else {
+        console.error("Error deleting suppliers:", error);
+        swal({
+          title: "Error",
+          text: "An error occurred while can't permission to delete suppliers.",
+          icon: "error",
+          button: "OK",
+        });
+      }
       console.error("Error deleting supplier:", error);
       message.error("An error occurred while deleting the supplier.");
     }
@@ -69,7 +95,12 @@ function Supplier() {
     });
   };
 
-  //Search supplier
+  // Function to close the access denied modal
+  const closeModal = () => {
+    setIsAccessDeniedVisible(false);
+  };
+
+  // Search supplier
   const filterSuppliers = (event) => {
     // Convert search input to lowercase for case-insensitive comparison
     const searchValue = event.target.value.toLowerCase();
@@ -135,7 +166,7 @@ function Supplier() {
             }}
           >
             <input
-              type="text end"
+              type="text"
               className="input"
               placeholder="Search Supplier..."
               onChange={filterSuppliers}
@@ -175,6 +206,18 @@ function Supplier() {
           fixedHeader
           pagination
         />
+        <Modal
+          title="Access Denied!"
+          visible={isAccessDeniedVisible}
+          onCancel={closeModal}
+          footer={[
+            <button onClick={closeModal} key="back">
+              OK
+            </button>,
+          ]}
+        >
+          <p>You do not have permission to view this page.</p>
+        </Modal>
       </DefaultHandle>
     </div>
   );

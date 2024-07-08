@@ -101,8 +101,8 @@ const ItemKit = () => {
       name: "Actions",
       cell: (row) => (
         <div>
-          <Link to={`/admin/inventory/kits/update/${row._id}`}>Edit</Link>
-          <span style={{ margin: "0 8px" }}>|</span>
+          {/* <Link to={`/admin/inventory/kits/update/${row._id}`}>Edit</Link>
+          <span style={{ margin: "0 8px" }}>|</span> */}
           <Link onClick={() => showDeleteConfirmation(row._id)}>Delete</Link>
         </div>
       ),
@@ -112,7 +112,8 @@ const ItemKit = () => {
   return (
     <>
       <DefaultHandle>
-        <div style={{ marginBottom: "10px" }}>
+        {/* <div style={{height: '500px', overflow: 'auto'}}> */}
+        <div style={{ marginBottom: "10px" }}>
           <div
             style={{
               display: "flex",
@@ -175,6 +176,7 @@ const ItemKit = () => {
             pagination
           />
         </div>
+        {/* </div> */}
       </DefaultHandle>
     </>
   );

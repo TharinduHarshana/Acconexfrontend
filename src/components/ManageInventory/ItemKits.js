@@ -393,14 +393,13 @@ import axios from "axios";
 import { message, Modal as AntdModal } from "antd";
 import { useNavigate } from "react-router-dom";
 import "../../styles/item-kit.css";
-import ItemKitModal from "./ItemKitModal"; 
+import { DeleteTwoTone } from '@ant-design/icons';
 import DefaultHandle from "../DefaultHandle";
 
 function ItemKitsForm() {
   const navigate = useNavigate();
 
   const [inventoryItems, setInventoryItems] = useState([]);
-  const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({
     itemKitId: "",
     itemKitName: "",
@@ -640,9 +639,9 @@ function ItemKitsForm() {
     });
   };
 
-  const toggleModal = () => {
-    setShowModal(!showModal);
-  };
+  const filteredItems = inventoryItems.filter(item =>
+    item.itemName.toLowerCase().includes(searchItem.toLowerCase())
+  );
 
   return (
     <div className="item_kit">
@@ -711,9 +710,7 @@ function ItemKitsForm() {
                 setFormData({ ...formData, kitQuantity: e.target.value });
               }}
             />
-            <button type="button" onClick={toggleModal} className="see_btn">
-              View Added Items
-            </button>
+            
             <button type="submit" className="form_btn">
               Create Item Kit
             </button>
@@ -729,83 +726,77 @@ function ItemKitsForm() {
               onChange={(e) => setSearchItem(e.target.value)}
             />
           </div>
-          <table>
-            <thead>
-              <tr>
-                <th>Item</th>
-                <th>Available Quantity</th>
-                <th>Selected Quantity</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {inventoryItems
-                .filter((item) =>
-                  item.itemName
-                    .toLowerCase()
-                    .includes(searchItem.toLowerCase())
-                )
-                .map((item) => (
-                  <tr key={item._id}>
-                    <td>{item.itemName}</td>
-                    <td>{item.quantity}</td>
-                    <td>
-                      <input
-                        type="number"
-                        value={item.selectedQuantity}
-                        onChange={(e) => handleQuantityChange(e, item)}
-                      />
-                    </td>
-                    <td>
-                      <button
-                        onClick={() => addItemToKit(item)}
-                        className="table_btn"
-                      >
-                        Add to Kit
-                      </button>
-                      
-                    </td>
+
+          {searchItem && filteredItems.length > 0 && (
+                <div className="search-results">
+                    {filteredItems.map(item => (
+                        <div key={item._id} className="search-item">
+                            <p style={{ fontWeight: 'bold', marginBottom: '5px' ,marginLeft:'5px'}}>Name: {item.itemName}</p>
+                            <p style={{marginLeft:'5px'}}>Available Quantity: {item.quantity}</p>
+                            <input
+                                type="number"
+                                placeholder="Enter quantity"
+                                value={item.selectedQuantity}
+                                onChange={(e) => handleQuantityChange(e, item)}
+                                style={{ padding: '5px', marginBottom: '5px' ,marginRight:'5px',marginLeft:'5px'}}
+                            />
+                            <button
+                                onClick={() => addItemToKit(item)}
+                                style={{
+                                    backgroundColor: 'rgb(1, 1, 41)',
+                                    color: 'white',
+                                    borderRadius: '5px',
+                                    padding: '5px 10px',
+                                    border: 'none',
+                                    cursor: 'pointer'
+                                }}
+                            >
+                                Add to Kit
+                            </button>
+                        </div>
+                    ))}
+                </div>
+            )}
+
+          {formData.items.length > 0 && (
+            <div className="kit-items-table">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Item Name</th>
+                    <th>Quantity</th>
+                    <th>Actions</th>
                   </tr>
-                ))}
-            </tbody>
-          </table>
+                </thead>
+                <tbody>
+                  {formData.items.map((item, index) => (
+                    <tr key={item._id}>
+                      <td>{item.itemName}</td>
+                      <td>{formData.itemQuantity[index]}</td>
+                      <td>
+                        <DeleteTwoTone
+                            twoToneColor="rgb(1, 1, 41)"
+                            style={{ cursor: 'pointer' }}
+                            onClick={() => removeItemFromKit(item)}
+                        />
+                    </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+          
         </div>
       </div>
       </DefaultHandle>
-      <ItemKitModal show={showModal} handleClose={toggleModal}>
-        <div className="item_kit_items">
-        <table>
-          <thead>
-            <tr>
-              <th></th>
-              <th></th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {formData.items.map((item, index) => (
-              <tr key={item._id}>
-                <td>{item.itemName}</td>
-                <td>{formData.itemQuantity[index]}</td>
-                <td>
-                  <button
-                    onClick={() => removeItemFromKit(item)}
-                    className="table_btn"
-                  >
-                    Remove
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      </ItemKitModal>
     </div>
   );
 }
 
 export default ItemKitsForm;
+
+
 
 
 

@@ -25,6 +25,7 @@ import Bill from './components/SalesComponents/Bill_components/Bill';
 import Customer from './components/CustomerComponents/Customer';
 import SuspendSale from './components/SalesComponents/SuspendSale';
 import Dailysales from './components/SalesComponents/Daily_sales';
+import TotalSale from './components/SalesComponents/TotalSale';
 
 
 
@@ -83,6 +84,7 @@ function App() {
         <Route path='/admin/bill' element={<Bill/>}/>
         <Route path='/admin/holdbill' element={<SuspendSale/>}/>
         <Route path='/admin/dailysales' element={<Dailysales/>}/>
+        <Route path="/admin/totalsale" element={<TotalSale/>}/>
 
 
         

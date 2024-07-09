@@ -3,8 +3,9 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 //login and dashboard import
 import Login from "./components/LoginComponents/Login";
-import Dashboard from "./components/SideBarComponent/DefaultHandle";
+import Dashboard from "./pages/adminDashbord";
 import Logout from "./components/LoginComponents/Logout";
+import AdminDashboardHome  from "./pages/adminDashbord";
 
 //import user components
 import CreateUser from "./components/ManageUsers/CreateUser";
@@ -47,6 +48,7 @@ import Services from './pages/WebServicesPage';
 import PaymentMethods from './pages/WebPaymentMethodPage'
 import ContactUs from './pages/WebContactUs';
 import ConfirmCODOrders from './pages/WebCODorders';
+import WebUserProfile from './pages/WebUserProfile';
 
 
 
@@ -90,6 +92,8 @@ function App() {
     <Route path ="/web/payment" element={<PaymentMethods/>} />
     <Route path ="/web/contact" element={<ContactUs/>} />
     <Route path ="admin/cashondelevery" element={<ConfirmCODOrders/>} />
+    <Route path ="/web/profile" element={<WebUserProfile/>} />
+
 
 
         
@@ -97,12 +101,13 @@ function App() {
        {/* admin routing path */}
         <Route path="/admin" element={<Login/>} />
         <Route path="admin/logout" element={<Logout/>}/>
-        <Route path="/admin/dashboard" element={< Dashboard/>} />
-        <Route path="/admin/userform" element={<CreateUserForm/>} />
+        <Route path="/admin/dashbord" element={< Dashboard/>} />
+        <Route path="/admin/userform" element={<CreateUser />} />
         <Route path="/admin/userform/update/:id" element={<UpdateUser />} />
         <Route path="/admin/userTable" element={<Users />} />
         <Route path="/admin/customer" element={<Customer/>}/>
-        <Route path="admin/editprofile" element={<UserProfile />} /> 
+        <Route path="/admin/editprofile" element={<UpdateProfileForm />} />
+
        
 
 

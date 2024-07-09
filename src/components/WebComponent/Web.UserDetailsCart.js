@@ -2,6 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import { loadStripe } from '@stripe/stripe-js';
+
+const stripePromise = loadStripe('pk_test_51PaEd2GWcHQSEVCwjoJvb5S1ymSVcku4VWnkrWX6DmUYHw7A2xM750tNMMlvep7ctKnjjHUFMJn703K3sLo4dEPs006cDaWwjV');
+
 
 const UserDetailsForm = () => {
     const [cartItems, setCartItems] = useState([]);
@@ -145,10 +149,69 @@ const UserDetailsForm = () => {
         }
     };
 
-    const handlePayment = () => {
-        console.log('Proceeding to payment');
-        // Additional logic for proceeding to payment
+
+
+
+    const handlePayment = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const line_items = cartItems.map(item => ({
+                itemDisplayName: item.itemDisplayName, // Ensure this matches your backend
+                price: item.price, // Ensure price is in the correct format
+                quantity: item.quantity
+            }));
+    
+            const orderDetails = {
+                userID: userDetails.id,
+                name: `${userDetails.fname} ${userDetails.lname}`,
+                email: userDetails.email,
+                address: userDetails.address,
+                city: userDetails.city,
+                zip: userDetails.zip,
+                contactNumber: userDetails.contactNumber,
+                totalPrice: total,
+                orderSummary: cartItems.map(item => `${item.itemDisplayName} = ${item.quantity} = ${item.price}`).join('\n '),
+                paymentMethod: paymentMethod,
+                orderDate: new Date().toISOString(),
+                line_items: line_items, // Added line_items to the request
+                success_url: 'http://localhost:3000/success',
+                cancel_url: 'http://localhost:3000/cancel'
+            };
+    
+            // Call your backend to create a Stripe Checkout Session
+            const response = await axios.post('http://localhost:8000/payment', orderDetails, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+    
+            const sessionId = response.data.sessionId;
+    
+            // Redirect to Stripe Checkout
+            const stripe = await stripePromise;
+            const result = await stripe.redirectToCheckout({
+                sessionId: sessionId
+            });
+    
+            if (result.error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: result.error.message
+                });
+            }
+        } catch (error) {
+            console.error('Error during payment:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Failed to initiate payment. Please try again.'
+            });
+        }
     };
+    
+    
+    
+
+
 
     return (
         <Form onSubmit={handleOrderSubmit}>
@@ -242,7 +305,7 @@ const UserDetailsForm = () => {
             )}
             {paymentMethod === 'proceedToPay' && (
                 <Button variant="primary" type="button" onClick={handlePayment}>
-                    Proceed to Payment
+                    Proceed to Payment 
                 </Button>
             )}
         </Form>

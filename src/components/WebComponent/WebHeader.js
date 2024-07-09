@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, AutoComplete, Input, message } from 'antd';
-import { ShoppingCartOutlined } from '@ant-design/icons';
+import { Menu, AutoComplete, Input,Avatar } from 'antd';
+import { ShoppingCartOutlined,UserOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import logo from '../../images/logo.jpg';
 import DisplayCart from '../WebComponent/Web.DisplayCart'; // Adjust the import path as needed
+import SubMenu from 'antd/es/menu/SubMenu';
 
 const { Option } = AutoComplete;
 
@@ -19,6 +20,35 @@ function WebHeader() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [hasRefreshed, setHasRefreshed] = useState(false); // Track if the page has been refreshed
   const navigate = useNavigate();
+  const [userdata, setUserData] = useState([]);
+
+  //get logged user name and the profile picture
+ 
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            try {
+                const response = await axios.get('http://localhost:8000/webuser/get', {
+                    headers: { 'Authorization': token }
+                });
+                const { fname, profileImage } = response.data;
+                setUserData({ fname,profileImage });
+            } catch (error) {
+                console.error('Error fetching user details:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Failed to load user details. Please try again later.'
+                });
+            }
+        }
+    };
+
+    fetchUserDetails();
+}, []);
+
+
 
   useEffect(() => {
     axios.get('http://localhost:8000/webitem/')
@@ -170,8 +200,21 @@ function WebHeader() {
               </Menu.Item>
             </>
           )}
-          {isLoggedIn && (
-            <Menu.Item key='logout' onClick={handleLogout}>LOGOUT</Menu.Item>
+           {isLoggedIn && (
+            <SubMenu
+              key='profile'
+              title={
+                <span>
+                  <Avatar src={userdata.profileImage} alt={userdata.fname} style={{ marginRight: 8 }} />
+                  {userdata.fname}
+                </span>
+              }
+            >
+              <Menu.Item key='profile'>
+                <Link to="/web/profile">PROFILE</Link>
+              </Menu.Item>
+              <Menu.Item key='logout' onClick={handleLogout}>LOGOUT</Menu.Item>
+            </SubMenu>
           )}
           <Menu.Item key='cart' icon={<ShoppingCartOutlined />}>CART ({cartCount})</Menu.Item>
         </Menu>

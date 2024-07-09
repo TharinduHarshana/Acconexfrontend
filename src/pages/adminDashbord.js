@@ -22,7 +22,9 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     getCountSales();
-    // Add other count functions if needed
+    getCountCustomer();
+    getItemCount();
+    getItemKitCount();
     fetchMonthlyTotalSalesData();
     fetchWeeklyTotalSalesData();
   }, []);
@@ -36,8 +38,35 @@ const AdminDashboard = () => {
     }
   };
 
-  // Add similar functions for getCountCustomer, getItemCount, and getItemKitCount
+  const getCountCustomer = async () => {
+    try {
+      const response = await axios.get('http://localhost:8000/customer/count');
+      setCustomerCount(response.data.data);
+    } catch (error) {
+      console.error('Error fetching customer count:', error);
+    }
+  };
 
+  const getItemCount = async () => {
+    try {
+      const response = await axios.get('http://localhost:8000/item/count');
+      setItemCount(response.data.data);
+    } catch (error) {
+      console.error('Error fetching item count:', error);
+    }
+  };
+
+  const getItemKitCount = async () => {
+    try {
+      const response = await axios.get('http://localhost:8000/itemkit/count');
+      setItemKitCount(response.data.data);
+    } catch (error) {
+      console.error('Error fetching item kit count:', error);
+    }
+  };
+
+
+ 
   const fetchMonthlyTotalSalesData = async () => {
     try {
       const response = await axios.get('http://localhost:8000/dailysales/monthly_totals');

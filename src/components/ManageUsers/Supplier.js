@@ -6,6 +6,7 @@ import axios from "axios";
 import { Modal, message, Space } from "antd";
 import swal from 'sweetalert'; 
 import "../../styles/accessmodal.css";
+import {EditFilled ,DeleteFilled } from '@ant-design/icons';
 
 function Supplier() {
   // State to store the list of suppliers
@@ -148,9 +149,9 @@ function Supplier() {
       name: "Actions",
       cell: (row) => (
         <div>
-          <Link to={`/admin/supplier/update/${row._id}`}>Edit</Link>
+          <Link to={`/admin/supplier/update/${row._id}`}><EditFilled/></Link>
           <span style={{ margin: "0 8px" }}>|</span>
-          <Link onClick={() => showDeleteConfirmation(row._id)}>Delete</Link>
+          <Link onClick={() => showDeleteConfirmation(row._id)}><DeleteFilled/></Link>
         </div>
       ),
     },

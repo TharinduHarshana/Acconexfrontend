@@ -7,6 +7,7 @@ import { Modal, message, Space } from "antd";
 import DefaultHandle from "../DefaultHandle";
 import "../../styles/accessmodal.css";
 import swal from 'sweetalert'; 
+import {EditFilled ,DeleteFilled } from '@ant-design/icons';
 
 function Users() {
   const [users, setUsers] = useState([]);
@@ -116,9 +117,9 @@ function Users() {
       name: "Actions",
       cell: row => (
         <div>
-          <Link to={`/admin/userform/update/${row._id}`}>Edit</Link>
+          <Link to={`/admin/userform/update/${row._id}`}><EditFilled/></Link>
           <span style={{ margin: "0 8px" }}>|</span>
-          <Link onClick={() => showDeleteConfirmation(row._id)}>Delete</Link>
+          <Link onClick={() => showDeleteConfirmation(row._id)}><DeleteFilled/></Link>
         </div>
       ),
     },

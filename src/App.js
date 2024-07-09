@@ -58,6 +58,8 @@ import CategoryHome from "./pages/Category";
 import AddNewCategory from "./components/CategoryComponents/Category.AddNewCategory";
 import CreateUserForm from "./components/ManageUsers/CreateUser";
 import UserProfile from "./components/ManageUsers/UserProfile";
+import SalesReport from "./components/SalesReport";
+
 
 
 
@@ -99,7 +101,7 @@ function App() {
         <Route path="/admin/userTable" element={<Users />} />
         <Route path="/admin/customer" element={<Customer/>}/>
         <Route path="admin/editprofile" element={<UserProfile />} /> 
-       
+        <Route path="/admin/reports" element={<SalesReport/>}/>
 
 
 

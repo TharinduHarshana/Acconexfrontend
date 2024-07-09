@@ -7,7 +7,7 @@ import DefaultHandle from './DefaultHandle';
 const { MonthPicker } = DatePicker;
 
 const SalesReport = () => {
-  const [monthlyTotalSalesData, setMonthlyTotalSalesData] = useState(null);
+  const [monthlyTotalSalesData, setMonthlyTotalSalesData] = useState([]);
   const [selectedMonth, setSelectedMonth] = useState(null);
 
   const fetchMonthlyTotalSalesData = async () => {
@@ -23,9 +23,10 @@ const SalesReport = () => {
       });
 
       if (response.data.success) {
-        setMonthlyTotalSalesData(response.data.data); // Assuming response.data.data holds the sales totals
+        // Assuming response.data.data holds the array of monthly sales
+        setMonthlyTotalSalesData(response.data.data);
       } else {
-        setMonthlyTotalSalesData(null);
+        setMonthlyTotalSalesData([]); // Set an empty array if no data found
         message.error('No data available for the selected month.');
       }
     } catch (error) {
@@ -57,19 +58,23 @@ const SalesReport = () => {
               Generate Report
             </Button>
           </Card>
-          {monthlyTotalSalesData !== null ? (
+          {monthlyTotalSalesData.length > 0 ? (
             <Card title={`Monthly Sales Report - ${selectedMonth ? selectedMonth.format('MMMM YYYY') : ''}`}>
-              <Row gutter={16}>
-                <Col span={8}>
-                  <Statistic title="Total Amount" value={monthlyTotalSalesData.totalAmount} precision={2} />
-                </Col>
-                <Col span={8}>
-                  <Statistic title="Total Cost" value={monthlyTotalSalesData.totalCost} precision={2} />
-                </Col>
-                <Col span={8}>
-                  <Statistic title="Total Profit" value={monthlyTotalSalesData.totalProfit} precision={2} />
-                </Col>
-              </Row>
+              {monthlyTotalSalesData
+                .filter(data => moment(data.monthYear, 'YYYY-MM').isSame(selectedMonth, 'month'))
+                .map((monthlyData, index) => (
+                  <Row gutter={16} key={index}>
+                    <Col span={8}>
+                      <Statistic title="Total Amount" value={monthlyData.totalAmount} precision={2} />
+                    </Col>
+                    <Col span={8}>
+                      <Statistic title="Total Profit" value={monthlyData.totalProfit} precision={2} />
+                    </Col>
+                    <Col span={8}>
+                      <Statistic title="Total Loss" value={monthlyData.totalLoss} precision={2} />
+                    </Col>
+                  </Row>
+                ))}
             </Card>
           ) : (
             <Card>

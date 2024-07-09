@@ -29,7 +29,7 @@ function Login() {
       if (response.status === 200) {
         document.cookie = `token=${response.data.token}; path=/; Secure; HttpOnly`;
         message.success("Login successful");
-        navigate("/admin/dashbord");
+        navigate("/admin/dashboard");
       } else if (response.data.message === "Token expired") {
         message.error("Your session has expired. Please log in again.");
         navigate("/admin");

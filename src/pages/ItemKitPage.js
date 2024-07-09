@@ -7,6 +7,7 @@ import { Modal, message, Space } from "antd";
 import DefaultHandle from "../components/DefaultHandle";
  import "../styles/accessmodal.css"
 import swal from 'sweetalert';
+import {DeleteFilled } from '@ant-design/icons';
 
 const ItemKit = () => {
   const [itemKit, setItemKit] = useState([]);
@@ -111,7 +112,7 @@ const ItemKit = () => {
       name: "Actions",
       cell: (row) => (
         <div>
-          <Link onClick={() => showDeleteConfirmation(row._id)}>Delete</Link>
+          <Link onClick={() => showDeleteConfirmation(row._id)}><DeleteFilled/></Link>
         </div>
       ),
     },

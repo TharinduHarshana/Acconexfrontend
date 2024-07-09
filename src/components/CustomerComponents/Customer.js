@@ -7,7 +7,7 @@ import DefaultHandle from "../DefaultHandle";
 import axios from "axios";
 import CustomerForm from "./customerForm";
 import "../../styles/customer.css";
-import {EditFilled ,DeleteFilled } from '@ant-design/icons';
+import { EditFilled, DeleteFilled } from "@ant-design/icons";
 
 function Customer() {
   const [customers, setCustomers] = useState([]);
@@ -15,33 +15,41 @@ function Customer() {
   const [editingCustomer, setEditingCustomer] = useState(null);
   const [searchValue, setSearchValue] = useState("");
   const [customerId, setCustomerId] = useState("");
-
-  const fetchCustomers = async () => {
-    try {
-      const response = await axios.get("http://localhost:8000/customer");
-      setCustomers(response.data.data);
-
-      // Get last customer ID and generate next customer ID
-      const lastCustomerId = response.data.data.length > 0 ? response.data.data[response.data.data.length - 1].cusid : 'cus000';
-      const nextCustomerId = generateNextCustomerId(lastCustomerId);
-      setCustomerId(nextCustomerId);
-
-    } catch (error) {
-      console.error("Error fetching customers:", error);
-    }
-  };
+  const [isAccessDeniedVisible, setIsAccessDeniedVisible] = useState(false);
 
   useEffect(() => {
     fetchCustomers();
   }, []);
 
-  // Generate next customer ID
-  const generateNextCustomerId = (currentCustomerId) => {
-    const nextNumber = parseInt(currentCustomerId.substr(3)) + 1;
-    return `cus${nextNumber.toString().padStart(3, '0')}`;
+  const fetchCustomers = async () => {
+    try {
+      const response = await axios.get("http://localhost:8000/customer", {
+        withCredentials: true,
+      });
+      setCustomers(response.data.data);
+
+      // Get last customer ID and generate next customer ID
+      const lastCustomerId =
+        response.data.data.length > 0
+          ? response.data.data[response.data.data.length - 1].cusid
+          : "cus000";
+      const nextCustomerId = generateNextCustomerId(lastCustomerId);
+      setCustomerId(nextCustomerId);
+    } catch (error) {
+      if (error.response && error.response.status === 403) {
+        setIsAccessDeniedVisible(true);
+      } else {
+        console.error("Error fetching customers:", error);
+        message.error("An error occurred while fetching customers.");
+      }
+    }
   };
 
-  // Delete customer
+  const generateNextCustomerId = (currentCustomerId) => {
+    const nextNumber = parseInt(currentCustomerId.substr(3)) + 1;
+    return `cus${nextNumber.toString().padStart(3, "0")}`;
+  };
+
   const handleDelete = async (cusid) => {
     try {
       await axios.delete(`http://localhost:8000/customer/delete/${cusid}`);
@@ -53,7 +61,6 @@ function Customer() {
     }
   };
 
-  // Delete confirmation message
   const showDeleteConfirmation = (cusid) => {
     Modal.confirm({
       title: "Confirm Delete",
@@ -75,14 +82,19 @@ function Customer() {
   const handleFormSubmit = async (formData) => {
     try {
       // Check if the customer ID already exists
-      const existingCustomer = customers.find((customer) => customer.cusid === formData.cusid);
+      const existingCustomer = customers.find(
+        (customer) => customer.cusid === formData.cusid
+      );
       if (existingCustomer) {
         message.error("Customer ID already exists. Please choose a different ID.");
         return;
       }
 
       // Add new customer
-      const response = await axios.post("http://localhost:8000/customer/add", formData);
+      const response = await axios.post(
+        "http://localhost:8000/customer/add",
+        formData
+      );
       if (response.data.success) {
         message.success(response.data.message);
         setShowForm(false);
@@ -101,10 +113,12 @@ function Customer() {
     setEditingCustomer(customer);
   };
 
-  // Update customer details
   const handleUpdate = async (formData) => {
     try {
-      const response = await axios.patch(`http://localhost:8000/customer/update/${formData.cusid}`, formData);
+      const response = await axios.patch(
+        `http://localhost:8000/customer/update/${formData.cusid}`,
+        formData
+      );
       if (response.data.success) {
         message.success("Customer updated successfully!");
         fetchCustomers();
@@ -119,24 +133,22 @@ function Customer() {
     }
   };
 
-  // Search customer
+  const handleSearch = (e) => {
+    setSearchValue(e.target.value);
+  };
+
   const filteredDataList = customers.filter(
     (row) =>
       row.name.toLowerCase().includes(searchValue.toLowerCase()) ||
       row.cusid.toLowerCase().includes(searchValue.toLowerCase())
   );
 
-  const handleSearch = (e) => {
-    setSearchValue(e.target.value);
-  };
-
-  // Prepare data for CSV export
   const prepareCsvData = () => {
-    return customers.map(customer => ({
-      cusid:customer.cusid,
+    return customers.map((customer) => ({
+      cusid: customer.cusid,
       name: customer.name,
       address: customer.address,
-      mobile: customer.mobile.toString() // Convert mobile number to string
+      mobile: customer.mobile.toString(),
     }));
   };
 
@@ -144,7 +156,13 @@ function Customer() {
     <div>
       <DefaultHandle>
         <div style={{ marginBottom: "10px" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
             <Input
               placeholder="Search customer"
               value={searchValue}
@@ -153,15 +171,21 @@ function Customer() {
             />
             <div>
               <Button style={{ marginRight: "10px" }}>
-                <CSVLink data={prepareCsvData()} filename={"customers_report.csv"}>
+                <CSVLink
+                  data={prepareCsvData()}
+                  filename={"customers_report.csv"}
+                >
                   Export CSV
                 </CSVLink>
               </Button>
-              <Link to="#" onClick={handleAddCustomer}> Add Customer</Link>
+              <Link to="#" onClick={handleAddCustomer}>
+                {" "}
+                Add Customer
+              </Link>
             </div>
           </div>
         </div>
-        
+
         <DataTable
           columns={[
             { name: "Customer ID", selector: (row) => row.cusid, sortable: true },
@@ -177,7 +201,7 @@ function Customer() {
                   </Link>
                   <span style={{ margin: "0 8px" }}>|</span>
                   <Link onClick={() => showDeleteConfirmation(row.cusid)}>
-                  <DeleteFilled />
+                    <DeleteFilled />
                   </Link>
                 </div>
               ),
@@ -196,6 +220,18 @@ function Customer() {
             editing={!!editingCustomer}
           />
         )}
+        <Modal
+          title="Access Denied"
+          visible={isAccessDeniedVisible}
+          onCancel={() => setIsAccessDeniedVisible(false)}
+          footer={[
+            <Button key="ok" onClick={() => setIsAccessDeniedVisible(false)}>
+              OK
+            </Button>,
+          ]}
+        >
+          <p>You do not have permission to view this page.</p>
+        </Modal>
       </DefaultHandle>
     </div>
   );

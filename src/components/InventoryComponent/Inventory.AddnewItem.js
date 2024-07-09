@@ -152,7 +152,7 @@ const AddNewItem = () => {
 
     return (
 <DefaultHandle> 
-<div className='formContainer'>
+<div style={{ display: '', height: '500px', overflow: 'auto' }} className='formContainer'>
         <form className='form'>
             <label className='label'>
               Display Name:

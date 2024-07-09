@@ -4,6 +4,7 @@ import { useNavigate} from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import Swal from "sweetalert2";
 import DataTable from 'react-data-table-component'
+import DefaultHandle from '../DefaultHandle';
 
 
 function UpdateItem() {
@@ -22,6 +23,9 @@ function UpdateItem() {
   const [item,setItem] = useState([])
   const {id} = useParams();
   const navigate = useNavigate();
+  const [categories, setCategories] = useState([]);
+  const [suppliers, setSuppliers] = useState([]);
+  const [loading, setLoading] = useState(true);
         
         useEffect(()=>{
             axios.patch('http://localhost:8000/item/update/'+id)
@@ -41,6 +45,29 @@ function UpdateItem() {
 
             .catch(err => console.log(err))
         },[])
+
+
+
+        useEffect(() => {
+          const fetchData = async () => {
+            try {
+              const categoriesResponse = await axios.get('http://localhost:8000/category/');
+              const suppliersResponse = await axios.get('http://localhost:8000/supplier/get');
+              setCategories(categoriesResponse.data.data);
+              console.log(categoriesResponse.data.data);
+              setSuppliers(suppliersResponse.data.data);
+              setLoading(false);
+            } catch (error) {
+              console.error('Error fetching data:', error);
+              setLoading(false);
+            }
+          };
+      
+          fetchData();
+        }, []);
+
+
+
 
         const handleSubmit = async (e) => {
           e.preventDefault();
@@ -82,7 +109,8 @@ function UpdateItem() {
       
 
     return (
-    <div style={formStyle}>
+    <DefaultHandle>
+    <div style={{ display: '', height: '500px', overflow: 'auto' }}>
          <form className='form'>
              <label style={label}>
                Display Name:
@@ -117,21 +145,22 @@ function UpdateItem() {
                <input type="text" className="form-control" placeholder="AK2928582-9582" onChange={(e) => setItemSerial(e.target.value)}  value={itemSereal} style={input} />
              </label>
 
-             <label style={label} >Select Supplier:</label>
-                 <select className="form-control" onChange={(e) => setSupplierID(e.target.value)}  value={supplierID} style={input}>
-                   <option value="5">Volvo</option>
-                   <option value="6">Saab</option>
-                   <option value="7">Mercedes</option>
-                   <option value="4">Audi</option>
-                 </select>
+                   {/* Your form inputs */}
+      <label className='label'>Select Supplier:</label>
+      <select onChange={(e) => setSupplierID(e.target.value)} value={supplierID} className='input'>
+      <option value="">Select Supplier</option>
+        {suppliers.map((supplier) => (
+          <option key={supplier._id} value={supplier.supplierId}>{supplier.firstName}</option>
+        ))}
+      </select>
 
-               <label style={label}>Select Category</label>
-                   <select className="form-control" onChange={(e) => setCategory(e.target.value)} value={category} style={input}>
-                     <option value="1">Volvo</option>
-                     <option value="2">Saab</option>
-                     <option value="3">Mercedes</option>
-                     <option value="4">Audi</option>
-              </select>
+      <label className='label'>Select Category:</label>
+      <select onChange={(e) => setCategory(e.target.value)} value={category} className='input'>
+      <option value="">Select Category</option>
+        {categories.map((category) => (
+          <option key={category._id} value={category.categoryname}>{category.categoryname}</option>
+        ))}
+      </select>
 
             <label style={label}>
                Warranty:
@@ -141,6 +170,7 @@ function UpdateItem() {
              
            </form>
  </div> 
+ </DefaultHandle>
 
     );
 }

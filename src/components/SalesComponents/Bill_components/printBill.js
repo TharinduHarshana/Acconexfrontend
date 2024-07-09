@@ -107,8 +107,8 @@ const printBill = (invoiceNo, cashier, date, paymentMethod, billItems, total, te
             <div class="bill-header">
               <img src="${logo}" alt="Acconex Computers Logo">
               <h1>Acconex Computers</h1>
-              <p style={{ textAlign: 'center', fontSize: 11 }} >Kaburupitiya, Mathara.</p>
-              <p>Tel: 0913454226 | Mob: 0765672636</p>
+              <p style={{ textAlign: 'center', fontSize: 11 }} >124/1/1, Anagarika Dharmapala MW, Matara </p>
+              <p>Mob; 071-7314099.</p>
               <hr>
             </div>
             <div class="bill-info">

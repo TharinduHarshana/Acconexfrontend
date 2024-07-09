@@ -67,7 +67,7 @@ function SuspendSale() {
       }
 
       setModalVisible(false);
-      navigate('/admin/bill');
+      navigate('/admin/sale');
     }
   };
 

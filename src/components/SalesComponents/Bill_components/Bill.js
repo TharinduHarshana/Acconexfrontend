@@ -174,47 +174,73 @@ const generateNextCustomerId = (currentCustomerId) => {
   //check the quantity
   const handleChange = (item) => {
     setSelectedItem(item);
-        setShowModal(true);
-        if(item.quantity<=2){
-          message.warning("This item is in Low Stock...");
-        }
+    if(item.quantity===0)
+    {
+      message.error("Out of Stock Cannot and this Item..")
+    }
+    else{
+      setShowModal(true);
+    }
+        
+       
   };
 
   const handleConfirmAddToBill = async (formData) => {
     const existingItemIndex = billItems.findIndex(existingItem => existingItem.productID === selectedItem.productID);
-
+  
     if (existingItemIndex === -1) {
       const itemToAdd = { ...formData, costPrice: selectedItem.costPrice, productID: selectedItem.productID };
-
-      // Create a new array with the added item
-      const newBillItems = [...billItems, itemToAdd];
-
+  
       try {
-        // Reduce the quantity in the `items` state
-        const updatedItems = items.map(item => {
-          if (item.productID === selectedItem.productID) {
-            return { ...item, quantity: item.quantity - formData.quantity };
-          }
-          return item;
+        // Make API call to reduce quantity in the database
+        const response = await axios.patch(`http://localhost:8000/item/update/${selectedItem._id}`, {
+          quantity: selectedItem.quantity - formData.quantity
         });
-
-        setBillItems(newBillItems);
-        setItems(updatedItems);
-        setFilteredItems(updatedItems.filter(
-          (row) =>
-            row.displayName.toLowerCase().includes(searchValue) ||
-            row.productID.toLowerCase().includes(searchValue)
-        ));
+  
+        if (response.data.success) {
+          // Update frontend state only if API call is successful
+          const updatedItems = items.map(item => {
+            if (item.productID === selectedItem.productID) {
+              const newQuantity = item.quantity - formData.quantity;
+              // Check the quantity and show warning message if necessary
+              if (newQuantity <= 2) {
+                message.warning("This item is in Low Stock...");
+              }
+              return { ...item, quantity: newQuantity };
+            }
+            return item;
+          });
+  
+          // Update billItems and items state
+          setBillItems([...billItems, itemToAdd]);
+          setItems(updatedItems);
+  
+          // Optionally update filteredItems state if needed
+          setFilteredItems(updatedItems.filter(
+            (row) =>
+              row.displayName.toLowerCase().includes(searchValue) ||
+              row.productID.toLowerCase().includes(searchValue)
+          ));
+  
+          // Show success message
+          message.success('Item quantity updated successfully.');
+        } else {
+          throw new Error('Failed to update item quantity in the database.');
+        }
+  
       } catch (error) {
         console.error('Error updating item quantity:', error.message);
+        message.error('Failed to update item quantity. Please try again.');
       }
-
-      setShowModal(false);
     } else {
-      message.warning('This item is already added to the bill');
-      setShowModal(false);
+      // Item already exists, show warning or handle as needed
+      message.warning("This item is already added to the bill.");
     }
+  
+    setShowModal(false);
   };
+  
+  
 
   //calculate  totlal qnt
   const calculateTotalQuantity = () => { return billItems.reduce((acc, item) => acc + parseInt(item.quantity), 0); };
@@ -298,7 +324,7 @@ const printAndCompleteSale = async () => {
     return;
   }
   //printout the bill
-  //handlePrint();
+  handlePrint();
   //store value to the daily sales table 
   await handleCompleteSale();
   //refresh the page
@@ -494,7 +520,9 @@ const handleConfirmDelete = () => {
       const updatedItems = items.map(item => {
         if (item.productID === updatedBillItems[editRowIndex].productID) {
           return { ...item, quantity: item.quantity - quantityDifference };
+
         }
+        
         return item;
       });
       
@@ -517,40 +545,42 @@ const handleConfirmDelete = () => {
     setShowEditModal(true);
   };
 
-  const handleCancelSale = () => {
-    window.location.reload();
+  const handleCancelSale = async () => {
+    
+      window.location.reload();
+     
   };
   
   return (
-    <div className='bill_container'>
-      <DefaultHandleSales> 
-        <div style={{ height: 'auto', overflow: 'auto' }} className='content'>
+    <div className='sales_bill_container'>
+      <DefaultHandleSales>
+        <div  style={{ display: '', height: '500px', overflow: 'auto' }} className='sales_content'>
           <div className='bill_container'>
             <div>
-              <div className='bill_table_container'>
+              <div className='sales_bill_table_container'>
                 <input placeholder='Search item' value={searchValue} onChange={filterItem} style={{width:'550px',marginBottom: '10px'}}/>
-                <div className='bill_table_wrapper'>
-                <table className='bill_table'>
+                <div className='sales_bill_table_wrapper'>
+                <table className='sales_bill_table'>
                   <thead>
                     <tr>
                       <th style={{ width: '10px' }}>Item ID</th>
                       <th style={{ width: '150px' }}>Item Name</th>
                       <th style={{ width: '20px' }}>Qnt</th>
-                      <th style={{ width: '40px' }}>Price</th>
-                      <th style={{ width: '40px' }}> Cost</th>
+                      <th style={{ width: '40px' }}>Price (LKR)</th>
+                      <th style={{ width: '40px' }}> Cost (LKR)</th>
                       <th style={{ width: '40px' }}>Action</th>
                     </tr>
                   </thead>
-                  <tbody>
+                  <tbody style={{border:'1px solid balck'}}>
                     {filteredItems.map((item, index) => (
-                      <tr key={index}>
-                        <td>{item.productID}</td>
+                      <tr style={{border:'1px solid balck'}} key={index}>
+                        <td style={{border:'1px solid balck'}}>{item.productID}</td>
                         <td>{item.displayName}</td>
                         <td>{item.quantity}</td>
                         <td>{formatNumber(item.sellingPrice)}</td>
                         <td>{formatNumber(item.costPrice)}</td>
                         <td>
-                          <button onClick={() => handleChange(item)}>Add</button>
+                          <button style={{width:'50px',padding:'1px 1px'}} onClick={() => handleChange(item)}>Add</button>
                         </td>
                       </tr>
                     ))}
@@ -560,17 +590,17 @@ const handleConfirmDelete = () => {
             </div>
           </div>
           </div>
-          <div className='print_bill' id='print_bill'>
-            <div className='searchcustomer'>
-              <input placeholder='Search customer' value={searchCustomerValue} onChange={filterCustomer} style={{marginBottom: '10px'}}/>
+          <div className='sales_print_bill' id='print_bill' style={{marginLeft:'-10px'}}>
+            <div className='sales_searchcustomer'>
+              <input placeholder='Search customer' value={searchCustomerValue} onChange={filterCustomer} style={{marginBottom: '20px'}}/>
               {searchCustomerValue && filteredCustomers.length > 0 && (
-                <div className='customer-list'>
+                <div className='sales_customer-list'>
                   {filteredCustomers.map((customer, index) => (
                     <div key={index} className='customer-item' onClick={() => handleCustomerItemClick(customer)}>
                       <table>
                         <tbody>
                           <tr>
-                            <td className='selectedcustomer'>
+                            <td className='sales_selectedcustomer'>
                               <span style={{ fontWeight: 'bold' }}>Name: {customer.name}</span><br />
                               <span>Address: {customer.address}</span>
                               <span style={{ marginLeft: '30px' }}>Mobile: {customer.mobile}</span>
@@ -583,19 +613,19 @@ const handleConfirmDelete = () => {
                 </div>
               )}
             </div>
-            <div className='printout'>
-              <form className='bill_form' id='bill_form'>
+            <div className='sales_printout'>
+              <form className='sales_bill_form' id='bill_form'>
                 <div>
                   <p style={{ textAlign: 'center', fontSize: 18, fontStyle: 'oblique' }}>Acconex Computers<br /></p>
-                  <p style={{ textAlign: 'center', fontSize: 11 }}>Kaburupitiya, Mathara.<br /> Mob; 0712293447 Tel: 0770897865</p>
+                  <p style={{ textAlign: 'center', fontSize: 11 }}>124/1/1, Anagarika Dharmapala MW, Matara<br /> Mob; 071-7314099  </p>
                   <hr />
-                  <div className="form-row">
-                    <div className="print_bill_label">
+                  <div className="sales_form-row">
+                    <div className="sales_print_bill_label">
                       <label style={{ fontSize: 12 }} htmlFor='invoice_no'>Invoice No:</label><br />
                       <label style={{ fontSize: 12 }} htmlFor='cashier'>Cashier:</label><br />
                       <label style={{ fontSize: 12 }} htmlFor='date'>Date:</label>
                     </div>
-                    <div className="print_bill_input">
+                    <div className="sales_print_bill_input">
                       <input type='text' style={{ fontSize: 12 }} id='invoice_no' className="input-no-border" value={invoiceNo} onChange={(e) => setInvoiceNo(e.target.value)} readOnly /><br />
                       <input type='text' style={{ fontSize: 12 }} id='cashier' className="input-no-border" value={cashier} onChange={(e) => setCashier(e.target.value)} readOnly /><br />
                       <input type='text' style={{ fontSize: 12 }} id='date' className="input-no-border" value={date} onChange={(e) => setDate(e.target.value)} readOnly />
@@ -604,14 +634,14 @@ const handleConfirmDelete = () => {
                 </div>
                 <hr />
                 <div>
-                  <table className='print_bill_table'>
+                  <table className='sales_print_bill_table'>
                     <thead>
                       <tr>
-                        <th style={{ width: '220px' }}>Product</th>
-                        <th>Price</th>
-                        <th>Qty</th>
-                        <th>Dis</th>
-                        <th>Amount</th>
+                        <th style={{ width: '180px' }}>Product</th>
+                        <th>Price (LKR)</th>
+                        <th  style={{ width: '10px' ,padding:'2px 2px 2px',textAlign:'center'}}>Qty</th>
+                        <th>Dis(LKR)</th>
+                        <th>Amount (LKR)</th>
                         <th>     </th>
                       </tr>
                     </thead>
@@ -621,7 +651,7 @@ const handleConfirmDelete = () => {
                           <td>{item.product}</td>
                           <td>{formatNumber(item.price)}</td>
                           <td>{item.quantity}</td>
-                          <td>{item.discount}</td>
+                          <td style={{textAlign:'center'}}>{item.discount}</td>
                           <td>{formatNumber(((item.price * item.quantity) - item.discount))}</td>
                           <td><Link onClick={() => handleRowClickToDelete(index)}>
                               <DeleteFilled />
@@ -635,7 +665,7 @@ const handleConfirmDelete = () => {
                   </table>
                 </div>
                 <hr />
-                <div className="form-row">
+                <div className="sales_form-row">
                   <div className="print_bill_label">
                     <label style={{ fontSize: 13 }} htmlFor='net_amount'>Net Amount:</label><br />
                     <label style={{ fontSize: 13 }} htmlFor='torent'>Tendered Amount:</label><br />
@@ -648,7 +678,7 @@ const handleConfirmDelete = () => {
                   </div>
                 </div>
                 <br />
-                <div className='payment-method-container'>
+                <div className='sales_payment-method-container'>
                   <div className="payment-method">
                     <input type='radio' name='paymentMethod' id='cash' checked={paymentMethod === 'cash'} value='cash' onChange={handleCashRadioChange} />
                     <label htmlFor='cash'>Cash</label>
@@ -686,11 +716,11 @@ const handleConfirmDelete = () => {
               formData={{ cusid: nextCustomerId }} // Pass the next customer ID
             />
           )}
-          <div className='bill_btn'>
-            <button className='complete_sale' onClick={printAndCompleteSale}>Complete Sell</button>
-            <button className='add_customer' onClick={handleAddCustomer}>Add Customer</button>
-            <button className='suspend_sale'onClick={handleSuspendSale}>Suspend Sale</button>
-            <button className='cancel_btn'onClick={handleCancelSale}>Cancel Sale</button>
+          <div className='sales_bill_btn'>
+            <button className='sales_complete_sale' onClick={printAndCompleteSale}>Complete Sell</button>
+            <button className='sales_add_customer' onClick={handleAddCustomer}>Add Customer</button>
+            <button className='sales_suspend_sale'onClick={handleSuspendSale}>Suspend Sale</button>
+            <button className='sales_cancel_btn'onClick={handleCancelSale}>Cancel Sale</button>
             
           </div>
         </div>

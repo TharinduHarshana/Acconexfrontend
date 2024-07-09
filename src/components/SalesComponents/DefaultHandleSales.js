@@ -53,7 +53,7 @@ const DefaultHandleSales = ({ children }) => {
             <Link to="/admin/dashboard">Back</Link>
           </Menu.Item>
           <Menu.Item key="/bill" icon={<FileDoneOutlined />}>
-            <Link to="/admin/bill">Bill</Link>
+            <Link to="/admin/sale">Bill</Link>
           </Menu.Item>
           <Menu.Item key="/admin/holdclose" icon={<ReconciliationOutlined />}>
             <Link to="/admin/holdbill">Suspend Sale</Link>

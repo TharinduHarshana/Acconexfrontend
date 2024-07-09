@@ -30,7 +30,7 @@ import Bill from './components/SalesComponents/Bill_components/Bill';
 import Customer from './components/CustomerComponents/Customer';
 import SuspendSale from './components/SalesComponents/SuspendSale';
 import Dailysales from './components/SalesComponents/Daily_sales';
-import SalesDachboad from './components/SalesComponents/DefaultHandleSales';
+import TotalSale from './components/SalesComponents/TotalSale';
 
 
 // import web components
@@ -130,6 +130,7 @@ function App() {
         <Route path='/admin/sale' element={<Bill/>}/>
         <Route path='/admin/holdbill' element={<SuspendSale/>}/>
         <Route path='/admin/dailysales' element={<Dailysales/>}/>
+        <Route path='/admin/totalsale' element={<TotalSale/>}/>
 
 
         <Route path='/admin/inventory' element={<InventoryHome/>}/>

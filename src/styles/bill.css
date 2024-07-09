@@ -1,8 +1,8 @@
-.content{
+.sales_content{
   display: flex;
   
 }
-.bill_container{
+.sales_bill_container{
   display: flex;
   margin: 0 auto;
 
@@ -10,17 +10,16 @@
 
 
 /*item table*/
-.bill_table{
+.sales_bill_table{
   width: 550px;
   background-color: rgb(238, 238, 238);
-  margin: 20px;
   border: 1px solid #c9c5c2; 
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); 
   border-radius: 5px;
   border-collapse: collapse; /* Ensures no gaps between table cells */
   
 }
-.bill_table_wrapper {
+.sales_bill_table_wrapper {
   max-height: 500px; /* Set the maximum height for the table body */
   overflow-y: auto; /* Enable vertical scrolling */
   margin: 0px auto 0 auto; 
@@ -28,13 +27,13 @@
  
 }
 
-.bill_table thead{
+.sales_bill_table thead{
   position: sticky;
   top: 0;
 }
 
 /*item table*/
-.bill_table thead tr th{
+.sales_bill_table thead tr th{
   background-color: rgb(11, 2, 51);
   color: aliceblue;
   padding :2% 10px;
@@ -44,7 +43,7 @@
 }
 
 /*item table*/
-.bill_table   tbody td{
+.sales_bill_table   tbody td{
   
   height: 200px  auto;
   padding: 5px 5px;
@@ -54,13 +53,13 @@
 }
 
 @media (max-width: 768px) {
-  .bill_table thead th, .bill_table tbody td {
+  .sales_bill_table thead th, .sales_bill_table tbody td {
     padding: 5px;
     font-size: 12px; /* Reduce font size for smaller screens */
   }
 }
 /*search item from the invetory*/
-.bill_table_container input{
+.sales_bill_table_container input{
   background-color: rgb(238, 238, 238);
   display: flex;
   flex-direction: column;
@@ -68,12 +67,11 @@
   border: 1px solid #c9c5c2; 
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); 
   border-radius: 5px;
-  
   width: 500px ;
 
 }
 /* Bill form container form styles */
-.print_bill form 
+.sales_print_bill form 
 {
   width: 525px;
   height: fit-content;
@@ -83,12 +81,11 @@
   padding: 20px 20px 1px;
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); 
   border-radius: 5px;
-  margin-top: 30px;
   max-height: 560px;
   overflow-y: auto;
 
 }
-.print_bill_table
+.sales_print_bill_table
 {
   border-color: #c9c5c2;
   width: 100%;
@@ -99,11 +96,11 @@
 }
 
 
-.print_bill_table thead tr th{
+.sales_print_bill_table thead tr th{
  background-color: rgb(11, 2, 51);
 color: aliceblue;
 }
-.print_bill_table tbody  td{
+.sales_print_bill_table tbody  td{
   height: 10px;
   padding: 2px 2px 2px;
   font-size: small;
@@ -112,14 +109,14 @@ font-weight: 500;
 
 /* Additional responsive styles */
 @media (max-width: 768px) {
-  .print_bill_table thead th, .print_bill_table tbody td {
+  .sales_print_bill_table thead th, .sales_print_bill_table tbody td {
     padding: 5px;
     font-size: 12px; /* Reduce font size for smaller screens */
   }
 }
 
 /*print bill - serach customer */
-.searchcustomer input {
+.sales_searchcustomer input {
   background-color: rgb(238, 238, 238);
   display: flex;
   flex-direction: column;
@@ -127,12 +124,11 @@ font-weight: 500;
   border: 1px solid #c9c5c2; 
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); 
   border-radius: 5px;
-  margin-top: 40px;
   width: 500px ;
 }
 
 /*print bill - serach customer */
-.customer-list{
+.sales_customer-list{
   width: 420px;
   background-color: rgb(11, 2, 51);
   border-color:rgb(11, 2, 51); ;
@@ -143,13 +139,13 @@ font-weight: 500;
   position: absolute;
 }
 /*print bill - serach customer */
-.customer-list table tbody tr td{
+.sales_customer-list table tbody tr td{
   width: 420px;
 
 }
 
 /* add item to the bill form */
-.modal-content{
+.sales_modal-content{
   width: 550px;
   background-color: rgb(238, 238, 238);
   display: flex;
@@ -165,18 +161,18 @@ font-weight: 500;
 }
 
 /* add item to the bill form */
-.modal-content input {
+.sales_modal-content input {
   font-size: 18px;
   padding: 5px;
   margin-top: 3px;
   margin-bottom: 10px;
 }
 /* add item to the bill form */
-.modal-content label {
+.sales_modal-content label {
   font-size: 15px;
 }
 
-.close-btn{
+.sales_close-btn{
   margin-left: auto;
   font-size: 18px;
   width: 20px;
@@ -187,7 +183,7 @@ font-weight: 500;
   cursor: pointer;
 }
 
-.btn{
+.sales_btn{
   background-color: rgb(11, 2, 51);
   color: white;
   border: none;
@@ -197,7 +193,7 @@ font-weight: 500;
   cursor: pointer;
   margin-top: 5px;
 }
-.form-row{
+.sales_form-row{
   justify-content: space-between;
   display: flex;
 }
@@ -209,10 +205,10 @@ font-weight: 500;
   text-align: right;
   background-color: rgb(238, 238, 238);
 }
-.complete_sale,
-.suspend_sale,
-.cancel_btn,
-.add_customer{
+.sales_complete_sale,
+.sales_suspend_sale,
+.sales_cancel_btn,
+.sales_add_customer{
   color: rgb(0, 0, 0);
   border: none;
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); 
@@ -224,26 +220,27 @@ font-weight: 500;
   margin-bottom: auto;
   height: 30px ;
   width: 120px;
+  font-size: 12px;
 }
-.complete_sale,
-.suspend_sale,
-.cancel_btn,
-.add_customer{
+.sales_complete_sale,
+.sales_suspend_sale,
+.sales_cancel_btn,
+.sales_add_customer{
   background-color: rgb(11, 2, 51);
   color: rgb(255, 255, 255);
 }
 
-.payment-method-container
+.sales_payment-method-container
 {
 
   display: flex;
   justify-content: space-around;
   
 }
-.popup
+.sales_popup
 {
-  width: 270px;
-  height: 150px;
+  width: 300px;
+  height: 200px;
   background-color: rgb(238, 238, 238);
   display: flex;
   flex-direction: column;
@@ -258,12 +255,13 @@ font-weight: 500;
   z-index: 2;
 }
 
-.popupbtnclose{
+.sales_popupbtnclose{
  margin-left: 40px;
 }
-.popupbtnok,
-.popupbtnclose{
-  color: rgb(0, 0, 0);
+.sales_popupbtnok,
+.sales_popupbtnclose{
+  color: rgb(255, 255, 255);
+  background-color: rgb(11, 2, 51);
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); 
   border-radius: 3px;
   font-style:oblique;
@@ -282,13 +280,13 @@ font-weight: 500;
   }
 
   /* Hide payment method radio buttons */
-  .payment-method-container {
+  .sales_payment-method-container {
     display: none;
   }
 
   /* Increase spacing between lines */
-  .print_bill_table td,
-  .print_bill_table th {
+  .sales_print_bill_table td,
+  .sales_print_bill_table th {
     padding: 10px 0; /* Increase vertical padding */
     line-height: 1.5; /* Increase line height */
   }

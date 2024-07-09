@@ -44,8 +44,8 @@ const BillForm = ({ handleClose, handleConfirmAddToBill, selectedItem}) => {
   };
 
   return (
-    <form className='modal-content' onSubmit={handleSubmit}>
-      <div className='close-btn' onClick={handleClose}>
+    <form className='sales_modal-content' onSubmit={handleSubmit}>
+      <div className='sales_close-btn' onClick={handleClose}>
         <CloseOutlined />
       </div>
 
@@ -61,7 +61,7 @@ const BillForm = ({ handleClose, handleConfirmAddToBill, selectedItem}) => {
       <label htmlFor='discount'>Discount:</label>
       <input type='text' id='discount' name='discount' value={formData.discount} onChange={handleChange}  />
 
-      <button className='btn' type='submit'>Add to Bill</button>
+      <button className='sales_btn' type='submit'>Add to Bill</button>
     </form>
   );
 };

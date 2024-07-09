@@ -47,6 +47,8 @@ import Services from './pages/WebServicesPage';
 import PaymentMethods from './pages/WebPaymentMethodPage'
 import ContactUs from './pages/WebContactUs';
 import ConfirmCODOrders from './pages/WebCODorders';
+import WebUserprofile from './pages/WebUserProfile';
+
 
 
 
@@ -88,6 +90,7 @@ function App() {
     <Route path ="/web/payment" element={<PaymentMethods/>} />
     <Route path ="/web/contact" element={<ContactUs/>} />
     <Route path ="admin/cashondelevery" element={<ConfirmCODOrders/>} />
+    <Route path ="/web/profile" element={<WebUserprofile/>} />
 
 
         

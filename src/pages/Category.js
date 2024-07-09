@@ -5,15 +5,19 @@ import DataTable from 'react-data-table-component';
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import DefaultHandle from '../components/DefaultHandle';
+import {EditFilled ,DeleteFilled } from '@ant-design/icons';
 
 const Categories = () => {
     const navigate = useNavigate();
   
-    // Define columns for the data table
+    const generateRandomNumber = () => {
+      return Math.floor(10000 + Math.random() * 90000); // Generates a random 5-digit number
+    };
+    
     const columns = [
       {
         name: 'Category ID',
-        selector: row => row._id,
+        selector: row => generateRandomNumber(), // Generates a different number for each row
         sortable: true
       },
       {
@@ -34,8 +38,9 @@ const Categories = () => {
         name: 'Actions',
         cell: (row) => (
           <div>
-            <Link to={`/updatecategory/${row._id}`}>Edit</Link>
-            <Link onClick={() => handleDelete(row._id)}>Delete</Link>
+            <Link to={`/updatecategory/${row._id}`}><EditFilled/></Link>
+            <span style={{ margin: "0 8px" }}></span>
+            <Link onClick={() => handleDelete(row._id)}><DeleteFilled/></Link>
           </div>
         ),
       },

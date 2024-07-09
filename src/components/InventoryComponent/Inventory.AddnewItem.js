@@ -75,6 +75,7 @@ const AddNewItem = () => {
         const categoriesResponse = await axios.get('http://localhost:8000/category/');
         const suppliersResponse = await axios.get('http://localhost:8000/supplier/get');
         setCategories(categoriesResponse.data.data);
+        console.log(categoriesResponse.data.data);
         setSuppliers(suppliersResponse.data.data);
         setLoading(false);
       } catch (error) {
@@ -156,17 +157,17 @@ const AddNewItem = () => {
         <form className='form'>
             <label className='label'>
               Display Name:
-              <input type="text"  placeholder="Cutting Wheel" onChange={(e) => setDisplayName(e.target.value)} value={displayName} required className='input' />
+              <input type="text"  placeholder="Desktop Computer" onChange={(e) => setDisplayName(e.target.value)} value={displayName} required className='input' />
             </label>
             <label className='label'> 
               Item Name:
-              <input type="text"  placeholder="Cutting Wheel 5''" onChange={(e) => setItemName(e.target.value)} value={itemName} required className='input' />
+              <input type="text"  placeholder="I3 10th GEN Desktop Computer" onChange={(e) => setItemName(e.target.value)} value={itemName} required className='input' />
             </label>
             <label>
               Description:
               <textarea
                   className="form-control"
-                  placeholder="Category Description"
+                  placeholder="Add Descripthion here... Like Processor : Intel Core i3 10th Gen"
                   onChange={(e) => setDescription(e.target.value)}
                   value={description}
                   style={{ height: '200px', width: '1000px' }} // Adjust the height and width as needed

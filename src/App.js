@@ -53,6 +53,7 @@ import AddNewCategory from "./components/CategoryComponents/Category.AddNewCateg
 
 
 
+
 function App() {
   return (
     <BrowserRouter>
@@ -103,6 +104,7 @@ function App() {
         <Route path='admin/category' element={<CategoryHome/>}/>
         <Route path='admin/addnewcategory' element={<AddNewCategory/>}/>
         <Route path='admin/inventory/update/:id' element={<InventoryUpdate/>}/>
+        
 
         
        {/* <Route path='/admin/sale' element={<SalesDachboad/>}/> */}

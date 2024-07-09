@@ -50,7 +50,7 @@ const DefaultHandleSales = ({ children }) => {
           onClick={handleMenuClick}
         >
           <Menu.Item key="home" icon={<RollbackOutlined />}>
-            <Link to="/admin/dashbord">Back</Link>
+            <Link to="/admin/dashboard">Back</Link>
           </Menu.Item>
           <Menu.Item key="/bill" icon={<FileDoneOutlined />}>
             <Link to="/admin/bill">Bill</Link>

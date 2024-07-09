@@ -523,8 +523,8 @@ const handleConfirmDelete = () => {
   
   return (
     <div className='bill_container'>
-      <DefaultHandleSales>
-        <div className='content'>
+      <DefaultHandleSales> 
+        <div style={{ height: 'auto', overflow: 'auto' }} className='content'>
           <div className='bill_container'>
             <div>
               <div className='bill_table_container'>

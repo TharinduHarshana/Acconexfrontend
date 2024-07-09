@@ -5,6 +5,7 @@ import Offcanvas from 'react-bootstrap/Offcanvas';
 import Table from 'react-bootstrap/Table';
 import { useNavigate } from 'react-router-dom';
 import { DeleteOutlined } from '@ant-design/icons';
+import Swal from 'sweetalert2';
 
 function DisplayCart({ show, handleClose }) {
   const [cartItems, setCartItems] = useState([]);
@@ -53,24 +54,45 @@ function DisplayCart({ show, handleClose }) {
   // Remove item from cart
   const removeItem = async (item_id) => {
     try {
-      const token = localStorage.getItem('token'); // Retrieve the token from local storage
-      const res = await axios.delete('http://localhost:8000/cart/delete', {
-        data: { item_id },
-        headers: {
-          'Authorization': `Bearer ${token}` // Include the token in the request headers
-        }
+      // Show confirmation dialog using SweetAlert2
+      const result = await Swal.fire({
+        title: 'Are you sure?',
+        text: 'Do you want to remove this item from your cart?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, remove it!',
+        cancelButtonText: 'No, keep it',
+        reverseButtons: true
       });
-      if (res.status === 200) {
-        console.log('Item removed from cart');
-        const updatedItems = cartItems.filter(item => item._id !== item_id);
-        setCartItems(updatedItems);
-        calculateTotal(updatedItems); // Recalculate total after removing an item
-        window.dispatchEvent(new Event('refreshPage')); // Trigger page refresh
+  
+      if (result.isConfirmed) {
+        const token = localStorage.getItem('token'); // Retrieve the token from local storage
+        const res = await axios.delete('http://localhost:8000/cart/delete', {
+          data: { item_id },
+          headers: {
+            'Authorization': `Bearer ${token}` // Include the token in the request headers
+          }
+        });
+        if (res.status === 200) {
+          console.log('Item removed from cart');
+          const updatedItems = cartItems.filter(item => item._id !== item_id);
+          setCartItems(updatedItems);
+          calculateTotal(updatedItems); // Recalculate total after removing an item
+          window.dispatchEvent(new Event('refreshPage')); // Trigger page refresh
+  
+          Swal.fire('Removed!', 'The item has been removed.', 'success');
+        } else {
+          Swal.fire('Error', 'There was an issue removing the item.', 'error');
+        }
+      } else {
+        Swal.fire('Cancelled', 'The item is safe :)', 'info');
       }
     } catch (err) {
       console.error(err);
+      Swal.fire('Error', 'Something went wrong!', 'error');
     }
   };
+  
 
   // Update cart quantity and price
   const updateCart = async (item_id, quantity, price) => {

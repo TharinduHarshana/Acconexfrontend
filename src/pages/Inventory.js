@@ -7,17 +7,13 @@ import Swal from 'sweetalert2';
 import DefaultHandle from '../components/DefaultHandle';
 import { Modal } from 'antd';
 import swal from 'sweetalert';
+import {EditFilled ,DeleteFilled } from '@ant-design/icons';
 
 const Items = () => {
   const navigate = useNavigate();
   const [isAccessDeniedVisible, setIsAccessDeniedVisible] = useState(false);
   // Assign Items
   const column = [
-    {
-      name: 'Product ID',
-      selector: (row) => row.productID,
-      sortable: true,
-    },
     {
       name: 'Display Name',
       selector: (row) => row.itemName,
@@ -54,12 +50,13 @@ const Items = () => {
           <Link
             to={`update/${row._id}`}
           >
-            Edit
+            <EditFilled/>
           </Link>
+          <span style={{ margin: "0 8px" }}></span>
           <Link
             onClick={(e) => handleDelete(row._id)}
           >
-            Delete
+            <DeleteFilled/>
           </Link>
         </div>
       ),
@@ -137,7 +134,7 @@ const Items = () => {
   // Data table and Display Items
   return (
     <DefaultHandle>
-      <div>
+      <div style={{ display: '', height: '500px', overflow: 'auto' }}>
         <div>
           <input type="text" className="input" placeholder="Search..." onChange={filterItem} />
         </div>

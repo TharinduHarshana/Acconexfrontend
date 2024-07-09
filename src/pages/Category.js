@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import DataTable from 'react-data-table-component';
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import DefaultHandle from '../components/DefaultHandle';
 
 const Categories = () => {
     const navigate = useNavigate();
@@ -91,7 +92,8 @@ const Categories = () => {
   
     // Render the component
     return (
-      <div>
+      <DefaultHandle>
+       <div style={{ display: '', height: '500px', overflow: 'auto' }}>
         <input type="text" className="input" placeholder="Search..." onChange={filterCategories} />
         <Link to="/admin/addnewcategory">
         <button style={newCategoryBtnStyle}>Add New Category</button>
@@ -103,6 +105,7 @@ const Categories = () => {
           selectableRows
         />
       </div>
+      </DefaultHandle>
     );
   };
   const newCategoryBtnStyle = {

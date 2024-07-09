@@ -37,7 +37,7 @@ function WebHomepage() {
                     {categories.map(category => (
                         <div className="col-md-3 mb-4" key={category._id}>
                             <Link to={`/web/${category.categoryname}`} className="category-link">
-                                <Card className="category-card">
+                                <Card className="category-card" >
                                     <div 
                                         className="category-card-img"
                                         style={{ backgroundImage: `url(${category.imageLink})` }}
@@ -66,8 +66,8 @@ function WebHomepage() {
                     <div className="col-md-3 mb-4" key={item._id}>
                         {/* Wrap the entire Card component with a Link component */}
                         <Link to={`/web/search/${item.displayName}`} className="product-link">
-                            <Card className="product-card">
-                                <Card.Img variant="top" src={item.imageLink} />
+                            <Card className="product-card" style={{height:'500px'}}>
+                                <Card.Img variant="top" src={item.imageLink} style={{height:'350px'}} />
                                 <Card.Body>
                                     <Card.Title>{item.displayName}</Card.Title>
                                     <Card.Text>

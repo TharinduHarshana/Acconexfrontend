@@ -28,10 +28,14 @@ const WebCategory = (props) => {
     fetchItems();
   }, [slug]);
 
-
-  //functon in save item to the cart 
+  // Function to handle adding item to the cart
   const handleAddToCart = async (item) => {
     try {
+      if (item.quantity === 0) {
+        message.error('This item cannot be added to the cart because it is out of stock.');
+        return;
+      }
+
       const token = localStorage.getItem('token'); // Retrieve the token from local storage
       const res = await axios.post('http://localhost:8000/cart/add', {
         Item_id: item._id,
@@ -44,15 +48,17 @@ const WebCategory = (props) => {
           'Authorization': `Bearer ${token}` // Include the token in the request headers
         }
       });
+
       if (res.status === 200) {
         message.success('Item added to cart');
       }
     } catch (error) {
-      console.error('Please Login/Regiater first', error);
-      message.error('Please Login/Regiater first');
+      console.error('Please Login/Register first', error);
+      message.error('Please Login/Register first');
     }
   };
 
+  // Function to show item details in modal
   const handleShowDetails = (item) => {
     setSelectedItem(item);
     setIsModalOpen(true);
@@ -62,9 +68,9 @@ const WebCategory = (props) => {
     <div>
       <div><WebHeader /></div>
       <div className='banner'>
-      <img src={Banner} alt='banner' style={{ width: '100%', height: '420px' }} />
+        <img src={Banner} alt='banner' style={{ width: '100%', height: '420px' }} />
       </div>
-      <div >
+      <div>
         <List
           grid={{ column: 3 }}
           dataSource={items}
@@ -74,7 +80,7 @@ const WebCategory = (props) => {
                 cover={<Image className='displaimg' alt="example" src={item.imageLink} />}
                 actions={[
                   <Button onClick={() => handleAddToCart(item)}>{<ShoppingCartOutlined />} Add to Cart</Button>,
-                  <Button onClick={() => handleShowDetails(item)} > Show More Details</Button>
+                  <Button onClick={() => handleShowDetails(item)}>Show More Details</Button>
                 ]}
               >
                 <Card.Meta

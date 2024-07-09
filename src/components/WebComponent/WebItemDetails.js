@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal } from 'antd';
+import { Modal, message } from 'antd';
 import { ShoppingCartOutlined } from '@ant-design/icons';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -19,11 +19,19 @@ const ItemDetails = ({ open, onClose, item, handleAddToCart }) => {
 
   const description = item && item.description ? parseDescription(item.description) : {};
 
+  const addToCart = (item) => {
+    if (item.quantity > 0) {
+      handleAddToCart(item);
+    } else {
+      message.error('This item cannot be added to the cart!');
+    }
+  };
+
   return (
     <Modal
       title={<div style={{ textAlign: 'center', fontSize:'25px' }}>{item ? item.itemName : ''}</div>}
       centered
-      open={open}
+      visible={open} // changed from open to visible as per Ant Design Modal prop
       onOk={onClose}
       onCancel={onClose}
       width={1500}
@@ -33,7 +41,6 @@ const ItemDetails = ({ open, onClose, item, handleAddToCart }) => {
         <div className="container">
           <div className="row">
             <div className="col-md-6">
-              
               <img src={item.imageLink} alt={item.itemName} className="img-thumbnail" />
               <h5 className="text-danger mt-3"><strong>Price: </strong> Rs. {item.sellingPrice}.00</h5>
             </div>
@@ -52,7 +59,7 @@ const ItemDetails = ({ open, onClose, item, handleAddToCart }) => {
                 </table>
               </div>
               <div className="mt-3">
-                <button className="btn btn-success mr-2" onClick={() => handleAddToCart(item)}>
+                <button className="btn btn-success mr-2" onClick={() => addToCart(item)}>
                   <ShoppingCartOutlined /> Add to Cart
                 </button>
                 <button className="btn btn-danger" onClick={onClose}>

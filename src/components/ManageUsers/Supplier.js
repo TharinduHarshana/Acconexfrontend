@@ -55,7 +55,9 @@ function Supplier() {
   const handleDelete = async (_id) => {
     try {
       // Send a DELETE request to delete the supplier with the specified ID
-      await axios.delete(`http://localhost:8000/supplier/delete/${_id}`);
+      await axios.delete(`http://localhost:8000/supplier/delete/${_id}`,{
+        withCredentials:true,
+      });
       // Update the suppliers state by filtering out the deleted supplier
       setSuppliers(suppliers.filter((supplier) => supplier._id !== _id));
       setFilterSupplier(

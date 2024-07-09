@@ -164,7 +164,6 @@ const AddNewItem = () => {
             </label>
             <label>
               Description:
-<<<<<<< Updated upstream
               <textarea
                   className="form-control"
                   placeholder="Category Description"
@@ -173,9 +172,6 @@ const AddNewItem = () => {
                   style={{ height: '200px', width: '1000px' }} // Adjust the height and width as needed
                 ></textarea>
 
-=======
-              <textarea className="form-control" placeholder="Category Description" onChange={(e) => setDescription(e.target.value)} value={description}></textarea>
->>>>>>> Stashed changes
             </label>
             <label className='label' >
               Product ID:

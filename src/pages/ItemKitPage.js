@@ -51,7 +51,7 @@ const ItemKit = () => {
         withCredentials:true,
       });
       setItemKit(itemKit.filter((itemKit) => itemKit._id !== _id));
-      setFilterKit(filterKit.filter((itemKit) => itemKit._id !== _id)); // Update filterKit as well
+      setFilterKit(filterKit.filter((itemKit) => itemKit._id !== _id)); 
       message.success("Item kit deleted successfully!");
     } catch (error) {
       console.error("Error deleting item kit:", error);

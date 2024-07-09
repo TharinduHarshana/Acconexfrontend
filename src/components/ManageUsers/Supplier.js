@@ -29,17 +29,9 @@ function Supplier() {
         setFilterSupplier(response.data.data);
         console.log(response.data); // Add this line to check the fetched data
       } catch (error) {
-        if (error.response && error.response.status === 403) {
-          setIsAccessDeniedVisible(true);
-        } else {
-          console.error("Error fetching suppliers:", error);
-          swal({
-            title: "Error",
-            text: "An error occurred while fetching suppliers.",
-            icon: "error",
-            button: "OK",
-          });
-        }
+        message.error("Error fetching suppliers:", error);
+        console.error("Error fetching suppliers:", error);
+        
       } finally {
         setLoading(false);
       }
@@ -68,18 +60,16 @@ function Supplier() {
       message.success("Supplier deleted successfully!");
     } catch (error) {
       if (error.response && error.response.status === 403) {
-        setIsAccessDeniedVisible(true);
+        setIsAccessDeniedVisible(true); // Show access denied modal for delete operation
       } else {
-        console.error("Error deleting suppliers:", error);
+        console.error("Error deleting supplier:", error);
         swal({
           title: "Error",
-          text: "An error occurred while can't permission to delete suppliers.",
+          text: "An error occurred while deleting the supplier.",
           icon: "error",
           button: "OK",
         });
       }
-      console.error("Error deleting supplier:", error);
-      message.error("An error occurred while deleting the supplier.");
     }
   };
 
@@ -219,7 +209,7 @@ function Supplier() {
             </button>,
           ]}
         >
-          <p>You do not have permission to view this page.</p>
+          <p>You do not have permission to delete this supplier.</p>
         </Modal>
       </DefaultHandle>
     </div>

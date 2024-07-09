@@ -10,7 +10,7 @@ import Logout from "./components/LoginComponents/Logout";
 import CreateUser from "./components/ManageUsers/CreateUser";
 import Users from "./components/ManageUsers/Users";
 import UpdateUser from "./components/ManageUsers/UpdateUser";
-import UpdateProfileForm from "./pages/UpdateProfile";
+
 
 //import customer and supplier components
 

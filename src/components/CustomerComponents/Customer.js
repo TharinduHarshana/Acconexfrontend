@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { message, Modal, Input } from "antd";
+import { message, Modal, Input, Button } from "antd";
 import DataTable from "react-data-table-component";
+import { CSVLink } from "react-csv";
 import DefaultHandle from "../DefaultHandle";
 import axios from "axios";
 import CustomerForm from "./customerForm";
@@ -33,13 +34,13 @@ function Customer() {
     fetchCustomers();
   }, []);
 
- // Generate next customer ID
- const generateNextCustomerId = (currentCustomerId) => {
-  const nextNumber = parseInt(currentCustomerId.substr(3)) + 1;
-  return `cus${nextNumber.toString().padStart(3, '0')}`;
-};
+  // Generate next customer ID
+  const generateNextCustomerId = (currentCustomerId) => {
+    const nextNumber = parseInt(currentCustomerId.substr(3)) + 1;
+    return `cus${nextNumber.toString().padStart(3, '0')}`;
+  };
 
-  //delete customer
+  // Delete customer
   const handleDelete = async (cusid) => {
     try {
       await axios.delete(`http://localhost:8000/customer/delete/${cusid}`);
@@ -51,7 +52,7 @@ function Customer() {
     }
   };
 
-  //delete confirmation masg
+  // Delete confirmation message
   const showDeleteConfirmation = (cusid) => {
     Modal.confirm({
       title: "Confirm Delete",
@@ -66,7 +67,6 @@ function Customer() {
   };
 
   const handleAddCustomer = () => {
-
     setShowForm(true);
     setEditingCustomer(null);
   };
@@ -80,7 +80,7 @@ function Customer() {
         return;
       }
 
-      //add new customer
+      // Add new customer
       const response = await axios.post("http://localhost:8000/customer/add", formData);
       if (response.data.success) {
         message.success(response.data.message);
@@ -94,13 +94,13 @@ function Customer() {
       message.error("An error occurred while submitting the form.");
     }
   };
-  
+
   const handleEditCustomer = (customer) => {
     setShowForm(true);
     setEditingCustomer(customer);
   };
 
-  //update customer details
+  // Update customer details
   const handleUpdate = async (formData) => {
     try {
       const response = await axios.patch(`http://localhost:8000/customer/update/${formData.cusid}`, formData);
@@ -118,7 +118,7 @@ function Customer() {
     }
   };
 
-  //search customer
+  // Search customer
   const filteredDataList = customers.filter(
     (row) =>
       row.name.toLowerCase().includes(searchValue.toLowerCase()) ||
@@ -129,22 +129,36 @@ function Customer() {
     setSearchValue(e.target.value);
   };
 
+  // Prepare data for CSV export
+  const prepareCsvData = () => {
+    return customers.map(customer => ({
+      cusid:customer.cusid,
+      name: customer.name,
+      address: customer.address,
+      mobile: customer.mobile.toString() // Convert mobile number to string
+    }));
+  };
 
   return (
     <div>
       <DefaultHandle>
-      <div style={{ marginBottom: "10px" }}>
-        <div style={{  display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        
-          <Input
-            placeholder="Search customer"
-            value={searchValue}
-            onChange={handleSearch}
-            style={{ marginBottom: "12px", width: "300px" }}/>
-          
-      
-            <Link to="#" onClick={handleAddCustomer}> Add Customer</Link>
+        <div style={{ marginBottom: "10px" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <Input
+              placeholder="Search customer"
+              value={searchValue}
+              onChange={handleSearch}
+              style={{ marginBottom: "12px", width: "300px" }}
+            />
+            <div>
+              <Button style={{ marginRight: "10px" }}>
+                <CSVLink data={prepareCsvData()} filename={"customers_report.csv"}>
+                  Export CSV
+                </CSVLink>
+              </Button>
+              <Link to="#" onClick={handleAddCustomer}> Add Customer</Link>
             </div>
+          </div>
         </div>
         
         <DataTable

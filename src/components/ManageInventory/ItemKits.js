@@ -483,61 +483,49 @@ function ItemKitsForm() {
       message.error("Please enter a valid quantity.");
       return;
     }
-  
+
     if (selectedQuantity > item.quantity) {
       message.error("Insufficient stock for this item.");
       return;
     }
-  
-    const existingItemIndex = formData.items.findIndex((i) => i._id === item._id);
-  
-    if (existingItemIndex !== -1) {
-      // Item already exists in the kit, update its quantity
-      const updatedItems = [...formData.items];
-      updatedItems[existingItemIndex].selectedQuantity += selectedQuantity;
-  
-      const updatedItemQuantities = [...formData.itemQuantity];
-      updatedItemQuantities[existingItemIndex] += selectedQuantity;
-  
-      const updatedPrice =
+
+    const itemIndex = formData.items.findIndex((i) => i._id === item._id);
+    if (itemIndex >= 0) {
+      const newItems = [...formData.items];
+      const newItemQuantities = [...formData.itemQuantity];
+      const oldSelectedQuantity = newItemQuantities[itemIndex];
+      const newSelectedQuantity = selectedQuantity;
+
+      newItemQuantities[itemIndex] = newSelectedQuantity;
+      const newPrice =
         formData.price +
-        item.sellingPrice * selectedQuantity;
-  
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        items: updatedItems,
-        itemQuantity: updatedItemQuantities,
-        price: updatedPrice,
-      }));
-    } else {
-      // Item is new in the kit, add it
-      const newItem = { ...item, selectedQuantity };
-      const newItems = [...formData.items, newItem];
-      const newItemQuantities = [...formData.itemQuantity, selectedQuantity];
-      const itemTotalPrice = item.sellingPrice * selectedQuantity;
-  
+        item.sellingPrice * (newSelectedQuantity - oldSelectedQuantity);
+
       setFormData((prevFormData) => ({
         ...prevFormData,
         items: newItems,
         itemQuantity: newItemQuantities,
+        price: newPrice,
+      }));
+    } else {
+      const itemTotalPrice = item.sellingPrice * selectedQuantity;
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        items: [...prevFormData.items, item],
+        itemQuantity: [...prevFormData.itemQuantity, selectedQuantity],
         price: prevFormData.price + itemTotalPrice,
       }));
     }
-  
-    // Update inventory items
+
     setInventoryItems(
       inventoryItems.map((i) =>
-        i._id === item._id
-          ? { ...i, quantity: i.quantity - selectedQuantity, selectedQuantity: "" }
-          : i
+        i._id === item._id ? { ...i, quantity: i.quantity - selectedQuantity, selectedQuantity: "" } : i
       )
     );
-  
+
     setSearchItem("");
   };
-  
-  
-  
+
   const checkIfItemKitIdExists = async (itemKitId) => {
     try {
       const response = await axios.get(

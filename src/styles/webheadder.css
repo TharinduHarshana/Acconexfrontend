@@ -1,0 +1,40 @@
+.main{
+    background-color: #030303;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+
+}
+.logoimg{
+    width: 200px;
+    height: 50px;
+    margin-left: 20px;
+}
+
+.heding1{
+    color: #ffffff;
+    display: inline-block;
+
+    line-height: 0.2;
+
+}
+
+.loginbtn{
+    background-color: #000000;
+    color: #fffefe;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    display: inline-block;
+    padding: 5px 10px;
+    
+}
+.header-container {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000; /* Ensure the header is above other content */
+    
+}

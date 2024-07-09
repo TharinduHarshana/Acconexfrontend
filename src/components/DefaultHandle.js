@@ -93,7 +93,7 @@ const DefaultHandle = ({ children }) => {
           onClick={handleMenuClick}
         >
           <Menu.Item key="dashboard" icon={<DashboardOutlined />}>
-            <Link to="admin/dashboard">Home</Link>
+            <Link to="/admin/dashbord">Home</Link>
           </Menu.Item>
 
           <Menu.SubMenu

@@ -164,7 +164,14 @@ const AddNewItem = () => {
             </label>
             <label>
               Description:
-              <textarea className="form-control" placeholder="Category Description" onChange={(e) => setDescription(e.target.value)} value={description}></textarea>
+              <textarea
+                  className="form-control"
+                  placeholder="Category Description"
+                  onChange={(e) => setDescription(e.target.value)}
+                  value={description}
+                  style={{ height: '200px', width: '1000px' }} // Adjust the height and width as needed
+                ></textarea>
+
             </label>
             <label className='label' >
               Product ID:

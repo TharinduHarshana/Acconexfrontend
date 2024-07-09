@@ -7,9 +7,11 @@ import BillForm from './bill_Form';
 import '../../../styles/print.css';
 import TenderedPopup from './TenderedPopup';
 import CustomerForm from "../../CustomerComponents/customerForm";
-import { message,Modal } from 'antd';
-import { useLocation } from 'react-router-dom';
+import { message,Modal} from 'antd'; 
 import printBill from './printBill'; 
+import { Link } from "react-router-dom";
+import {EditFilled ,DeleteFilled } from '@ant-design/icons';
+
 
 const Bill = () => {
   const [billItems, setBillItems] = useState([]);
@@ -36,9 +38,9 @@ const Bill = () => {
   const [nextCustomerId, setNextCustomerId] = useState('');
   const [deleteRowIndex, setDeleteRowIndex] = useState(null); // State to track the index of the row to delete
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false); 
-
-
-  const location = useLocation();
+  const [editRowIndex, setEditRowIndex] = useState(null); 
+  const [showEditModal, setShowEditModal] = useState(false); 
+  const [editQuantity, setEditQuantity] = useState(0); 
  
   useEffect(() => {
     // Fetch initial data
@@ -71,6 +73,7 @@ const Bill = () => {
         const lastCustomerId =customersResponse.data.data.length > 0 ? customersResponse.data.data[customersResponse.data.data.length - 1].cusid:'cus000';
         const nextCustomerId = generateNextCustomerId(lastCustomerId);
         setSelectedCustomerId(nextCustomerId);
+
         // Restore sale data if available
         const restoredSaleData = sessionStorage.getItem('restoredSale');
         if (restoredSaleData) {
@@ -105,6 +108,7 @@ const Bill = () => {
     };
     fetchData();
   
+    //get current date when resotre
     const currentDate = getCurrentDateTime();
     setDate(currentDate);
     setCashier('hiru');
@@ -123,6 +127,7 @@ const generateNextSuspendId = (currentSuspendId) => {
   return `sps${nextNumber.toString().padStart(3, '0')}`;
 };
 
+//generate the customer id
 const generateNextCustomerId = (currentCustomerId) => {
   const nextNumber = parseInt(currentCustomerId.substr(3)) + 1;
   return `cus${nextNumber.toString().padStart(3, '0')}`;
@@ -138,10 +143,11 @@ const generateNextCustomerId = (currentCustomerId) => {
       const calculateBalance = enteredAmount - calculatedTotal;
       setBalance(calculateBalance);
     }
-  }, [billItems, tendered]);
+  }, [billItems, tendered,invoiceNo]);
 
   
 
+  //get current date
   const getCurrentDateTime = () => {
     const date = new Date();
     const formattedDate = date.toISOString().slice(0, 10);
@@ -152,6 +158,8 @@ const generateNextCustomerId = (currentCustomerId) => {
     return `${formattedDate} ${formattedTime}`;
   };
 
+
+  //search item
   const filterItem = (event) => {
     const value = event.target.value.toLowerCase();
     setSearchValue(value);
@@ -163,33 +171,58 @@ const generateNextCustomerId = (currentCustomerId) => {
     setFilteredItems(filteredData);
   };
 
+  //check the quantity
   const handleChange = (item) => {
     setSelectedItem(item);
-    if(item.quantity<=2)
-      {
-        message.error('Cannot add this item , it is less quantity');
+        setShowModal(true);
+        if(item.quantity<=2){
+          message.warning("This item is in Low Stock...");
+        }
+  };
+
+  const handleConfirmAddToBill = async (formData) => {
+    const existingItemIndex = billItems.findIndex(existingItem => existingItem.productID === selectedItem.productID);
+
+    if (existingItemIndex === -1) {
+      const itemToAdd = { ...formData, costPrice: selectedItem.costPrice, productID: selectedItem.productID };
+
+      // Create a new array with the added item
+      const newBillItems = [...billItems, itemToAdd];
+
+      try {
+        // Reduce the quantity in the `items` state
+        const updatedItems = items.map(item => {
+          if (item.productID === selectedItem.productID) {
+            return { ...item, quantity: item.quantity - formData.quantity };
+          }
+          return item;
+        });
+
+        setBillItems(newBillItems);
+        setItems(updatedItems);
+        setFilteredItems(updatedItems.filter(
+          (row) =>
+            row.displayName.toLowerCase().includes(searchValue) ||
+            row.productID.toLowerCase().includes(searchValue)
+        ));
+      } catch (error) {
+        console.error('Error updating item quantity:', error.message);
       }
-    else{
-      setShowModal(true);
+
+      setShowModal(false);
+    } else {
+      message.warning('This item is already added to the bill');
+      setShowModal(false);
     }
-    
-  };
-  const handleConfirmAddToBill = (formData) => {
-    const itemToAdd = { ...formData, costPrice: selectedItem.costPrice, productID: selectedItem.productID }; // Include product ID here
-    setBillItems([...billItems, itemToAdd]);
-    setShowModal(false);
-  };
-  
-  
-  const calculateTotalQuantity = () => {
-    return billItems.reduce((acc, item) => acc + parseInt(item.quantity), 0);
   };
 
-  const calculateTotalCost = () => {
-    return billItems.reduce((acc, item) => acc + (item.costPrice*item.quantity), 0);
-};
-  
+  //calculate  totlal qnt
+  const calculateTotalQuantity = () => { return billItems.reduce((acc, item) => acc + parseInt(item.quantity), 0); };
 
+  //calculate cost of total
+  const calculateTotalCost = () => { return billItems.reduce((acc, item) => acc + (item.costPrice*item.quantity), 0);};
+  
+  
 //function for complete the sale
 const handleCompleteSale = async () => {
   try {
@@ -227,7 +260,7 @@ const handleCompleteSale = async () => {
     const response = await axios.post("http://localhost:8000/dailysales/add", data);
 
     if (response.data.success) {
-      message.success("Sale completed successfully and data saved to daily sales.");
+     message.success("Sales complete Successfully...")
 
       // Increment invoice number by 1 for the next sale
       const nextInvoiceNumber = generateNextInvoiceNumber(invoiceNo);
@@ -251,10 +284,40 @@ const handleCompleteSale = async () => {
   }
 };
 
+  
+//function for print tha bill
+const printAndCompleteSale = async () => {
+
+  if (!selectedCustomerName || !selectedCustomerId) {
+    message.warning('Please select or add a customer before complete the bill.');
+    return;
+  }
+
+  if (billItems.length === 0) {
+    message.warning('Please add items to the bill before complete the bill.');
+    return;
+  }
+  //printout the bill
+  //handlePrint();
+  //store value to the daily sales table 
+  await handleCompleteSale();
+  //refresh the page
+  window.location.reload();
+};
 
 //function for suspend sale
 const handleSuspendSale = async () => {
   try {
+
+    if (!selectedCustomerName || !selectedCustomerId) {
+      message.warning('Please select or add a customer before suspending the bill.');
+      return;
+    }
+
+    if (billItems.length === 0) {
+      message.warning('Please add items to the bill before suspending.');
+      return;
+    }
 
     const itemIds =billItems.map(item => item.productID).join(',');
     const itemNames =billItems.map(item => item.product).join(',');
@@ -292,23 +355,16 @@ const handleSuspendSale = async () => {
     }
     
   } catch (error) {
-    console.error("Error suspending sale:", error);
     message.error("An error occurred while suspending the sale. Please try again later.");
   }
   
-  window.location.reload();
 };
 
 const handlePrint = () => {
   printBill(invoiceNo, cashier, date, paymentMethod, billItems, total, tendered, balance,selectedCustomerName);
 };
 
-//function for print tha bill
-const printAndCompleteSale = async () => {
-  handlePrint();
-  await handleCompleteSale();
-  window.location.reload();
-};
+
 
  //add tendered amount
   const handleConfirmTendered = (tenderedAmount) => {
@@ -363,7 +419,6 @@ const printAndCompleteSale = async () => {
       setNextCustomerId(nextCustomerId);
       setShowForm(true);
     } catch (error) {
-      console.error('Error fetching customers:', error.message);
       message.error('Error fetching customer data.');
     }
   };
@@ -380,6 +435,7 @@ const printAndCompleteSale = async () => {
       if (response.data.success) {
         message.success(response.data.message);
         setShowForm(false);
+        window.location.reload();
       } else {
         message.error(response.data.message);
       }
@@ -389,33 +445,82 @@ const printAndCompleteSale = async () => {
     }
   };
 
-  // //print the bill
-  // const printBillForm = () => {
-  //   const printContents = document.getElementById('bill_form').innerHTML;
-  //   const originalContents = document.body.innerHTML;
-  //   document.body.innerHTML = printContents;
-  //   window.print();
-  //   document.body.innerHTML = originalContents;
-  // };
+   // Function to handle click on a row to delete
+const handleRowClickToDelete = (index) => {
+  setDeleteRowIndex(index);
+  setShowDeleteConfirmation(true);
+};
 
-    // Function to handle click on a row to delete
-  const handleRowClickToDelete = (index) => {
-    setDeleteRowIndex(index);
-    setShowDeleteConfirmation(true);
-  };
+const handleConfirmDelete = () => {
+  if (deleteRowIndex !== null) {
+    const itemToRemove = billItems[deleteRowIndex];
+    const updatedBillItems = billItems.filter((_, index) => index !== deleteRowIndex);
 
-  // Function to confirm delete action
-  const handleConfirmDelete = () => {
-    // Remove the row from billItems based on deleteRowIndex
-    const updatedBillItems = [...billItems];
-    updatedBillItems.splice(deleteRowIndex, 1);
+    // Update inventory in the `items` state
+    const updatedItems = items.map(item => {
+      if (item.productID === itemToRemove.productID) {
+        // Ensure the quantity is updated correctly
+        const newQuantity = Number(item.quantity) + Number(itemToRemove.quantity); // Convert to numbers and add
+        return { ...item, quantity: newQuantity };
+      }
+      return item;
+    });
+
     setBillItems(updatedBillItems);
-
-    // Reset deleteRowIndex and hide the confirmation modal
-    setDeleteRowIndex(null);
+    setItems(updatedItems);
+    setFilteredItems(updatedItems.filter(
+      (row) =>
+        row.displayName.toLowerCase().includes(searchValue) ||
+        row.productID.toLowerCase().includes(searchValue)
+    ));
     setShowDeleteConfirmation(false);
+    setDeleteRowIndex(null);
+
+    // Optionally show a success message
+    message.success('Item deleted successfully');
+  }
+};
+
+
+  const handleEditQuantity = async() => {
+    if (editRowIndex !== null) {
+      const updatedBillItems = [...billItems];
+      const oldQuantity = updatedBillItems[editRowIndex].quantity;
+      const newQuantity = editQuantity;
+      const quantityDifference = newQuantity - oldQuantity;
+      updatedBillItems[editRowIndex].quantity = newQuantity;
+
+      // Update inventory in the `items` state
+      const updatedItems = items.map(item => {
+        if (item.productID === updatedBillItems[editRowIndex].productID) {
+          return { ...item, quantity: item.quantity - quantityDifference };
+        }
+        return item;
+      });
+      
+      setBillItems(updatedBillItems);
+      setItems(updatedItems);
+      setFilteredItems(updatedItems.filter(
+        (row) =>
+          row.displayName.toLowerCase().includes(searchValue) ||
+          row.productID.toLowerCase().includes(searchValue)
+      ));
+      setShowEditModal(false);
+      setEditRowIndex(null);
+      setEditQuantity(0);
+    }
   };
 
+  const handleRowClickToEdit = (index) => {
+    setEditRowIndex(index);
+    setEditQuantity(billItems[index].quantity);
+    setShowEditModal(true);
+  };
+
+  const handleCancelSale = () => {
+    window.location.reload();
+  };
+  
   return (
     <div className='bill_container'>
       <DefaultHandleSales>
@@ -423,12 +528,13 @@ const printAndCompleteSale = async () => {
           <div className='bill_container'>
             <div>
               <div className='bill_table_container'>
-                <input placeholder='Search item' value={searchValue} onChange={filterItem} />
+                <input placeholder='Search item' value={searchValue} onChange={filterItem} style={{width:'550px',marginBottom: '10px'}}/>
+                <div className='bill_table_wrapper'>
                 <table className='bill_table'>
                   <thead>
                     <tr>
-                      <th style={{ width: '50px' }}>Item ID</th>
-                      <th style={{ width: '170px' }}>Item Name</th>
+                      <th style={{ width: '10px' }}>Item ID</th>
+                      <th style={{ width: '150px' }}>Item Name</th>
                       <th style={{ width: '20px' }}>Qnt</th>
                       <th style={{ width: '40px' }}>Price</th>
                       <th style={{ width: '40px' }}> Cost</th>
@@ -453,9 +559,10 @@ const printAndCompleteSale = async () => {
               </div>
             </div>
           </div>
+          </div>
           <div className='print_bill' id='print_bill'>
             <div className='searchcustomer'>
-              <input placeholder='Search customer' value={searchCustomerValue} onChange={filterCustomer} />
+              <input placeholder='Search customer' value={searchCustomerValue} onChange={filterCustomer} style={{marginBottom: '10px'}}/>
               {searchCustomerValue && filteredCustomers.length > 0 && (
                 <div className='customer-list'>
                   {filteredCustomers.map((customer, index) => (
@@ -476,7 +583,7 @@ const printAndCompleteSale = async () => {
                 </div>
               )}
             </div>
-            <div>
+            <div className='printout'>
               <form className='bill_form' id='bill_form'>
                 <div>
                   <p style={{ textAlign: 'center', fontSize: 18, fontStyle: 'oblique' }}>Acconex Computers<br /></p>
@@ -500,21 +607,28 @@ const printAndCompleteSale = async () => {
                   <table className='print_bill_table'>
                     <thead>
                       <tr>
-                        <th>Product</th>
+                        <th style={{ width: '220px' }}>Product</th>
                         <th>Price</th>
-                        <th >Qty</th>
-                        <th>Discount</th>
+                        <th>Qty</th>
+                        <th>Dis</th>
                         <th>Amount</th>
+                        <th>     </th>
                       </tr>
                     </thead>
                     <tbody>
                       {billItems.map((item, index) => (
-                        <tr key={index}onClick={() => handleRowClickToDelete(index)}>
+                        <tr >
                           <td>{item.product}</td>
                           <td>{formatNumber(item.price)}</td>
                           <td>{item.quantity}</td>
                           <td>{item.discount}</td>
                           <td>{formatNumber(((item.price * item.quantity) - item.discount))}</td>
+                          <td><Link onClick={() => handleRowClickToDelete(index)}>
+                              <DeleteFilled />
+                            </Link>
+                            <Link onClick={() => handleRowClickToEdit(index)}>
+                                <EditFilled />
+                             </Link></td>
                         </tr>
                       ))}
                     </tbody>
@@ -576,6 +690,7 @@ const printAndCompleteSale = async () => {
             <button className='complete_sale' onClick={printAndCompleteSale}>Complete Sell</button>
             <button className='add_customer' onClick={handleAddCustomer}>Add Customer</button>
             <button className='suspend_sale'onClick={handleSuspendSale}>Suspend Sale</button>
+            <button className='cancel_btn'onClick={handleCancelSale}>Cancel Sale</button>
             
           </div>
         </div>
@@ -584,9 +699,22 @@ const printAndCompleteSale = async () => {
               visible={showDeleteConfirmation}
               onOk={handleConfirmDelete}
               onCancel={() => setShowDeleteConfirmation(false)}
-            >
+              
+              >
               <p>Are you sure you want to remove this item?</p>
             </Modal>
+              <Modal
+              visible={showEditModal}
+              onCancel={() => setShowEditModal(false)}
+              onOk={handleEditQuantity}
+              title="Edit Quantity?"
+            >
+  <div>
+    <label>Quantity:</label>
+    <input type='number' value={editQuantity} onChange={(e) => setEditQuantity(e.target.value)} />
+  </div>
+</Modal>
+
       </DefaultHandleSales>
    
     </div>

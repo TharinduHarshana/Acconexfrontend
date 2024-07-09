@@ -8,6 +8,7 @@ import DataTable from "react-data-table-component";
 import { Input, Modal, Button ,message} from "antd";
 import '../../styles/suspendsale.css';
 import { Link } from "react-router-dom";
+import {DeleteFilled } from '@ant-design/icons';
 
 function SuspendSale() {
   const [suspendSale, setSuspendSale] = useState([]);
@@ -15,10 +16,12 @@ function SuspendSale() {
   const [searchValue, setSearchValue] = useState("");
   const [selectedSale, setSelectedSale] = useState(null);
   const navigate = useNavigate();
+
   const fetchSuspendSale = async () => {
     try {
       const response = await axios.get('http://localhost:8000/suspendsale/');
-      setSuspendSale(response.data.data); // Adjust this line based on actual response structure
+      const sortedData = response.data.data.sort((a,b) =>new Date(b.Date) - new Date(a.Date));
+      setSuspendSale(sortedData); // Adjust this line based on actual response structure
     } catch (error) {
       console.log('Error Fetching Data', error);
     }
@@ -138,7 +141,7 @@ function SuspendSale() {
                 <Link 
                   onClick={() => showDeleteConfirmation(row.suspend_id)}
                 >
-                  Delete
+                  <DeleteFilled/>
                 </Link>
               )
             }

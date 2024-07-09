@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import DataTable from 'react-data-table-component';
 import DefaultHandle from '../components/DefaultHandle';
@@ -6,11 +6,13 @@ import { Link } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
+import swal from 'sweetalert';
 
 function WebCODorders() {
     const [orderDetails, setOrderDetails] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [trackingCode, setTrackingCode] = useState('');
+    const [isAccessDeniedVisible, setIsAccessDeniedVisible] = useState(false);
 
     useEffect(() => {
         getCodConfirmOrders();
@@ -18,10 +20,22 @@ function WebCODorders() {
 
     const getCodConfirmOrders = async () => {
         try {
-            const res = await axios.get('http://localhost:8000/cart/codOrders');
+            const res = await axios.get('http://localhost:8000/cart/codOrders', {
+                withCredentials: true,
+            });
             setOrderDetails(res.data);
         } catch (err) {
             console.error(err);
+            if (err.response && err.response.status === 403) {
+                setIsAccessDeniedVisible(true);
+            } else {
+                swal({
+                    title: "Error",
+                    text: "An error occurred while fetching COD orders.",
+                    icon: "error",
+                    button: "OK",
+                });
+            }
         }
     };
 
@@ -143,6 +157,24 @@ function WebCODorders() {
                     </Button>
                     <Button variant="primary" onClick={handleModalConfirm}>
                         Save Changes
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+            <Modal
+                title="Access Denied!"
+                show={isAccessDeniedVisible}
+                onHide={() => setIsAccessDeniedVisible(false)}
+                centered
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title>Access Denied!</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <p>You do not have permission to view this page.</p>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setIsAccessDeniedVisible(false)}>
+                        OK
                     </Button>
                 </Modal.Footer>
             </Modal>

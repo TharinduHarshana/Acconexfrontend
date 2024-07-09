@@ -93,7 +93,7 @@ function App() {
        {/* admin routing path */}
         <Route path="/admin" element={<Login/>} />
         <Route path="admin/logout" element={<Logout/>}/>
-        <Route path="/admin/dashbord" element={< Dashboard/>} />
+        <Route path="/admin/dashboard" element={< Dashboard/>} />
         <Route path="/admin/userform" element={<CreateUserForm/>} />
         <Route path="/admin/userform/update/:id" element={<UpdateUser />} />
         <Route path="/admin/userTable" element={<Users />} />

@@ -1,3 +1,4 @@
+import logo from  '../../../images/icon.jpg'
 const printBill = (invoiceNo, cashier, date, paymentMethod, billItems, total, tendered, balance,customerName) => {
     // Validate and escape inputs to prevent HTML injection
     const escapeHtml = (unsafe) => {
@@ -10,12 +11,15 @@ const printBill = (invoiceNo, cashier, date, paymentMethod, billItems, total, te
     };
   
     const formatCurrency = (amount) => {
-        if (typeof amount === 'number') {
-            return `Rs ${amount.toFixed(2)}`;
-        } else {
-            return 'Invalid amount';
-        }
-    };
+      if (typeof amount === 'number') {
+          return `Rs ${amount.toFixed(2)}`;
+      } else {
+          return 'Invalid amount';
+      }
+  };
+
+  // Convert tendered amount to a number if it's not already
+  tendered = Number(tendered);
     
     // Construct the bill content
     let billContent = `
@@ -101,7 +105,7 @@ const printBill = (invoiceNo, cashier, date, paymentMethod, billItems, total, te
         <body>
           <div class="bill-container">
             <div class="bill-header">
-              <img src="/images/icon.jpg" alt="Acconex Computers Logo">
+              <img src="${logo}" alt="Acconex Computers Logo">
               <h1>Acconex Computers</h1>
               <p style={{ textAlign: 'center', fontSize: 11 }} >Kaburupitiya, Mathara.</p>
               <p>Tel: 0913454226 | Mob: 0765672636</p>
@@ -164,7 +168,6 @@ const printBill = (invoiceNo, cashier, date, paymentMethod, billItems, total, te
   
     // Open the print window
     const printWindow = window.open('', '_blank');
-    printWindow.document.open();
     printWindow.document.write(billContent);
     printWindow.document.close();
     printWindow.print();

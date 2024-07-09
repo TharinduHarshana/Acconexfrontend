@@ -64,6 +64,10 @@ import UserProfile from "./components/ManageUsers/UserProfile";
 
 
 
+import Logout from "./components/LoginComponents/Logout";
+import ItemKit from "./pages/ItemKitPage";
+import ItemKitsForm from "./components/ManageInventory/ItemKits";
+import Inventory from './components/InventoryComponent/Inventory.AddnewItem';
 
 function App() {
 
@@ -130,6 +134,7 @@ function App() {
         <Route path='/admin/sale' element={<Bill/>}/>
         <Route path='/admin/holdbill' element={<SuspendSale/>}/>
         <Route path='/admin/dailysales' element={<Dailysales/>}/>
+        <Route path="/admin/totalsale" element={<TotalSale/>}/>
 
 
         <Route path='/admin/inventory' element={<InventoryHome/>}/>

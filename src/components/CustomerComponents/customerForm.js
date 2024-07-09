@@ -4,7 +4,7 @@ import "../../styles/customer.css";
 import { message } from 'antd';
 
 
-const CustomerForm = ({ handleSubmit, handleClose, formData = {}, editing, handleUpdate }) => {
+const CustomerForm = ({ handleSubmit, handleClose, formData = {}, editing, }) => {
   const [mobileError, setMobileError] = useState('');
   const [customerData, setCustomerData] = useState({
     cusid: formData.cusid || '',
@@ -26,6 +26,7 @@ const CustomerForm = ({ handleSubmit, handleClose, formData = {}, editing, handl
     });
   };
 
+  //handle the mobile error
   const handleMobileChange = (e) => {
     let { value } = e.target;
     // Remove non-numeric characters
@@ -39,13 +40,11 @@ const CustomerForm = ({ handleSubmit, handleClose, formData = {}, editing, handl
     } else {
       setMobileError('');
     }
-
     // Truncate the value if it exceeds 10 digits
     if (value.length > 10) {
       value = value.slice(0, 10);
      
     }
-
     // Update the form data
     setCustomerData({
       ...customerData,
@@ -53,8 +52,10 @@ const CustomerForm = ({ handleSubmit, handleClose, formData = {}, editing, handl
     });
   };
 
+
+  //validate form(check empty)
   const validateForm = () => {
-    if (!customerData.cusid || !customerData.name || !customerData.address || !customerData.mobile) {
+    if (!customerData.cusid || !customerData.name || !customerData.address || !customerData.mobile ) {
       message.error('Please fill in all the required fields.');
       return false;
     }
@@ -91,6 +92,8 @@ const CustomerForm = ({ handleSubmit, handleClose, formData = {}, editing, handl
 
         <label htmlFor='mobile'>Contact NO :</label>
         <input type='tel' id='mobile' name='mobile' onChange={handleMobileChange} value={customerData.mobile} maxLength={10} minLength={10}  pattern='[0-9]+' title='Only numbers are allowed' />
+       
+
         {mobileError && <p className="error">{mobileError}</p>}
 
         <button className='btn'>Submit</button>

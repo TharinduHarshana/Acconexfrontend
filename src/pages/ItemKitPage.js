@@ -46,7 +46,9 @@ const ItemKit = () => {
 
   const handleDelete = async (_id) => {
     try {
-      await axios.delete(`http://localhost:8000/itemkit/delete/${_id}`);
+      await axios.delete(`http://localhost:8000/itemkit/delete/${_id}`,{
+        withCredentials:true,
+      });
       setItemKit(itemKit.filter((itemKit) => itemKit._id !== _id));
       setFilterKit(filterKit.filter((itemKit) => itemKit._id !== _id)); // Update filterKit as well
       message.success("Item kit deleted successfully!");

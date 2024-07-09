@@ -82,7 +82,7 @@ const SalesReport = () => {
           <p>No data available for the selected month.</p>
         </Card>
       )}
-     
+      
     </div>
     </DefaultHandle> 
     </>

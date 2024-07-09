@@ -1,16 +1,24 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import DataTable from "react-data-table-component";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { Modal, message, Space } from "antd";
 import DefaultHandle from "../components/DefaultHandle";
-import { message, Modal, Space } from "antd";
+ import "../styles/accessmodal.css"
+import swal from 'sweetalert';
 
 const ItemKit = () => {
   const [itemKit, setItemKit] = useState([]);
   const [filterKit, setFilterKit] = useState([]);
+  const [isHovered, setIsHovered] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [isAccessDeniedVisible, setIsAccessDeniedVisible] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const loadItemKit = async () => {
+      setLoading(true);
       try {
         const response = await axios.get("http://localhost:8000/itemkit/all", {
           withCredentials: true,
@@ -18,15 +26,29 @@ const ItemKit = () => {
         setItemKit(response.data.data);
         setFilterKit(response.data.data); // Initialize filterKit with fetched data
       } catch (error) {
-        console.error("Error Fetching item kit: ", error);
+        if (error.response && error.response.status === 403) {
+          setIsAccessDeniedVisible(true);
+        } else {
+          console.error("Error fetching item kit:", error);
+          swal({
+            title: "Error",
+            text: "An error occurred while fetching item kits.",
+            icon: "error",
+            button: "OK",
+          });
+        }
+      } finally {
+        setLoading(false);
       }
     };
     loadItemKit();
-  }, []);
+  }, [navigate]);
 
   const handleDelete = async (_id) => {
     try {
-      await axios.delete(`http://localhost:8000/itemkit/delete/${_id}`);
+      await axios.delete(`http://localhost:8000/itemkit/delete/${_id}`,{
+        withCredentials:true,
+      });
       setItemKit(itemKit.filter((itemKit) => itemKit._id !== _id));
       setFilterKit(filterKit.filter((itemKit) => itemKit._id !== _id)); // Update filterKit as well
       message.success("Item kit deleted successfully!");
@@ -76,77 +98,111 @@ const ItemKit = () => {
       sortable: true,
     },
     {
+      name: "Quantity",
+      selector: (row) => row.kitQuantity,
+      sortable: true,
+    },
+    {
+      name: "Price (LKR)",
+      selector: (row) => row.price,
+      sortable: true,
+    },
+    {
       name: "Actions",
       cell: (row) => (
         <div>
-          <Link to={`/admin/inventory/kits/update/${row._id}`}>Edit</Link>
-          <span style={{ margin: "0 8px" }}>|</span>
           <Link onClick={() => showDeleteConfirmation(row._id)}>Delete</Link>
         </div>
       ),
     },
   ];
 
+  const closeModal = () => {
+    setIsAccessDeniedVisible(false);
+    navigate("/admin/dashboard");
+  };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   return (
-    <>
-      <DefaultHandle>
-        <div style={{ marginBottom: "10px" }}>
-          <div
+    <DefaultHandle>
+      <div style={{ marginBottom: "10px" }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <input
+            type="text"
+            placeholder="Search item kit..."
+            onChange={filterKits}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
             style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
+              marginBottom: "12px",
+              width: "300px",
+              padding: "5px",
+              border: isHovered ? "1px solid black" : "1px solid #ccc",
+              borderRadius: "5px",
+              transition: "border-color 0.3s",
             }}
-          >
-            <input
-              style={{ marginBottom: "12px", width: "200px" }}
-              type="text"
-              className="input"
-              placeholder="Search item kit..."
-              onChange={filterKits}
-            />
-          </div>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "flex-end",
-              alignItems: "center",
-              marginBottom: "25px",
-            }}
-          >
-            <Space size={12}></Space>
-            <Link to={"/admin/inventory/kits/add"} style={{ fontSize: "16px" }}>
-              New Item Kit
-            </Link>
-          </div>
-
-          <div
-            style={{
-              fontSize: "14px",
-              boxShadow: "5px 5px 10px rgba(0, 0, 0, 0.2)", 
-              fontWeight: "bold",
-              marginBottom: "20px",
-              border: "1px solid #c9c5c2",
-              borderRadius: "10px", // Adjust the value as needed
-              padding: "5px ",
-              marginLeft:"5px",
-              textAlign:"center",
-              width:"100px"
-            }}
-          >
-            Total Kit {itemKit.length}
-          </div>
-
-          <DataTable
-            columns={columns}
-            data={filterKit}
-            selectableRows
-            fixedHeader
-            pagination
           />
         </div>
-      </DefaultHandle>
-    </>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            alignItems: "center",
+            marginBottom: "25px",
+          }}
+        >
+          <Space size={12}></Space>
+          <Link to={"/admin/inventory/kits/add"} style={{ fontSize: "14px" }}>
+            New Item Kit
+          </Link>
+        </div>
+
+        <div
+          style={{
+            fontSize: "14px",
+            boxShadow: "5px 5px 10px rgba(0, 0, 0, 0.2)",
+            marginBottom: "20px",
+            border: "1px solid #c9c5c2",
+            borderRadius: "10px",
+            padding: "5px 10px",
+            marginLeft: "5px",
+            textAlign: "center",
+            width: "100px",
+          }}
+        >
+          Total Kit {itemKit.length}
+        </div>
+
+        <DataTable
+          columns={columns}
+          data={filterKit}
+          selectableRows
+          fixedHeader
+          pagination
+        />
+      </div>
+      <Modal
+        title="Access Denied!"
+        visible={isAccessDeniedVisible}
+        onCancel={closeModal}
+        footer={[
+          <button onClick={closeModal} key="back">
+            OK
+          </button>,
+        ]}
+      >
+        <p>You do not have permission to view this page.</p>
+      </Modal>
+    </DefaultHandle>
   );
 };
 

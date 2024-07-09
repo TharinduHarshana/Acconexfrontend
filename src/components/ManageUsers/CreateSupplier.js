@@ -1,5 +1,5 @@
-import { Form, Input, message, Button, Row, Col } from "antd";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { message } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 import DefaultHandle from "../DefaultHandle";
 import axios from "axios";
@@ -8,6 +8,8 @@ import "../../styles/supplierform.css";
 
 const CreateSupplierForm = () => {
   const navigate = useNavigate();
+
+  // State for supplier data and form validation
   const [supplierData, setSupplierData] = useState({
     supplierId: "",
     firstName: "",
@@ -15,6 +17,8 @@ const CreateSupplierForm = () => {
     phoneNumber: "",
     email: "",
   });
+
+  // State for phone number validation error
   const [phoneError, setPhoneError] = useState("");
 
   // Function to handle phone number input change and validation
@@ -28,20 +32,50 @@ const CreateSupplierForm = () => {
       setPhoneError("Please enter only numbers and a maximum of 10 digits");
     }
   };
-  const checkSupplierIdExists = async (supplierId) => {
+
+  // Function to fetch the latest Supplier ID and generate the next one
+  useEffect(() => {
+    fetchLatestSupplierId();
+  }, []);
+
+  const fetchLatestSupplierId = async () => {
     try {
-      const response = await axios.get(
-        `http://localhost:8000/supplier/check/${supplierId}`
-      );
-      return response.data.exists;
+      const response = await axios.get("http://localhost:8000/supplier/get",{
+        withCredentials:true,
+      });
+      const lastSupplierId =
+        response.data.data.length > 0
+          ? response.data.data[response.data.data.length - 1].supplierId
+          : "sup000";
+      const nextSupplierId = generateNextSupplierId(lastSupplierId);
+      setSupplierData((prevData) => ({
+        ...prevData,
+        supplierId: nextSupplierId,
+      }));
     } catch (error) {
-      console.error("Error checking if supplier ID exists:", error);
-      return false; // Or handle the error appropriately
+      console.error("Error fetching latest supplier ID:", error);
+      message.error("Failed to fetch latest supplier ID.");
     }
   };
+
+  const generateNextSupplierId = (currentSupplierId) => {
+    const prefix = "sup";
+    const numericPart = currentSupplierId.substring(prefix.length);
+    const nextNumber = parseInt(numericPart, 10) + 1;
+
+    // Ensure the next number is a valid number
+    if (isNaN(nextNumber)) {
+      console.error("Invalid supplier ID format:", currentSupplierId);
+      return `${prefix}001`;
+    }
+
+    return `${prefix}${nextNumber.toString().padStart(3, "0")}`;
+  };
+
   // Function to handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     // Check if all fields are filled
     const allFieldsFilled = Object.values(supplierData).every(
       (field) => field.trim() !== ""
@@ -51,60 +85,60 @@ const CreateSupplierForm = () => {
       message.error("All fields are required.");
       return;
     }
-    const supplierIdExists = await checkSupplierIdExists(
-      supplierData.supplierId
-    );
-    if (supplierIdExists) {
-      message.error(
-        "Supplier with this ID already exists!, Try another Supplier Id"
-      );
-      return;
-    }
-    axios
-      .post("http://localhost:8000/supplier/add", supplierData)
-      .then((result) => {
-        console.log(result);
-        message.success("Supplier add successful!");
-        navigate("/admin/supplier");
-      })
-      .catch((err) => {
-        if (err.response && err.response.status === 401) {
-          message.error("Supplier with this supplierID already exists!");
-        } else {
-          console.error("Error adding supplier:", err);
-          message.error("An error occurred while adding supplier.");
+
+    try {
+      const result = await axios.post(
+        "http://localhost:8000/supplier/add",
+        supplierData,{
+          withCredentials:true,
         }
-      });
+      );
+      if (result.data.success) {
+        message.success("Supplier added successfully!");
+        navigate("/admin/supplier");
+      } else {
+        message.error(result.data.message || "Failed to add supplier.");
+      }
+    } catch (error) {
+      console.error("Error adding supplier:", error);
+      message.error("An error occurred while adding supplier.");
+    }
   };
+
   // Function to handle close button click
   const handleCloseButtonClick = () => {
-    // Navigate to the home page
     navigate("/admin/supplier");
   };
+
   return (
-    <>
-      <DefaultHandle>
-        <div className="form_addContainer">
-          <Form>
-            <div className="close-btn" onClick={handleCloseButtonClick}>
-              <CloseOutlined />
-            </div>
-            <span style={{ color: "red", fontSize: "12px" }}>
-              (All fields are required )
-            </span>
-            <label htmlFor="supplierId">Supplier Id</label>
-            <Input
+    <DefaultHandle>
+      <div className="form_addContainer">
+        <form onSubmit={handleSubmit}>
+          <div className="close-btn" onClick={handleCloseButtonClick}>
+            <CloseOutlined />
+          </div>
+          <span style={{ color: "red", fontSize: "12px" }}>
+            (All fields are required )
+          </span>
+          <div>
+            <label htmlFor="supplierId">Supplier Id</label><br></br>
+            <input
               type="text"
               id="supplierId"
               name="supplierId"
               value={supplierData.supplierId}
               onChange={(e) =>
-                setSupplierData({ ...supplierData, supplierId: e.target.value })
+                setSupplierData({
+                  ...supplierData,
+                  supplierId: e.target.value,
+                })
               }
               required
             />
-            <label htmlFor="firstName">First Name</label>
-            <Input
+          </div>
+          <div>
+            <label htmlFor="firstName">First Name</label><br></br>
+            <input
               type="text"
               id="firstName"
               name="firstName"
@@ -114,8 +148,10 @@ const CreateSupplierForm = () => {
               }
               required
             />
-            <label htmlFor="companyName">Company Name</label>
-            <Input
+          </div>
+          <div>
+            <label htmlFor="companyName">Company Name</label><br/>
+            <input
               type="text"
               id="companyName"
               name="companyName"
@@ -128,17 +164,22 @@ const CreateSupplierForm = () => {
               }
               required
             />
-            <label htmlFor="phoneNumber">Phone Number</label>
-            <Input
-              type="tel"
+          </div>
+          <div>
+            <label htmlFor="phoneNumber">Phone Number</label><br/>
+            <input
+              type="text"
               id="phoneNumber"
               name="phoneNumber"
               value={supplierData.phoneNumber}
               onChange={handlePhoneChange}
               required
             />
-            <label htmlFor="email">Email</label>
-            <Input
+            {phoneError && <span style={{ color: "red" }}>{phoneError}</span>}
+          </div>
+          <div>
+            <label htmlFor="email">Email</label><br/>
+            <input
               type="email"
               id="email"
               name="email"
@@ -148,13 +189,13 @@ const CreateSupplierForm = () => {
               }
               required
             />
-            <Button type="submit" onClick={handleSubmit}>
-              Save
-            </Button>
-          </Form>
-        </div>
-      </DefaultHandle>
-    </>
+          </div>
+          <div>
+            <button type="submit">Save</button>
+          </div>
+        </form>
+      </div>
+    </DefaultHandle>
   );
 };
 

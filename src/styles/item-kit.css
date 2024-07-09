@@ -1,29 +1,40 @@
 .item_kits form {
   width: 350px;
-  height: 400px;
   background-color: rgb(238, 238, 238);
   display: flex;
   flex-direction: column;
   padding: 30px 40px 1px;
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
   border-radius: 5px;
-  margin-top: 5px;
+  margin-bottom: 20px;
   margin-left: 2px;
 }
+.item_kits form input {
+  height: 30px; /* Adjust the height as needed */
+}
+
 .item_kits table {
-  width: 550px;
+  width: 550px; 
+  max-height: 200px; 
   background-color: rgb(238, 238, 238);
   margin-top: 5px;
   border: 1px solid #c9c5c2;
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
   border-radius: 5px;
+  margin-left: 10px;
+  margin-top: 5px;
+  overflow-y: auto; 
 }
-.item_kit table thead tr th {
-  background-color: #fbceb1;
+
+
+.item_kits table thead tr th {
+  background-color: rgb(1, 1, 41);
   padding: 2% 10px;
   text-align: center;
+  color: white;
 }
-.btn {
+
+.form_btn {
   background-color: rgb(1, 1, 41);
   color: white;
   border: none;
@@ -32,13 +43,16 @@
   border-radius: 5px;
   font-weight: bold;
   margin-top: 10px;
+  text-align: center;
+  margin-bottom: 20px;
 }
 
-.item_kit table tbody td {
+.item_kits table tbody td {
   height: 40px auto;
   text-align: center;
   padding-inline: 5px;
 }
+
 .bill_table_container input {
   background-color: rgb(238, 238, 238);
   display: flex;
@@ -51,30 +65,38 @@
   margin-top: 40px;
   width: 600px;
 }
+
 .container {
   display: flex;
   justify-content: space-between;
 }
+
 .item_kit {
   margin-top: 5px;
   display: flex;
 }
 
-.search-field input {
-  margin-top: 2px;
-  margin-bottom: 10px;
-  border-radius: 5px 5px 5px 5px;
-}
 .table_btn {
   background-color: black;
   color: white;
   border: none;
-  padding: 7px 15px;
+  padding: 5px 10px;
   font-size: 12px;
   border-radius: 5px;
   cursor: pointer;
   margin-top: 10px;
+  width: 100px;
 }
+
+.search_input {
+  margin-top: 2px;
+  margin-bottom: 10px;
+  border-radius: 5px; /* Adjusted border radius */
+  margin-left: 10px;
+  width: 300px;
+  height: 30px;
+}
+
 
 .table_btn:hover {
   background-color: gray;

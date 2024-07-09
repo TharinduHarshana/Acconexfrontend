@@ -128,6 +128,7 @@ function UpdateSupplier() {
               name="supplierId"
               value={supplier.supplierId}
               onChange={handleInputChange}
+              disabled
             />
 
             <label>First Name:</label>

@@ -499,6 +499,7 @@ const CreateUserForm = () => {
                     <Option value="inventory manager">Inventory Manager</Option>
                     <Option value="cashier">Cashier</Option>
                     <Option value="sales staff">Sales Staff</Option>
+                    
                   </Select>
                 </Form.Item>
               </Col>

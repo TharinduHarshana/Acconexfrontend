@@ -25,7 +25,9 @@ const AddNewItem = () => {
   const [percent, setPercent] = useState(0);
   const [categories, setCategories] = useState([]);
   const [suppliers, setSuppliers] = useState([]);
+  const [description , setDescription] = useState('');
   const [loading, setLoading] = useState(true);
+ 
   
 
 
@@ -44,7 +46,8 @@ const AddNewItem = () => {
 
     const storageRef = ref(storage, `/files/${file.name}`);
 
-
+    // Progress can be paused and resumed. It also exposes progress updates.
+    // Receives the storage reference and the file to upload.
     const uploadTask = uploadBytesResumable(storageRef, file);
 
     uploadTask.on(
@@ -97,7 +100,8 @@ const AddNewItem = () => {
       supplierID === '' ||
       category === '' ||
       warranty === '' ||
-      imageLink === ''
+      imageLink === ''||
+      description === ''
     ) {
       Swal.fire({
         icon: 'error',
@@ -126,6 +130,7 @@ const AddNewItem = () => {
       category,
       warranty,
       imageLink,
+      description,
     };
     console.log(newItem);
     axios
@@ -159,6 +164,7 @@ const AddNewItem = () => {
             </label>
             <label>
               Description:
+<<<<<<< Updated upstream
               <textarea
                   className="form-control"
                   placeholder="Category Description"
@@ -167,6 +173,9 @@ const AddNewItem = () => {
                   style={{ height: '200px', width: '1000px' }} // Adjust the height and width as needed
                 ></textarea>
 
+=======
+              <textarea className="form-control" placeholder="Category Description" onChange={(e) => setDescription(e.target.value)} value={description}></textarea>
+>>>>>>> Stashed changes
             </label>
             <label className='label' >
               Product ID:
@@ -231,9 +240,10 @@ const AddNewItem = () => {
               <input type="text" placeholder="AK2928582-9582" onChange={(e) => setItemSerial(e.target.value)} value={itemSereal} className='input' />
             </label>
 
-            {/* Your form inputs */}
+      {/* Your form inputs */}
       <label className='label'>Select Supplier:</label>
       <select onChange={(e) => setSupplierID(e.target.value)} value={supplierID} className='input'>
+      <option value="">Select Supplier</option>
         {suppliers.map((supplier) => (
           <option key={supplier._id} value={supplier.supplierId}>{supplier.firstName}</option>
         ))}
@@ -241,6 +251,7 @@ const AddNewItem = () => {
 
       <label className='label'>Select Category:</label>
       <select onChange={(e) => setCategory(e.target.value)} value={category} className='input'>
+      <option value="">Select Category</option>
         {categories.map((category) => (
           <option key={category._id} value={category.categoryname}>{category.categoryname}</option>
         ))}

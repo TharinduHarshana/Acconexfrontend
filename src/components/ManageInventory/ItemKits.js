@@ -384,10 +384,6 @@
 
 // export default ItemKitsForm;
 
-
-
-
-
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { message, Modal as AntdModal } from "antd";
@@ -747,10 +743,10 @@ function ItemKitsForm() {
                                   marginBottom: '5px',
                                   marginRight: '5px',
                                   marginLeft: '5px',
-                                  width: '150px', // Reduced width
-                                  height: '25px', // Reduced height
-                                  borderRadius: '3px', // Border radius for a cleaner look
-                                  border: '1px solid #ccc' // Light border color
+                                  width: '150px', 
+                                  height: '25px', 
+                                  borderRadius: '3px',
+                                  border: '1px solid #ccc' 
                                 }}
                             />
                             <button
@@ -766,12 +762,12 @@ function ItemKitsForm() {
                                 style={{
                                   backgroundColor: 'rgb(1, 1, 41)',
                                   color: 'white',
-                                  borderRadius: '3px', // Adjusted border radius
-                                  padding: '3px 7px', // Adjusted padding to reduce size
+                                  borderRadius: '3px', 
+                                  padding: '3px 7px', 
                                   border: 'none',
                                   cursor: 'pointer',
-                                  fontSize: '12px', // Reduced font size
-                                  marginLeft: '5px' // Margin for spacing
+                                  fontSize: '12px', 
+                                  marginLeft: '5px' 
                                 }}
                             >
                                 Add to Kit

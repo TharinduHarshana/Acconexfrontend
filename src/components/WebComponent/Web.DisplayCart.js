@@ -139,7 +139,7 @@ function DisplayCart({ show, handleClose }) {
                 <th>Image</th>
                 <th>Item Name</th>
                 <th>Quantity</th>
-                <th>Price</th>
+                <th>Price (LKR)</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -166,7 +166,7 @@ function DisplayCart({ show, handleClose }) {
                 </tr>
               ))}
               <tr>
-                <td colSpan="3">Total</td>
+                <td colSpan="3">Total (LKR)</td>
                 <td>{total.toFixed(2)}</td>
               </tr>
               <tr>

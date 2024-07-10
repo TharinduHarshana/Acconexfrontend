@@ -36,7 +36,7 @@ const CartSummary = () => {
                         <tr>
                             <th>Item Name</th>
                             <th>Quantity</th>
-                            <th>Price</th>
+                            <th>Price (LKR)</th>
                         </tr>
                     </thead>
                     <tbody>

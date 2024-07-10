@@ -36,7 +36,7 @@ const CartSummary = () => {
                         <tr>
                             <th>Item Name</th>
                             <th>Quantity</th>
-                            <th>Price</th>
+                            <th>Price(LKR)</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -48,7 +48,7 @@ const CartSummary = () => {
                             </tr>
                         ))}
                         <tr>
-                            <td colSpan="2"><strong>Total</strong></td>
+                            <td colSpan="2"><strong>Total(LKR)</strong></td>
                             <td><strong>{total.toFixed(2)}</strong></td>
                         </tr>
                     </tbody>

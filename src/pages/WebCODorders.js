@@ -9,11 +9,13 @@ import Modal from "react-bootstrap/Modal";
 import swal from "sweetalert";
 import { useNavigate } from "react-router-dom";
 import { Modal as AntdModal } from "antd";
+import Swal from "sweetalert2";
 
 function WebCODorders() {
   const [orderDetails, setOrderDetails] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [trackingCode, setTrackingCode] = useState("");
+  const [selectedOrder, setSelectedOrder] = useState(null);
   const [isAccessDeniedVisible, setIsAccessDeniedVisible] = useState(false);
   const navigate = useNavigate();
 
@@ -50,7 +52,7 @@ function WebCODorders() {
         <div key={itemName}>
           <div>Item name: {itemName}</div>
           <div>Quantity: {quantity}</div>
-          <div>Price: {price}</div>
+          <div>Price(LKR): {price}</div>
           <br />
         </div>
       );
@@ -66,7 +68,8 @@ function WebCODorders() {
     );
   };
 
-  const handleConfirm = () => {
+  const handleConfirm = (order) => {
+    setSelectedOrder(order);
     setShowModal(true);
   };
 
@@ -78,11 +81,29 @@ function WebCODorders() {
     setTrackingCode(event.target.value);
   };
 
-  const handleModalConfirm = () => {
-    // Send the tracking code to the server or perform any other action
-    console.log("Tracking code:", trackingCode);
-    // Close the modal
-    setShowModal(false);
+  const handleModalConfirm = async () => {
+    try {
+      const res = await axios.post("http://localhost:8000/cart/updateOrder", {
+        orderId: selectedOrder.id,
+        trackingCode,
+      });
+      if (res.status === 200) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Tracking Code Confirmed',
+          text: 'The tracking code has been updated successfully!',
+        });
+        getCodConfirmOrders(); // Refresh the order list
+        setShowModal(false);
+      }
+    } catch (err) {
+      console.error(err);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Failed to update tracking code. Please try again later.',
+      });
+    }
   };
 
   const columns = [
@@ -122,10 +143,12 @@ function WebCODorders() {
       cell: (row) => <Link onClick={() => handleConfirm(row)}>Confirm</Link>,
     },
   ];
+
   const closeModal = () => {
     setIsAccessDeniedVisible(false);
     navigate("/admin/dashboard");
   };
+
   return (
     <DefaultHandle>
       <div style={{ display: "flex", height: "500px", overflow: "auto" }}>

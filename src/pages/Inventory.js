@@ -20,12 +20,12 @@ const Items = () => {
       sortable: true,
     },
     {
-      name: 'Cost Price',
+      name: 'Cost Price (LKR)',
       selector: (row) => row.costPrice,
       sortable: true,
     },
     {
-      name: 'Selling Price',
+      name: 'Selling Price (LKR)',
       selector: (row) => row.sellingPrice,
       sortable: true,
     },

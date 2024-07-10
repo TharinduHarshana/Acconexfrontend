@@ -388,9 +388,6 @@ const DefaultHandle = ({ children }) => {
             <Menu.Item key="cashondelevery" title="cashondelevery">
               <Link to="/admin/cashondelevery">Cash On Delivery</Link>
             </Menu.Item>
-            <Menu.Item key="paidsales" title="paidsales">
-              <Link to="/admin/paidsales">Paid Sales</Link>
-            </Menu.Item>
           </Menu.SubMenu>
 
           <Menu.Item key="/admin/reports" icon={<LineChartOutlined />}>

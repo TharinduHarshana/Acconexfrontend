@@ -130,7 +130,7 @@ function TotalSale() {
   return (
     <div>
       <DefaultHandleSales>
-        <div className='maindiv'>
+        <div style={{ display: '', height: '500px', overflow: 'auto' }} className='maindiv'>
           <div className='divcontent'>
             <h3 style={{textAlign:'center'}}>Today's Total Sale</h3>
             <div>
@@ -141,7 +141,7 @@ function TotalSale() {
                 name='start' 
                 value={selectedDate}
                 onChange={handleDateChange}
-                style={{marginLeft:'20px'}}
+                style={{marginLeft:'20px',width:'200px'}}
               />
               <button style={{backgroundColor:'rgb(11, 2, 51)',color:'white',width:'130px',height:'30px',marginLeft:'20px'}} onClick={handleSeeTotalSale}>See Total Sale</button>
             </div>

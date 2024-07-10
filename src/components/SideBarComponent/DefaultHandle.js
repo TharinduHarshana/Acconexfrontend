@@ -46,15 +46,7 @@ const DefaultHandle = ({ children }) => {
     },
   ];
 
-  const messagesItems = [
-    { key: "all_messages", title: "All messages", icon: <MessageOutlined /> },
-    { key: "sent_messages", title: "Sent messages", icon: <MessageOutlined /> },
-    {
-      key: "received_messages",
-      title: "Received messages",
-      icon: <MessageOutlined />,
-    },
-  ];
+  
 
   const actionItems = [
     {
@@ -86,7 +78,7 @@ const DefaultHandle = ({ children }) => {
           onClick={handleMenuClick}
         >
           <Menu.Item key="/admin/dashboard" icon={<DashboardOutlined />}>
-            <Link to="/admin/home">Home</Link>
+            <Link to="/admin/dashboard">Home</Link>
           </Menu.Item>
 
           <Menu.SubMenu
@@ -110,8 +102,8 @@ const DefaultHandle = ({ children }) => {
             <Menu.Item key="supplier" title="Supplier">
               <Link to="/admin/supplier">Supplier</Link>
             </Menu.Item>
-            <Menu.Item key="/addcus" title="Customer">
-              <Link to="/admin//addcus">Customer</Link>
+            <Menu.Item key="customer" title="Customer">
+              <Link to="/admin/customer">Customer</Link>
             </Menu.Item>
           </Menu.SubMenu>
           
@@ -120,10 +112,7 @@ const DefaultHandle = ({ children }) => {
           </Menu.Item>
           
           <Menu.Item key="admin/sale" icon={<ShoppingCartOutlined />}>
-            <Link to="admin/sale">Sales</Link>
-          </Menu.Item>
-          <Menu.Item key="/sales" title="Sales">
-            <Link to="/sales">Sales</Link>
+            <Link to="/admin/sale">Sales</Link>
           </Menu.Item>
 
           <Menu.Item key="/admin/reports" icon={<LineChartOutlined />}>
@@ -144,63 +133,6 @@ const DefaultHandle = ({ children }) => {
           </Typography.Title>
           <Space>
             <div className="header-action" style={{ marginRight: "8px" }}>
-              <Dropdown
-                overlay={
-                  <Menu>
-                    {actionItems.map((item) => (
-                      <Menu.Item key={item.key} icon={item.icon}>
-                        <a href={item.linkTo}>{item.title}</a>
-                      </Menu.Item>
-                    ))}
-                  </Menu>
-                }
-              >
-                <span style={{ marginRight: "36px", fontSize: "12px" }}>
-                  <PlusOutlined
-                    style={{ marginLeft: "18px", marginRight: "18px" }}
-                  />
-                </span>
-              </Dropdown>
-              <Dropdown
-                overlay={
-                  <Menu>
-                    {messagesItems.map((item) => (
-                      <Menu.Item key={item.key}>{item.title}</Menu.Item>
-                    ))}
-                  </Menu>
-                }
-              >
-                <Badge
-                  count={2}
-                  overflowCount={10}
-                  style={{ marginRight: "16px", color: "white" }}
-                >
-                  <BellOutlined
-                    style={{
-                      marginLeft: "8px",
-                      marginRight: "8px",
-                      color: "black",
-                    }}
-                  />
-                </Badge>
-              </Dropdown>
-              <Dropdown
-                overlay={
-                  <Menu>
-                    {actionItems.map((item) => (
-                      <Menu.Item key={item.key} icon={item.icon}>
-                        {item.title}
-                      </Menu.Item>
-                    ))}
-                  </Menu>
-                }
-              >
-                <span>
-                  <UserOutlined
-                    style={{ marginLeft: "4px", marginRight: "4px" }}
-                  />
-                </span>
-              </Dropdown>
             </div>
           </Space>
         </Header>
@@ -220,3 +152,8 @@ const DefaultHandle = ({ children }) => {
 };
 
 export default DefaultHandle;
+
+
+
+
+

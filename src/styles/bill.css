@@ -1,0 +1,296 @@
+.sales_content{
+  display: flex;
+  
+}
+.sales_bill_container{
+  display: flex;
+  margin: 0 auto;
+
+}
+
+
+/*item table*/
+.sales_bill_table{
+  width: 550px;
+  background-color: rgb(238, 238, 238);
+  border: 1px solid #c9c5c2; 
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); 
+  border-radius: 5px;
+  border-collapse: collapse; /* Ensures no gaps between table cells */
+  
+}
+.sales_bill_table_wrapper {
+  max-height: 500px; /* Set the maximum height for the table body */
+  overflow-y: auto; /* Enable vertical scrolling */
+  margin: 0px auto 0 auto; 
+  width: 600px; /* Ensure the wrapper takes full width */
+ 
+}
+
+.sales_bill_table thead{
+  position: sticky;
+  top: 0;
+}
+
+/*item table*/
+.sales_bill_table thead tr th{
+  background-color: rgb(11, 2, 51);
+  color: aliceblue;
+  padding :2% 10px;
+  align-items: center;
+  font-size: 12px;
+  font-weight: bolder;
+}
+
+/*item table*/
+.sales_bill_table   tbody td{
+  
+  height: 200px  auto;
+  padding: 5px 5px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .sales_bill_table thead th, .sales_bill_table tbody td {
+    padding: 5px;
+    font-size: 12px; /* Reduce font size for smaller screens */
+  }
+}
+/*search item from the invetory*/
+.sales_bill_table_container input{
+  background-color: rgb(238, 238, 238);
+  display: flex;
+  flex-direction: column;
+  padding: 10px 40px;
+  border: 1px solid #c9c5c2; 
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); 
+  border-radius: 5px;
+  width: 500px ;
+
+}
+/* Bill form container form styles */
+.sales_print_bill form 
+{
+  width: 525px;
+  height: fit-content;
+  background-color: rgb(238, 238, 238);
+  display: flex;
+  flex-direction: column;
+  padding: 20px 20px 1px;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); 
+  border-radius: 5px;
+  max-height: 560px;
+  overflow-y: auto;
+
+}
+.sales_print_bill_table
+{
+  border-color: #c9c5c2;
+  width: 100%;
+  max-height: 300px; /* Adjust the maximum height as per your design */
+  overflow-y: auto; /* Add vertical scrollbar when content overflows */
+  border: 1px solid #c9c5c2;
+  border-collapse: collapse; /* Ensure borders collapse properly */
+}
+
+
+.sales_print_bill_table thead tr th{
+ background-color: rgb(11, 2, 51);
+color: aliceblue;
+}
+.sales_print_bill_table tbody  td{
+  height: 10px;
+  padding: 2px 2px 2px;
+  font-size: small;
+font-weight: 500;
+}
+
+/* Additional responsive styles */
+@media (max-width: 768px) {
+  .sales_print_bill_table thead th, .sales_print_bill_table tbody td {
+    padding: 5px;
+    font-size: 12px; /* Reduce font size for smaller screens */
+  }
+}
+
+/*print bill - serach customer */
+.sales_searchcustomer input {
+  background-color: rgb(238, 238, 238);
+  display: flex;
+  flex-direction: column;
+  padding: 10px 40px;
+  border: 1px solid #c9c5c2; 
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); 
+  border-radius: 5px;
+  width: 500px ;
+}
+
+/*print bill - serach customer */
+.sales_customer-list{
+  width: 420px;
+  background-color: rgb(11, 2, 51);
+  border-color:rgb(11, 2, 51); ;
+  color: white;
+  box-shadow: 5px 5px 10px rgb(0, 0, 0,0.1);
+  border-radius: 5px;
+  margin-left: 30PX;
+  position: absolute;
+}
+/*print bill - serach customer */
+.sales_customer-list table tbody tr td{
+  width: 420px;
+
+}
+
+/* add item to the bill form */
+.sales_modal-content{
+  width: 550px;
+  background-color: rgb(238, 238, 238);
+  display: flex;
+  flex-direction: column;
+  padding: 50px 40px;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); 
+  border-radius: 5px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+}
+
+/* add item to the bill form */
+.sales_modal-content input {
+  font-size: 18px;
+  padding: 5px;
+  margin-top: 3px;
+  margin-bottom: 10px;
+}
+/* add item to the bill form */
+.sales_modal-content label {
+  font-size: 15px;
+}
+
+.sales_close-btn{
+  margin-left: auto;
+  font-size: 18px;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.sales_btn{
+  background-color: rgb(11, 2, 51);
+  color: white;
+  border: none;
+  padding: 7px 15px;
+  font-size: 18px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 5px;
+}
+.sales_form-row{
+  justify-content: space-between;
+  display: flex;
+}
+/* bill.css */
+
+.input-no-border {
+  border: none;
+  outline: none;
+  text-align: right;
+  background-color: rgb(238, 238, 238);
+}
+.sales_complete_sale,
+.sales_suspend_sale,
+.sales_cancel_btn,
+.sales_add_customer{
+  color: rgb(0, 0, 0);
+  border: none;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); 
+  border-radius: 3px;
+  font-style:oblique;
+  font-weight: bold;
+  margin-top: 40px;
+  margin-left: 20px;
+  margin-bottom: auto;
+  height: 30px ;
+  width: 120px;
+  font-size: 12px;
+}
+.sales_complete_sale,
+.sales_suspend_sale,
+.sales_cancel_btn,
+.sales_add_customer{
+  background-color: rgb(11, 2, 51);
+  color: rgb(255, 255, 255);
+}
+
+.sales_payment-method-container
+{
+
+  display: flex;
+  justify-content: space-around;
+  
+}
+.sales_popup
+{
+  width: 300px;
+  height: 200px;
+  background-color: rgb(238, 238, 238);
+  display: flex;
+  flex-direction: column;
+  padding: 30px 40px 40px;
+  box-shadow: 5px 5px 10px rgb(0, 0, 0);
+  border-radius: 5px;
+  position: absolute;
+  top: 50%;
+  left: 80%;
+  right: 10%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+}
+
+.sales_popupbtnclose{
+ margin-left: 40px;
+}
+.sales_popupbtnok,
+.sales_popupbtnclose{
+  color: rgb(255, 255, 255);
+  background-color: rgb(11, 2, 51);
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); 
+  border-radius: 3px;
+  font-style:oblique;
+  font-weight: bold;
+}
+
+@media print {
+  /* Set paper size to A4 */
+  @page {
+    size: A4;
+  }
+
+  /* Optionally, you can also set margins */
+  body {
+    margin: 0.5in;
+  }
+
+  /* Hide payment method radio buttons */
+  .sales_payment-method-container {
+    display: none;
+  }
+
+  /* Increase spacing between lines */
+  .sales_print_bill_table td,
+  .sales_print_bill_table th {
+    padding: 10px 0; /* Increase vertical padding */
+    line-height: 1.5; /* Increase line height */
+  }
+
+
+}
+

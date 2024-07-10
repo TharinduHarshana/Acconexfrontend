@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import DefaultHandle from "../DefaultHandle";
-import { message } from "antd";
+import { message, } from "antd";
+import { CloseOutlined } from "@ant-design/icons";
+import "../../styles/update.user.css";
 
 function UpdateSupplier() {
   // Extracting ID parameter from URL
@@ -36,26 +38,56 @@ function UpdateSupplier() {
         console.log(error);
       });
   }, [id]);
+
+  const checkSupplierIdExists = async (supplierId) => {
+    try {
+      // Fetch supplier data from the backend API
+      const response = await axios.get(
+        `http://localhost:8000/supplier/check/${supplierId}`
+      );
+      const { exists } = response.data;
+      // If the supplier ID exists in the database
+      if (exists) {
+        // Fetch the supplier data by ID
+        const supplierData = await axios.get(
+          `http://localhost:8000/supplier/${id}`
+        );
+        // If the fetched supplier ID is the same as the current supplier's ID, return false (no conflict)
+        if (supplierData.data.data.supplierId === supplierId) {
+          return false;
+        } else {
+          // If the fetched supplier ID is different, return true (conflict)
+          return true;
+        }
+      }
+      // If the supplier ID doesn't exist in the database, return false (no conflict)
+      return exists;
+    } catch (error) {
+      console.error("Error checking if supplier ID exists:", error);
+      return false;
+    }
+  };
+
   // Function to handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Check if userId remains the same
-    if (supplier.supplierId === supplier.supplierId) {
-      message.error("Supplier ID cannot be the same. Please modify the Supplier ID.");
-      return;
-    }
-
     try {
+      const supplierIdExists = await checkSupplierIdExists(supplier.supplierId);
+      if (supplierIdExists) {
+        message.error(
+          "Supplier with this ID already exists! Try another Supplier Id.."
+        );
+        return;
+      }
+
       await axios.patch(
         `http://localhost:8000/supplier/update/${id}`,
         supplier
       );
       console.log("Supplier updated successfully:", supplier);
-      message.success("Supplier updated successfully!");
-      // Assuming a successful update, navigate to a different page
+      message.success("Supplier Updated successfully!");
       navigate("/admin/supplier");
     } catch (error) {
-      message.error("Error updating supplier");
       console.error("Error updating supplier:", error);
     }
   };
@@ -76,129 +108,54 @@ function UpdateSupplier() {
       setPhoneError("Please enter only numbers and a maximum of 10 digits");
     }
   };
-
+  // Function to handle close button click
+  const handleCloseButtonClick = () => {
+    // Navigate to the home page
+    navigate("/admin/supplier");
+  };
   return (
     <>
       <DefaultHandle>
-        <form
-          onSubmit={handleSubmit}
-          style={{
-            maxWidth: "400px",
-            margin: "auto",
-            marginTop: "1px",
-            padding: "20px",
-            border: "1px solid #ccc",
-            borderRadius: "16px",
-            backgroundColor: "#fff",
-            boxShadow: "0px 8px 32px rgba(0, 0, 0, 0.1)",
-          }}
-        >
-          <h2
-            style={{
-              fontSize: "20px",
-              fontFamily: "Arial, sans-serif",
-              textAlign: "center",
-              margin: "0 0 20px",
-              fontWeight: "bold",
-              color: "#333",
-            }}
-          >
-            Update Supplier
-          </h2>
-
-          <div style={{ marginBottom: "20px" }}>
-            <label
-              style={{
-                marginBottom: "5px",
-                display: "block",
-              }}
-            >
-              Supplier Id:
-            </label>
+        <div className="form_addContainer form">
+          <form onSubmit={handleSubmit}>
+            <div className="close-btn" onClick={handleCloseButtonClick}>
+              <CloseOutlined />
+            </div>
+            <label>Supplier Id:</label>
             <input
               type="text"
               className="form-control"
               name="supplierId"
               value={supplier.supplierId}
               onChange={handleInputChange}
-              style={{
-                width: "100%",
-                padding: "10px",
-                borderRadius: "5px",
-                border: "1px solid #ccc",
-              }}
+              disabled
             />
-          </div>
 
-          <div style={{ marginBottom: "20px" }}>
-            <label
-              style={{
-                marginBottom: "5px",
-                display: "block",
-              }}
-            >
-              First Name:
-            </label>
+            <label>First Name:</label>
             <input
               type="text"
               className="form-control"
               name="firstName"
               value={supplier.firstName}
               onChange={handleInputChange}
-              style={{
-                width: "100%",
-                padding: "10px",
-                borderRadius: "5px",
-                border: "1px solid #ccc",
-              }}
             />
-          </div>
 
-          <div style={{ marginBottom: "20px" }}>
-            <label
-              style={{
-                marginBottom: "5px",
-                display: "block",
-              }}
-            >
-              Company Name:
-            </label>
+            <label>Company Name:</label>
             <input
               type="text"
               className="form-control"
               name="companyName"
               value={supplier.companyName}
               onChange={handleInputChange}
-              style={{
-                width: "100%",
-                padding: "10px",
-                borderRadius: "5px",
-                border: "1px solid #ccc",
-              }}
             />
-          </div>
 
-          <div style={{ marginBottom: "20px" }}>
-            <label
-              style={{
-                marginBottom: "5px",
-                display: "block",
-              }}
-            >
-              Phone Number:
-            </label>
+            <label>Phone Number:</label>
             <input
               type="text"
               className="form-control"
               name="phoneNumber"
               value={supplier.phoneNumber}
               onChange={handlePhoneChange}
-              style={{
-                width: "100%",
-                padding: "10px",
-                borderRadius: "5px",
-                border: "1px solid #ccc",
-              }}
             />
             {phoneError && (
               <div
@@ -208,48 +165,21 @@ function UpdateSupplier() {
                 {phoneError}
               </div>
             )}
-          </div>
 
-          <div style={{ marginBottom: "20px" }}>
-            <label
-              style={{
-                marginBottom: "5px",
-                display: "block",
-              }}
-            >
-              Email:
-            </label>
+            <label>Email:</label>
             <input
               type="email"
               className="form-control"
               name="email"
               value={supplier.email}
               onChange={handleInputChange}
-              style={{
-                width: "100%",
-                padding: "10px",
-                borderRadius: "5px",
-                border: "1px solid #ccc",
-              }}
             />
-          </div>
 
-          <button
-            type="submit"
-            className="btn btn-primary"
-            style={{
-              width: "100%",
-              padding: "10px",
-              borderRadius: "5px",
-              border: "none",
-              backgroundColor: "#007bff",
-              color: "#fff",
-              cursor: "pointer",
-            }}
-          >
-            Update
-          </button>
-        </form>
+            <button type="submit" className="btn">
+              Update
+            </button>
+          </form>
+        </div>
       </DefaultHandle>
     </>
   );

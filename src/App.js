@@ -3,124 +3,148 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 //login and dashboard import
 import Login from "./components/LoginComponents/Login";
-import Dashboard from "./components/SideBarComponent/DefaultHandle";
-import Homepage from "./pages/Homepage";
+import Dashboard from "./pages/adminDashbord";
+import Logout from "./components/LoginComponents/Logout";
 
 //import user components
 import CreateUser from "./components/ManageUsers/CreateUser";
 import Users from "./components/ManageUsers/Users";
 import UpdateUser from "./components/ManageUsers/UpdateUser";
 
+
 //import customer and supplier components
 
 import CreateSupplierForm from "./components/ManageUsers/CreateSupplier";
 import Supplier from "./components/ManageUsers/Supplier";
 import UpdateSupplier from "./components/ManageUsers/UpdateSupplier";
+import CustomerForm from "./components/CustomerComponents/customerForm";
 
 //import item kits
-import ItemKits from "./components/ManageInventory/ItemKits";
-import ItemKitsTable from "./components/ManageInventory/ItemKitsTable";
+import ItemKit from "./pages/ItemKitPage";
+import ItemKitsForm from "./components/ManageInventory/ItemKits";
+import ItemKitsUpdate from "./components/ManageInventory/UpdateKits";
+
 
 //import sales components
-import SalesDachboad from './components/SalesComponents/SalesDachboad';
-import Bill from './components/SalesComponents/Bill';
+import Bill from './components/SalesComponents/Bill_components/Bill';
 import Customer from './components/CustomerComponents/Customer';
 import SuspendSale from './components/SalesComponents/SuspendSale';
-
-import Daily_sales from './components/SalesComponents/Daily_sales';
-
-
-
-// web imports
-
-// import web components
+import Dailysales from './components/SalesComponents/Daily_sales';
+import TotalSale from './components/SalesComponents/TotalSale';
 
 
 // import web components
-
-import WebHomepage from "./pages/WebHomepage";
-import CustomerForm from "./components/CustomerComponents/customerForm";
 import Category from './pages/WebCategory';
-import WebLogin from './pages/Weblogin';
-import WebRegister from './pages/WebRegister';
+import WebRegister from './components/WebComponent/WebRegister';
+import WebLogin from "./components/WebComponent/WebLogin";
+import FrogotPassword from './components/WebComponent/WebFrogotPassword';
+import ResetPassword from "./components/WebComponent/WebResetPassword";
+import WebHomepage from "./pages/WebHomepage";
+import SearchResults from "./components/WebComponent/web.SearchResult";
+import Checkout from "./pages/WebCkeckout";
+import AboutUs from "./pages/WebAboutUs";
+import Services from './pages/WebServicesPage';
+import PaymentMethods from './pages/WebPaymentMethodPage'
+import ContactUs from './pages/WebContactUs';
+import ConfirmCODOrders from './pages/WebCODorders';
+import WebUserprofile from './pages/WebUserProfile';
+
+
+
 
 //import inventory 
 import InventoryAdd from './components/InventoryComponent/Inventory.AddnewItem';
 import InventoryUpdate from './components/InventoryComponent/inventory.UpdateItem';
 import InventoryHome from './pages/Inventory';
+import CategoryHome from "./pages/Category";
+import AddNewCategory from "./components/CategoryComponents/Category.AddNewCategory";
+import CreateUserForm from "./components/ManageUsers/CreateUser";
+import UserProfile from "./components/ManageUsers/UserProfile";
+import SalesReport from "./components/SalesReport";
+
+
 
 
 
 
 function App() {
+
+
+
   return (
+   
+
     <BrowserRouter>
       <Routes>
     {/* user routing path */}
     <Route path='/web/home' element={<WebHomepage/>} />
     <Route path='/web/:slug' element={<Category/>} />
-    <Route path='/web/login' element={<WebLogin/>} />
     <Route path='/web/register' element={<WebRegister/>} />
+    <Route path='/web/login' element={<WebLogin/>} />
+    <Route path ="/web/forgotpassword" element={<FrogotPassword/>} />
+    <Route path ="/web/resetPassword/:token" element={<ResetPassword/>} />
+    <Route path ="/web/search/:value" element={<SearchResults/>} />
+    <Route path ="/web/checkout" element={<Checkout/>} />
+    <Route path ="/web/about" element={<AboutUs/>} />
+    <Route path ="/web/services" element={<Services/>} />
+    <Route path ="/web/payment" element={<PaymentMethods/>} />
+    <Route path ="/web/contact" element={<ContactUs/>} />
+    <Route path ="admin/cashondelevery" element={<ConfirmCODOrders/>} />
+    <Route path ="/web/profile" element={<WebUserprofile/>} />
+
+
         
 
        {/* admin routing path */}
         <Route path="/admin" element={<Login/>} />
-        <Route path="/admin/dashbord" element={< Dashboard/>} />
-        <Route path="/admin/userform" element={<CreateUser />} />
-        <Route path="/admin/userform/update/:id" element={<UpdateUser/>} />
+        <Route path="admin/logout" element={<Logout/>}/>
+        <Route path="/admin/dashboard" element={< Dashboard/>} />
+        <Route path="/admin/userform" element={<CreateUserForm/>} />
+        <Route path="/admin/userform/update/:id" element={<UpdateUser />} />
         <Route path="/admin/userTable" element={<Users />} />
         <Route path="/admin/customer" element={<Customer/>}/>
-
-       <Route path="/admin/customerform" element={<CustomerForm/>}/>
+        <Route path="admin/editprofile" element={<UserProfile />} /> 
+        <Route path="/admin/reports" element={<SalesReport/>}/>
 
 
 
         
 
         <Route path="/admin/supplier" element={<Supplier/>}/>
-        <Route path="/admin/supplier/create" element={<CreateSupplierForm/>}/>
+      
+         <Route path="/admin/supplier/create" element={<CreateSupplierForm/>}/> 
         <Route path="/admin/supplier/update/:id" element={<UpdateSupplier />} />
-        <Route path="admin/inventory/item-kits" element={<ItemKits/>}/>
-        <Route path="admin/inventory/item-kits/table" element={<ItemKitsTable/>}/>
-
-
-
-        <Route path='sales' element={<SalesDachboad/>}/>
-        <Route path='bill' element={<Bill/>}/>
-        <Route path='addcus' element={<Customer/>}/>
-        <Route path='holdbill' element={<SuspendSale/>}/>
-        <Route path="dailysales" element={<Daily_sales/>}/>
-       
-         
-
-        <Route path='admin/sale' element={<SalesDachboad/>}/>
-        <Route path='admin/bill' element={<Bill/>}/>
-        <Route path='admin/addcus' element={<Customer/>}/>
-        <Route path='admin/holdbill' element={<SuspendSale/>}/>
-
-
-        {/* <Route path='admin/viewcustomer' element={<ViewCutomer/>}/> */}
+        <Route path="/admin/inventory/item-kits" element={<ItemKit/>}/>
+        <Route path="/admin/inventory/kits/add" element={<ItemKitsForm/>}/>
+        {/* <Route path="/admin/inventory" element={<Inventory/>}/> */}
+        <Route path="/admin/inventory/kits/update/:id" element={<ItemKitsUpdate/>} />
+        
 
         <Route path='admin/inventory' element={<InventoryHome/>}/>
-        <Route path="admin/addnewitem" element={<InventoryAdd/>}/> 
+        <Route path="admin/addnewitem" element={<InventoryAdd/>}/>
+        <Route path='admin/category' element={<CategoryHome/>}/>
+        <Route path='admin/addnewcategory' element={<AddNewCategory/>}/>
 
-        
-        <Route path='/admin/sale' element={<SalesDachboad/>}/>
-        <Route path='/admin/bill' element={<Bill/>}/>
-        <Route path='/admin/addcus' element={<Customer/>}/>
+
+        {/* sales routes */}
+        <Route path='/admin/sale' element={<Bill/>}/>
         <Route path='/admin/holdbill' element={<SuspendSale/>}/>
-        {/* <Route path='/admin/viewcustomer' element={<ViewCutomer/>}/> */}
+        <Route path='/admin/dailysales' element={<Dailysales/>}/>
+        <Route path='/admin/totalsale' element={<TotalSale/>}/>
+
 
         <Route path='/admin/inventory' element={<InventoryHome/>}/>
-        <Route path="/admin/addnewitem" element={<InventoryAdd/>}/> 
-
-        <Route path="/admin/inventory/updateitem/:id" element={<InventoryUpdate/>}/>
-        
+        <Route path='/admin/inventory/addnewitem' element={<InventoryAdd/>}/>
+        <Route path='/admin/inventory/update/:id' element={<InventoryUpdate/>}/>
         
 
 
+        
+        
       </Routes>
+      
     </BrowserRouter>
+    
   );
 }
 

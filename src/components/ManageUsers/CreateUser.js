@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import DefaultHandle from "../DefaultHandle";
 import axios from "axios";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "../../styles/userform.css";
 import { Row, Col } from "antd";
 import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
@@ -16,11 +16,10 @@ import {
 } from "antd";
 const { Option } = Select;
 
-//Function to create a user
 const CreateUserForm = () => {
-  //Hook for navigation
   const navigate = useNavigate();
 
+  // Layout settings for the form items
   const formItemLayout = {
     labelCol: {
       xs: { span: 24 },
@@ -31,8 +30,10 @@ const CreateUserForm = () => {
       sm: { span: 18 },
     },
   };
+  // Ant Design form instance
+  const [form] = Form.useForm();
 
-  //State variable to manage form data and validation errors
+  // State to hold form data
   const [formData, setFormData] = useState({
     userId: "",
     userName: "",
@@ -47,55 +48,131 @@ const CreateUserForm = () => {
     gender: "",
     role: "",
   });
+
+  // State for validation errors
   const [phoneError, setPhoneError] = useState("");
   const [idNumberError, setIdNumberError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  //Function to toggle password visibility
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const fetchUsers = async () => {
+    try {
+      const response = await axios.get("http://localhost:8000/user/all",{
+        withCredentials:true,
+      });
+      const lastUserId =
+        response.data.data.length > 0
+          ? response.data.data[response.data.data.length - 1].userId
+          : "use000";
+      const nextUserId = generateNextUserId(lastUserId);
+      setFormData((prevData) => ({
+        ...prevData,
+        userId: nextUserId,
+      }));
+      form.setFieldsValue({ userId: nextUserId });
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      message.error("Failed to fetch latest user ID.");
+    }
+  };
+
+  // Function to generate next userId
+  const generateNextUserId = (currentUserId) => {
+    const prefix = "user";
+    const numericPart = currentUserId.substring(prefix.length);
+    const nextNumber = parseInt(numericPart, 10) + 1;
+
+    // Ensure the next number is a valid number
+    if (isNaN(nextNumber)) {
+      console.error("Invalid user ID format:", currentUserId);
+      return `${prefix}001`;
+    }
+
+    return `${prefix}${nextNumber.toString().padStart(3, "0")}`;
+  };
+
+  // Toggle password visibility
   const handleTogglePassword = () => {
     setShowPassword(!showPassword);
   };
 
-  const handleSubmit = (e) => {
-    // Submit the form data to create a new user
-    axios
-      .post("http://localhost:8000/user/add", formData)
-      .then((result) => {
-        console.log(result);
-        message.success("User created successfully!");
-        // Redirect to user table after successful creation
-        navigate("/admin/usertable");
-      })
-      .catch((err) => {
-        if (err.response && err.response.status === 401) {
-          message.error("User with this userID already exists!");
-        } else {
-          // For other errors, display a generic error message
-          console.error("Error adding user:", err);
-          message.error("An error occurred while adding user.");
-        }
-      });
+  // Check if user ID already exists
+  const checkUserIdExists = async (userId) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8000/user/check/${userId}`,
+        { withCredentials: true }
+      );
+      return response.data.exists;
+    } catch (error) {
+      console.error("Error checking if user ID exists:", error);
+      return false;
+    }
   };
 
-  //Phone number validation
+  // Handle form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Check if all fields are filled
+    const allFieldsFilled = Object.values(formData).every(
+      (field) => field.trim() !== ""
+    );
+
+    if (!allFieldsFilled) {
+      message.error("All fields are required.");
+      return;
+    }
+
+    try {
+      const userIdExists = await checkUserIdExists(formData.userId);
+      if (userIdExists) {
+        message.error(
+          "User with this ID already exists! Try another User Id.."
+        );
+        return;
+      }
+      const result = await axios.post(
+        "http://localhost:8000/user/add",
+        formData,
+        {
+          withCredentials: true
+        }
+      );
+      if (result.data.success) {
+        message.success("User created successfully!");
+        navigate("/admin/usertable");
+      } else {
+        message.error(result.data.message);
+      }
+    } catch (err) {
+      console.error("Error adding user:", err);
+      message.error("An error occurred while adding user.");
+    }
+  };
+
+  // Phone number validation
   const handlePhoneChange = (e) => {
     const { value } = e.target;
     const containsOnlyDigits = /^[0-9]+$/.test(value);
     if ((containsOnlyDigits && value.length <= 10) || value === "") {
       setFormData({ ...formData, phoneNumber: value });
-      setPhoneError(""); // Clear any previous error message
+      setPhoneError("");
     } else {
       setPhoneError("Please enter only numbers and a maximum of 10 digits");
     }
   };
 
-  //Id number validation
+  // Id number validation
   const handleIdNumberChange = (e) => {
     const { value } = e.target;
-    const isValid = /^[a-zA-Z0-9]{1,12}$/.test(value); // Validate alphanumeric characters and maximum length of 12
+    const isValid = /^[a-zA-Z0-9]{1,12}$/.test(value);
     if (isValid || value === "") {
       setFormData({ ...formData, idNumber: value });
-      setIdNumberError(""); // Clear any previous error message
+      setIdNumberError("");
     } else {
       setIdNumberError(
         "Please enter only letters and numbers, and ensure the ID number has a maximum length of 12 characters"
@@ -107,8 +184,13 @@ const CreateUserForm = () => {
     <>
       <DefaultHandle>
         <div style={{ padding: "20px" }}>
-          <Form {...formItemLayout} className="form-containeer">
-            <Typography.Text className="header">
+          <Form
+            {...formItemLayout}
+            className="form-containeer"
+            form={form}
+            initialValues={formData}
+          >
+            <Typography.Text>
               User Information{" "}
               <span style={{ color: "red", fontSize: "12px" }}>
                 (Fields in red * are required)
@@ -142,7 +224,7 @@ const CreateUserForm = () => {
                       whitespace: true,
                     },
                     {
-                      min: 4,
+                      min: 7,
                     },
                   ]}
                   hasFeedback
@@ -150,9 +232,10 @@ const CreateUserForm = () => {
                   <Input
                     value={formData.userId}
                     onChange={(e) =>
-                      e &&
-                      e.target &&
-                      setFormData({ ...formData, userId: e.target.value })
+                      setFormData({
+                        ...formData,
+                        userId: e.target.value,
+                      })
                     }
                   />
                 </Form.Item>
@@ -168,11 +251,13 @@ const CreateUserForm = () => {
                     },
                     {
                       pattern: /^[A-Za-z]+$/,
-                      message: "First name should contain only alphabetic characters!",
+                      message:
+                        "First name should contain only alphabetic characters!",
                     },
                   ]}
                 >
                   <Input
+                    value={formData.firstName}
                     onChange={(e) =>
                       e &&
                       e.target &&
@@ -251,6 +336,7 @@ const CreateUserForm = () => {
                   ]}
                 >
                   <Input.TextArea
+                    value={formData.address}
                     onChange={(e) =>
                       e &&
                       e.target &&
@@ -271,6 +357,7 @@ const CreateUserForm = () => {
                   ]}
                 >
                   <Select
+                    value={formData.gender}
                     onChange={(value) =>
                       setFormData({ ...formData, gender: value })
                     }
@@ -290,14 +377,10 @@ const CreateUserForm = () => {
                       required: true,
                       message: "Please input user name!",
                     },
-                    {
-                      max: 8,
-                      message: "UserName must be at least 8 characters long!",
-                    },
                   ]}
-                  hasFeedback
                 >
                   <Input
+                    value={formData.userName}
                     onChange={(e) =>
                       e &&
                       e.target &&
@@ -317,11 +400,13 @@ const CreateUserForm = () => {
                     },
                     {
                       pattern: /^[A-Za-z]+$/,
-                      message: "Last name should contain only alphabetic characters!",
+                      message:
+                        "Last name should contain only alphabetic characters!",
                     },
                   ]}
                 >
                   <Input
+                    value={formData.lastName}
                     onChange={(e) =>
                       e &&
                       e.target &&
@@ -341,12 +426,12 @@ const CreateUserForm = () => {
                     },
                     {
                       type: "email",
-                      message: "Please enter a valid email",
+                      message: "Please enter a valid email address!",
                     },
                   ]}
-                  hasFeedback
                 >
                   <Input
+                    value={formData.gmail}
                     onChange={(e) =>
                       e &&
                       e.target &&
@@ -365,7 +450,6 @@ const CreateUserForm = () => {
                       message: "Please input phone number!",
                     },
                   ]}
-                  hasFeedback
                   validateStatus={phoneError ? "error" : ""}
                   help={phoneError}
                 >
@@ -382,11 +466,10 @@ const CreateUserForm = () => {
                   rules={[
                     {
                       required: true,
-                      message: "Please input id number!",
+                      message: "Please input ID number!",
                     },
                   ]}
-                  hasFeedback
-                  validateStatus={idNumberError ? "error" : " "}
+                  validateStatus={idNumberError ? "error" : ""}
                   help={idNumberError}
                 >
                   <Input
@@ -407,6 +490,7 @@ const CreateUserForm = () => {
                   ]}
                 >
                   <Select
+                    value={formData.role}
                     onChange={(value) =>
                       setFormData({ ...formData, role: value })
                     }
@@ -415,15 +499,34 @@ const CreateUserForm = () => {
                     <Option value="inventory manager">Inventory Manager</Option>
                     <Option value="cashier">Cashier</Option>
                     <Option value="sales staff">Sales Staff</Option>
+                    
                   </Select>
                 </Form.Item>
               </Col>
             </Row>
-            <div style={{ marginTop: "20px", textAlign: "right" }}>
-              <Button type="primary" htmlType="submit" onClick={handleSubmit}>
-                Save
-              </Button>
-            </div>
+
+            <Form.Item
+              wrapperCol={{
+                xs: { span: 24, offset: 0 },
+                sm: { span: 18, offset: 6 },
+              }}
+            >
+              <div className="form_button">
+                <Button
+                  htmlType="submit"
+                  onClick={handleSubmit}
+                  style={{
+                    backgroundColor: "rgb(1, 1, 41)",
+                    color: "white",
+                    fontWeight: "500",
+                    marginTop: "5px",
+                    fontSize: "14px",
+                  }}
+                >
+                  Save
+                </Button>
+              </div>
+            </Form.Item>
           </Form>
         </div>
       </DefaultHandle>

@@ -1,0 +1,75 @@
+.category-card {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  width: 100%;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.category-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.category-card-img {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  display: flex;
+  
+}
+
+.category-card-overlay {
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  padding: 20px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.category-card:hover .category-card-overlay {
+  opacity: 1;
+}
+
+.category-link {
+  text-decoration: none;
+  color: inherit;
+}
+.card-text {
+  
+  font-weight: bold;
+  margin-bottom: auto;
+  color: rgb(221, 221, 221);
+  margin-top: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+.product-link {
+  text-decoration: none; /* Remove underline */
+  color: inherit; /* Inherit color */
+  transition: color 0.3s, transform 0.3s; /* Add transition for color change and hover effect */
+}
+
+.product-link:hover {
+  color: #007bff; /* Change color on hover */
+  transform: translateY(-5px); 
+
+}
+
+.web-homepage {
+  animation: fadeIn 2s ease-in-out;
+  animation-fill-mode: forwards;
+  background-color: #e2e2e2;
+}
+
+@keyframes fadeIn {
+  from {
+      opacity: 0;
+  }
+  to {
+      opacity: 1;
+  }
+}

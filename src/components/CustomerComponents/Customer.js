@@ -36,12 +36,8 @@ function Customer() {
       const nextCustomerId = generateNextCustomerId(lastCustomerId);
       setCustomerId(nextCustomerId);
     } catch (error) {
-      if (error.response && error.response.status === 403) {
-        setIsAccessDeniedVisible(true);
-      } else {
-        console.error("Error fetching customers:", error);
-        message.error("An error occurred while fetching customers.");
-      }
+      console.error("Error fetching customers:", error);
+      message.error("An error occurred while fetching customers.");
     }
   };
 
@@ -52,12 +48,18 @@ function Customer() {
 
   const handleDelete = async (cusid) => {
     try {
-      await axios.delete(`http://localhost:8000/customer/delete/${cusid}`);
+      await axios.delete(`http://localhost:8000/customer/delete/${cusid}`, {
+        withCredentials: true,
+      });
       setCustomers(customers.filter((customer) => customer.cusid !== cusid));
       message.success("Customer deleted successfully!");
     } catch (error) {
-      console.error("Error deleting customer:", error);
-      message.error("An error occurred while deleting the customer.");
+      if (error.response && error.response.status === 403) {
+        setIsAccessDeniedVisible(true);
+      } else {
+        console.error("Error deleting customer:", error);
+        message.error("An error occurred while deleting the customer.");
+      }
     }
   };
 
@@ -230,7 +232,7 @@ function Customer() {
             </Button>,
           ]}
         >
-          <p>You do not have permission to view this page.</p>
+          <p>You do not have permission to delete this customer.</p>
         </Modal>
       </DefaultHandle>
     </div>

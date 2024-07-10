@@ -141,7 +141,7 @@ function TotalSale() {
                 name='start' 
                 value={selectedDate}
                 onChange={handleDateChange}
-                style={{marginLeft:'20px'}}
+                style={{marginLeft:'20px',width:'150px'}}
               />
               <button style={{backgroundColor:'rgb(11, 2, 51)',color:'white',width:'130px',height:'30px',marginLeft:'20px'}} onClick={handleSeeTotalSale}>See Total Sale</button>
             </div>

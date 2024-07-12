@@ -116,9 +116,10 @@ function WebHeader() {
   };
 
   const handleSearch = (value) => {
-    setSearchValue(value);
-    if (value.trim().length > 0) {
-      axios.get(`http://localhost:8000/webitem/search/${value}`)
+    const trimmedValue = value.trim().slice(0, 10);
+    setSearchValue(trimmedValue);
+    if (trimmedValue.length > 0) {
+      axios.get(`http://localhost:8000/webitem/search/${trimmedValue}`)
         .then(res => {
           const filtered = res.data.data.map(item => item.displayName);
           setFilteredData(filtered);
@@ -131,17 +132,19 @@ function WebHeader() {
       setFilteredData([]);
     }
   };
-
+  
   const handleSelect = (value) => {
-    setSearchValue(value);
-    navigate(`/web/search/${value}`);
+    setSearchValue(value.slice(0, 10));
+    navigate(`/web/search/${value.slice(0, 10)}`);
   };
-
+  
   const handleSearchSubmit = (value) => {
-    if (value.trim().length > 0) {
-      navigate(`/web/search/${value}`);
+    const trimmedValue = value.trim().slice(0, 10);
+    if (trimmedValue.length > 0) {
+      navigate(`/web/search/${trimmedValue}`);
     }
   };
+  
 
   const handleCartClose = () => {
     setCartVisible(false);

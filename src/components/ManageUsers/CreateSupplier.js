@@ -16,6 +16,7 @@ const CreateSupplierForm = () => {
     companyName: "",
     phoneNumber: "",
     email: "",
+    items: [] // New items field
   });
 
   // State for phone number validation error
@@ -40,8 +41,8 @@ const CreateSupplierForm = () => {
 
   const fetchLatestSupplierId = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/supplier/get",{
-        withCredentials:true,
+      const response = await axios.get("http://localhost:8000/supplier/get", {
+        withCredentials: true,
       });
       const lastSupplierId =
         response.data.data.length > 0
@@ -76,10 +77,13 @@ const CreateSupplierForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Check if all fields are filled
-    const allFieldsFilled = Object.values(supplierData).every(
-      (field) => field.trim() !== ""
-    );
+    // Check if all fields are filled except items
+    const allFieldsFilled = Object.keys(supplierData).every((key) => {
+      if (key === "items") {
+        return supplierData[key].length > 0; // Ensure items is not empty
+      }
+      return supplierData[key].trim() !== "";
+    });
 
     if (!allFieldsFilled) {
       message.error("All fields are required.");
@@ -89,8 +93,8 @@ const CreateSupplierForm = () => {
     try {
       const result = await axios.post(
         "http://localhost:8000/supplier/add",
-        supplierData,{
-          withCredentials:true,
+        supplierData, {
+          withCredentials: true,
         }
       );
       if (result.data.success) {
@@ -118,10 +122,10 @@ const CreateSupplierForm = () => {
             <CloseOutlined />
           </div>
           <span style={{ color: "red", fontSize: "12px" }}>
-            (All fields are required )
+            (All fields are required)
           </span>
           <div>
-            <label htmlFor="supplierId">Supplier Id</label><br></br>
+            <label htmlFor="supplierId">Supplier Id</label><br />
             <input
               type="text"
               id="supplierId"
@@ -137,7 +141,7 @@ const CreateSupplierForm = () => {
             />
           </div>
           <div>
-            <label htmlFor="firstName">First Name</label><br></br>
+            <label htmlFor="firstName">First Name</label><br />
             <input
               type="text"
               id="firstName"
@@ -150,7 +154,7 @@ const CreateSupplierForm = () => {
             />
           </div>
           <div>
-            <label htmlFor="companyName">Company Name</label><br/>
+            <label htmlFor="companyName">Company Name</label><br />
             <input
               type="text"
               id="companyName"
@@ -166,7 +170,7 @@ const CreateSupplierForm = () => {
             />
           </div>
           <div>
-            <label htmlFor="phoneNumber">Phone Number</label><br/>
+            <label htmlFor="phoneNumber">Phone Number</label><br />
             <input
               type="text"
               id="phoneNumber"
@@ -178,7 +182,7 @@ const CreateSupplierForm = () => {
             {phoneError && <span style={{ color: "red" }}>{phoneError}</span>}
           </div>
           <div>
-            <label htmlFor="email">Email</label><br/>
+            <label htmlFor="email">Email</label><br />
             <input
               type="email"
               id="email"
@@ -188,6 +192,18 @@ const CreateSupplierForm = () => {
                 setSupplierData({ ...supplierData, email: e.target.value })
               }
               required
+            />
+          </div>
+          <div>
+            <label htmlFor="items">Items</label><br />
+            <textarea
+              id="items"
+              name="items"
+              value={supplierData.items.join(',')}
+              onChange={(e) =>
+                setSupplierData({ ...supplierData, items: e.target.value.split(',') })
+              }
+              rows="4" 
             />
           </div>
           <div>

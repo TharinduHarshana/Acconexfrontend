@@ -52,18 +52,29 @@ const CustomerForm = ({ handleSubmit, handleClose, formData = {}, editing, }) =>
     });
   };
 
+//  const mobileUnique = (mobile) => {
+//   const existingCustomers = fetchCustomers(); 
 
+//   return !existingCustomers.some(customer => customer.mobile === mobile);
+//  }
+ 
   //validate form(check empty)
   const validateForm = () => {
     if (!customerData.cusid || !customerData.name || !customerData.address || !customerData.mobile ) {
       message.error('Please fill in all the required fields.');
       return false;
     }
-    if (mobileError) {
-      message.error('Please correct the mobile number field.');
-      return false;
-    }
-    return true;
+    // if (mobileError) {
+    //   message.error('Please correct the mobile number field.');
+    //   return false;
+    // }
+    
+    // if (!mobileUnique(customerData.mobile)) {
+    //   message.error('The mobile number already exists. Please use a different mobile number.');
+    //   return false;
+    // }
+    // if(mobile)
+    // return true;
   };
 
   const onSubmit = (e) => {

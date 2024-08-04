@@ -26,11 +26,12 @@
 }
 
 .form_addContainer form input,
+.form_addContainer form textarea,
 .form_addContainer form button {
   width: 100%; 
   font-size: 14px;
-  padding: 6px; /* Reduced padding to decrease height */
-  margin-bottom: 5px; /* Reduced margin to decrease height */
+  padding: 6px; 
+  margin-bottom: 5px; 
   border: 1px solid #ccc; 
   border-radius: 3px; 
 }
@@ -38,7 +39,7 @@
 .form_addContainer form span {
   font-size: 12px;
   color: rgb(12, 12, 12);
-  margin-bottom: 5px; /* Reduced margin to decrease height */
+  margin-bottom: 5px; 
   display: block; 
 }
 
@@ -66,10 +67,10 @@
   color: white;
   font-weight: 500;
   font-size: 14px;
-  padding: 8px 16px; /* Reduced padding to decrease height */
+  padding: 8px 16px; 
   border: none;
   cursor: pointer;
-  margin-top: 10px; /* Reduced margin to decrease height */
-  margin-bottom: 10px; /* Reduced margin to decrease height */
+  margin-top: 10px; 
+  margin-bottom: 10px; 
   border-radius: 3px; 
 }

@@ -1,93 +1,60 @@
-
 import React, { useState } from 'react';
+import { DatePicker, Table, Card, message, Button } from 'antd';
 import axios from 'axios';
-import { Card, DatePicker, Button, Statistic, Row, Col, message } from 'antd';
-import DefaultHandle from './DefaultHandle';
+import moment from 'moment';
 
-const { MonthPicker } = DatePicker;
+const DailySalesReport = () => {
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [reportData, setReportData] = useState([]);
 
-const SalesReport = () => {
-  const [monthlyTotalSalesData, setMonthlyTotalSalesData] = useState(null);
-  const [selectedMonth, setSelectedMonth] = useState(null);
-
-  const fetchMonthlyTotalSalesData = async () => {
+  const fetchDailySalesReport = async (date) => {
     try {
-      if (!selectedMonth) {
-        return; 
-      }
-
-      const response = await axios.get('http://localhost:8000/dailysales/monthtotals', {
-        params: {
-          month: selectedMonth.format('YYYY-MM'),
-        }
-      });
-
-      if (response.data.success) {
-        if (response.data.data.length > 0) {
-          setMonthlyTotalSalesData(response.data.data[0]); 
-        } else {
-          setMonthlyTotalSalesData(null);
-          message.error('No data available for the selected month.');
-        }
-      } else {
-        setMonthlyTotalSalesData(null);
-        message.error('No data available for the selected month.');
-      }
+        const formattedDate = moment(date).format('YYYY-MM-DD');
+        console.log(`Requesting report for: ${formattedDate}`);
+        const response = await axios.get(`http://localhost:8000/dailysales/report/${formattedDate}`);
+        console.log('Response data:', response.data);
+        setReportData(response.data);
     } catch (error) {
-      console.error('Error fetching monthly total sales data:', error);
-      message.error('Failed to fetch data. Please try again later.');
+        message.error('Error fetching sales report');
+        console.error('Error fetching sales report:', error.response ? error.response.data : error.message);
+    }
+};
+
+
+  const handleGenerateReport = () => {
+    if (selectedDate) {
+      fetchDailySalesReport(selectedDate);
+    } else {
+      message.error('Please select a date first');
     }
   };
 
-  const handleMonthChange = (date, dateString) => {
-    setSelectedMonth(date);
-    if (!date) {
-      setMonthlyTotalSalesData(null); // Clear the data when date is cleared
-    }
-  };
+  const columns = [
+    { title: 'Date', dataIndex: '_id.day', key: '_id.day' },
+    { title: 'Cashier Name', dataIndex: '_id.cashier', key: '_id.cashier' },
+    { title: 'Customer Name', dataIndex: '_id.customer', key: '_id.customer' },
+    { title: 'Total Sales', dataIndex: 'totalSales', key: 'totalSales' },
+    { title: 'Item Count', dataIndex: 'itemCount', key: 'itemCount' },
+    { title: 'Items', dataIndex: 'items', key: 'items', render: items => items.join(', ') },
+  ];
 
   return (
-    <>
-      <DefaultHandle>
-        <div>
-          <Card>
-            <MonthPicker
-              onChange={handleMonthChange}
-              placeholder="Select month"
-              allowClear 
-            />
-            <Button
-              type="primary"
-              onClick={fetchMonthlyTotalSalesData}
-              style={{ marginLeft: '10px' }}
-              disabled={!selectedMonth}
-            >
-              Generate Report
-            </Button>
-          </Card>
-          {monthlyTotalSalesData ? (
-            <Card title={`Monthly Sales Report - ${selectedMonth ? selectedMonth.format('MMMM YYYY') : ''}`}>
-              <Row gutter={16}>
-                <Col span={8}>
-                  <Statistic title="Total Amount(LKR)" value={monthlyTotalSalesData.totalAmount} precision={2} />
-                </Col>
-                <Col span={8}>
-                  <Statistic title="Total Profit(LKR)" value={monthlyTotalSalesData.totalProfit} precision={2} />
-                </Col>
-                <Col span={8}>
-                  <Statistic title="Total Loss(LKR)" value={monthlyTotalSalesData.totalLoss} precision={2} />
-                </Col>
-              </Row>
-            </Card>
-          ) : (
-            <Card>
-              <p>No data available for the selected month.</p>
-            </Card>
-          )}
-        </div>
-      </DefaultHandle>
-    </>
+    <div style={{ margin: '20px' }}>
+      <Card title="Daily Sales Report">
+        <DatePicker onChange={(date) => setSelectedDate(date)} />
+        <Button type="primary" onClick={handleGenerateReport} style={{ marginLeft: '10px' }}>
+          Generate Report
+        </Button>
+        <Table
+          columns={columns}
+          dataSource={reportData}
+          rowKey={(record) => `${record._id.year}-${record._id.month}-${record._id.day}-${record._id.cashier}-${record._id.customer}`}
+          pagination={{ pageSize: 10 }}
+          style={{ marginTop: '10px' }}
+        />
+      </Card>
+    </div>
   );
 };
 
-export default SalesReport;
+export default DailySalesReport;

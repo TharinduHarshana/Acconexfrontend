@@ -136,6 +136,12 @@ function Supplier() {
       sortable: true,
     },
     {
+      name:"Supply Items",
+      selector:(row)=>row.items,
+      sortable:true,
+      cell: row => row.items.join(", "),
+    },
+    {
       name: "Actions",
       cell: (row) => (
         <div>

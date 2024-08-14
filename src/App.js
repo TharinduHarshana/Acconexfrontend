@@ -60,7 +60,9 @@ import CategoryHome from "./pages/Category";
 import AddNewCategory from "./components/CategoryComponents/Category.AddNewCategory";
 import CreateUserForm from "./components/ManageUsers/CreateUser";
 import UserProfile from "./components/ManageUsers/UserProfile";
-import SalesReport from "./components/SalesReport";
+import Reports from "./components/ReportComponents/SalesReport";
+import DailySalesReport from "./components/ReportComponents/DailySalesReport";
+
 
 
 
@@ -104,7 +106,9 @@ function App() {
         <Route path="/admin/userTable" element={<Users />} />
         <Route path="/admin/customer" element={<Customer/>}/>
         <Route path="admin/editprofile" element={<UserProfile />} /> 
-        <Route path="/admin/reports" element={<SalesReport/>}/>
+        <Route path="/admin/reports" element={<Reports/>}/>
+        <Route path="/dailysale" element={<DailySalesReport/>}/>
+
 
 
 
@@ -131,7 +135,6 @@ function App() {
         <Route path='/admin/holdbill' element={<SuspendSale/>}/>
         <Route path='/admin/dailysales' element={<Dailysales/>}/>
         <Route path='/admin/totalsale' element={<TotalSale/>}/>
-
 
         <Route path='/admin/inventory' element={<InventoryHome/>}/>
         <Route path='/admin/inventory/addnewitem' element={<InventoryAdd/>}/>

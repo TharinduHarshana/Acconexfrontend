@@ -174,7 +174,7 @@ function Users() {
             Add User
           </Link>
         </div>
-
+        <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
         <DataTable
           columns={columns}
           data={filterUser}
@@ -182,6 +182,7 @@ function Users() {
           fixedHeader
           pagination
         />
+        </div>
       </div>
       <Modal
         title="Access Denied!"

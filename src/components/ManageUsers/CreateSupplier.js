@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { message } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
@@ -16,7 +17,6 @@ const CreateSupplierForm = () => {
     companyName: "",
     phoneNumber: "",
     email: "",
-    items: [] // New items field
   });
 
   // State for phone number validation error
@@ -41,13 +41,11 @@ const CreateSupplierForm = () => {
 
   const fetchLatestSupplierId = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/supplier/get", {
-        withCredentials: true,
-      });
+      const response = await axios.get("http://localhost:8000/supplier/get");
       const lastSupplierId =
         response.data.data.length > 0
           ? response.data.data[response.data.data.length - 1].supplierId
-          : "sup000";
+          : "cus000";
       const nextSupplierId = generateNextSupplierId(lastSupplierId);
       setSupplierData((prevData) => ({
         ...prevData,
@@ -60,30 +58,18 @@ const CreateSupplierForm = () => {
   };
 
   const generateNextSupplierId = (currentSupplierId) => {
-    const prefix = "sup";
-    const numericPart = currentSupplierId.substring(prefix.length);
-    const nextNumber = parseInt(numericPart, 10) + 1;
-
-    // Ensure the next number is a valid number
-    if (isNaN(nextNumber)) {
-      console.error("Invalid supplier ID format:", currentSupplierId);
-      return `${prefix}001`;
-    }
-
-    return `${prefix}${nextNumber.toString().padStart(3, "0")}`;
+    const nextNumber = parseInt(currentSupplierId.substr(3)) + 1;
+    return `sup${nextNumber.toString().padStart(3, "0")}`;
   };
 
   // Function to handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Check if all fields are filled except items
-    const allFieldsFilled = Object.keys(supplierData).every((key) => {
-      if (key === "items") {
-        return supplierData[key].length > 0; // Ensure items is not empty
-      }
-      return supplierData[key].trim() !== "";
-    });
+    // Check if all fields are filled
+    const allFieldsFilled = Object.values(supplierData).every(
+      (field) => field.trim() !== ""
+    );
 
     if (!allFieldsFilled) {
       message.error("All fields are required.");
@@ -93,9 +79,7 @@ const CreateSupplierForm = () => {
     try {
       const result = await axios.post(
         "http://localhost:8000/supplier/add",
-        supplierData, {
-          withCredentials: true,
-        }
+        supplierData
       );
       if (result.data.success) {
         message.success("Supplier added successfully!");
@@ -122,10 +106,10 @@ const CreateSupplierForm = () => {
             <CloseOutlined />
           </div>
           <span style={{ color: "red", fontSize: "12px" }}>
-            (All fields are required)
+            (All fields are required )
           </span>
           <div>
-            <label htmlFor="supplierId">Supplier Id</label><br />
+            <label htmlFor="supplierId">Supplier Id</label><br></br>
             <input
               type="text"
               id="supplierId"
@@ -141,7 +125,7 @@ const CreateSupplierForm = () => {
             />
           </div>
           <div>
-            <label htmlFor="firstName">First Name</label><br />
+            <label htmlFor="firstName">First Name</label><br></br>
             <input
               type="text"
               id="firstName"
@@ -154,7 +138,7 @@ const CreateSupplierForm = () => {
             />
           </div>
           <div>
-            <label htmlFor="companyName">Company Name</label><br />
+            <label htmlFor="companyName">Company Name</label><br/>
             <input
               type="text"
               id="companyName"
@@ -170,7 +154,7 @@ const CreateSupplierForm = () => {
             />
           </div>
           <div>
-            <label htmlFor="phoneNumber">Phone Number</label><br />
+            <label htmlFor="phoneNumber">Phone Number</label><br/>
             <input
               type="text"
               id="phoneNumber"
@@ -182,7 +166,7 @@ const CreateSupplierForm = () => {
             {phoneError && <span style={{ color: "red" }}>{phoneError}</span>}
           </div>
           <div>
-            <label htmlFor="email">Email</label><br />
+            <label htmlFor="email">Email</label><br/>
             <input
               type="email"
               id="email"
@@ -195,18 +179,6 @@ const CreateSupplierForm = () => {
             />
           </div>
           <div>
-            <label htmlFor="items">Items</label><br />
-            <textarea
-              id="items"
-              name="items"
-              value={supplierData.items.join(',')}
-              onChange={(e) =>
-                setSupplierData({ ...supplierData, items: e.target.value.split(',') })
-              }
-              rows="4" 
-            />
-          </div>
-          <div>
             <button type="submit">Save</button>
           </div>
         </form>
@@ -216,3 +188,4 @@ const CreateSupplierForm = () => {
 };
 
 export default CreateSupplierForm;
+

@@ -1,41 +1,88 @@
-import jsPDF from 'jspdf';
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 
-const downloadReport = (totals, selectedDate, logo) => {
+const downloadReport = (totals, selectedDate, logo, isPrint = false) => {
   const doc = new jsPDF();
 
-  // Add Logo
+  // Add Logo at the top center
   const img = new Image();
   img.src = logo;
-  doc.addImage(img, 'JPEG', 15, 10, 50, 20);
+  doc.addImage(
+    img,
+    "PNG",
+    doc.internal.pageSize.getWidth() / 2 - 25,
+    10,
+    50,
+    20
+  );
 
   // Report Header
   doc.setFontSize(18);
-  doc.text('Daily Sales Report', 70, 30);
+  doc.setFont("Helvetica", "bold"); // Make the title bold
+  doc.setTextColor(0, 0, 0);
+  doc.text(
+    "Daily Sales Summary Report - Aconex Computers",
+    doc.internal.pageSize.getWidth() / 2,
+    40,
+    { align: "center" }
+  );
+
+  // Date
   doc.setFontSize(12);
-  doc.text(`Date: ${selectedDate}`, 15, 40);
-  doc.text(`Acconex Computers`, 15, 50);
-  doc.text(`124/1/1, Anagarika Dharmapala MW, Matara`, 15, 60);
-  doc.text(`Mob: 071-7314099`, 15, 70);
+  doc.setFont("Helvetica", "normal");
+  doc.setTextColor(0, 0, 0);
+  doc.text(`Date: ${selectedDate}`, 15, 50, { align: "left" });
 
-  // Sales Data
-  doc.setFontSize(14);
-  doc.text('Sales Summary:', 15, 90);
+  // Sales Summary Table
+  doc.autoTable({
+    startY: 75,
+    head: [
+      [
+        "Sell ID",
+        "Total Sells (LKR)",
+        "Total Cost (LKR)",
+        "Total Profit (LKR)",
+        "Total Loss (LKR)",
+        "Total Items Count",
+      ],
+    ],
+    body: [
+      [
+        totals.sellId,
+        totals.totalSell,
+        totals.totalCost,
+        totals.totalProfit,
+        totals.totalLoss,
+        totals.totalItemsCount,
+      ],
+    ],
+    theme: "striped",
+    headStyles: { fillColor: [11, 2, 51] },
+  });
 
-  doc.setFontSize(12);
-  doc.text(`Sell ID: ${totals.sellId}`, 15, 100);
-  doc.text(`Total Sells (LKR): ${totals.totalSell}`, 15, 110);
-  doc.text(`Total Cost (LKR): ${totals.totalCost}`, 15, 120);
-  doc.text(`Total Profit (LKR): ${totals.totalProfit}`, 15, 130);
-  doc.text(`Total Loss (LKR): ${totals.totalLoss}`, 15, 140);
-  doc.text(`Total Items Count: ${totals.totalItemsCount}`, 15, 150);
-
-  // Footer
+  // Footer with Signature and Date
   doc.setFontSize(10);
-  doc.text(`Signature: ____________________________`, 15, 170);
-  doc.text(`Checked Date: ${new Date().toLocaleDateString()}`, 15, 180);
+  doc.setFont("Helvetica", "italic");
+  doc.setTextColor(100, 100, 100);
+  const finalY = doc.internal.pageSize.getHeight() - 30;
+  
+  // Calculate the width for alignment
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const checkedDateText = `Checked Date: ${new Date().toLocaleDateString()}`;
+  const textWidth = doc.getTextWidth(checkedDateText);
 
-  // Download the PDF
-  doc.save('Daily_Sales_Report.pdf');
+  // Signature
+  doc.text("Signature: ____________________________", 15, finalY + 20);
+
+  // Checked Date aligned to the right, same line as Signature
+  doc.text(checkedDateText, pageWidth - textWidth - 15, finalY + 20);
+
+  if (isPrint) {
+    doc.autoPrint();
+    window.open(doc.output('bloburl'), '_blank');
+  } else {
+    doc.save(`${selectedDate}_Daily_Sales_Report.pdf`);
+  }
 };
 
 export default downloadReport;

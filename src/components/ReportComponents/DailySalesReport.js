@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { Button, Form, Input, Row, Col, Modal } from 'antd';
-import DefaultHandle from '../DefaultHandle';
-import downloadReport from './ReportDownload';
-import logo from "../../images/icon.jpg"; // Adjust the path to your logo image
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Button, Form, Input, Row, Col, Modal } from "antd";
+import DefaultHandle from "../DefaultHandle";
+import downloadReport from "./ReportDownload";
+import logo from "../../images/aconex.jpg";
 
 function DailySales() {
   const [totals, setTotals] = useState({
@@ -28,7 +28,10 @@ function DailySales() {
 
   const fetchDailySales = async (date) => {
     try {
-      const response = await axios.get(`http://localhost:8000/dailysales/report`, { params: { date } });
+      const response = await axios.get(
+        `http://localhost:8000/dailysales/report`,
+        { params: { date } }
+      );
       const data = response.data.data;
       calculateTotals(data);
     } catch (error) {
@@ -42,7 +45,7 @@ function DailySales() {
     let totalProfit = 0;
     let totalItemsCount = 0;
 
-    data.forEach(item => {
+    data.forEach((item) => {
       totalSell += item.totalamount;
       totalCost += item.totalcost;
       totalProfit += item.profit;
@@ -52,7 +55,7 @@ function DailySales() {
     const totalLoss = totalCost > totalSell ? totalCost - totalSell : 0;
 
     setTotals({
-      sellId: '1', 
+      sellId: "1",
       totalSell,
       totalCost,
       totalProfit,
@@ -62,28 +65,27 @@ function DailySales() {
   };
 
   const handleClose = () => {
-    navigate('/admin/reports');
+    navigate("/admin/reports");
   };
 
   const handleDownload = () => {
     downloadReport(totals, selectedDate, logo);
   };
 
+  const handlePrint = () => {
+    downloadReport(totals, selectedDate, logo, true); // Pass true to indicate printing
+  };
+
   return (
     <>
       <DefaultHandle>
-        <div style={{ padding: '2px', marginTop: "2px" }}>
+        <div style={{ padding: "2px", marginTop: "2px" }}>
           <Modal
             visible
             footer={null}
             onCancel={handleClose}
-            closeIcon={
-              <Button 
-                type="link" 
-                style={{ color: 'black' }} 
-              />
-            }
-            style={{ width: '50%' }}
+            closeIcon={<Button type="link" style={{ color: "black" }} />}
+            style={{ width: "50%" }}
           >
             <h5>Daily Sales Report for {selectedDate}</h5>
             <Form layout="vertical">
@@ -119,13 +121,58 @@ function DailySales() {
                   </Form.Item>
                 </Col>
               </Row>
-              <Button type="primary" style={{ width: "200px" }} onClick={handleDownload}>
-                Download Report
-              </Button>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <Button
+                  style={{
+                    width: "200px",
+                    marginRight: "10px",
+                    marginBottom: "10px",
+                    backgroundColor: "rgb(1, 1, 41)",
+                    color: "white",
+                    borderColor: "black",
+                  }}
+                  onClick={handleDownload}
+                  onMouseOver={(e) => {
+                    e.currentTarget.style.backgroundColor = "white";
+                    e.currentTarget.style.color = "black";
+                  }}
+                  onMouseOut={(e) => {
+                    e.currentTarget.style.backgroundColor = "rgb(1, 1, 41)";
+                    e.currentTarget.style.color = "white";
+                  }}
+                >
+                  Download Report
+                </Button>
+                <Button
+                  style={{
+                    width: "200px",
+                    marginBottom: "10px",
+                    backgroundColor: "rgb(1, 1, 41)",
+                    color: "white",
+                    borderColor: "black",
+                  }}
+                  onClick={handlePrint}
+                  onMouseOver={(e) => {
+                    e.currentTarget.style.backgroundColor = "white";
+                    e.currentTarget.style.color = "black";
+                  }}
+                  onMouseOut={(e) => {
+                    e.currentTarget.style.backgroundColor = "rgb(1, 1, 41)";
+                    e.currentTarget.style.color = "white";
+                  }}
+                >
+                  Print Report
+                </Button>
+              </div>
             </Form>
           </Modal>
         </div>
-  
       </DefaultHandle>
     </>
   );

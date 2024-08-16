@@ -1,17 +1,18 @@
-
-
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { message, Modal as AntdModal } from "antd";
+import { message,Modal } from "antd";
 import { useNavigate } from "react-router-dom";
 import "../../styles/item-kit.css";
-import { DeleteTwoTone } from '@ant-design/icons';
+import { DeleteTwoTone } from "@ant-design/icons";
 import DefaultHandle from "../DefaultHandle";
 
 function ItemKitsForm() {
   const navigate = useNavigate();
 
   const [inventoryItems, setInventoryItems] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
   const [formData, setFormData] = useState({
     itemKitId: "",
     itemKitName: "",
@@ -19,7 +20,6 @@ function ItemKitsForm() {
     price: 0,
     kitQuantity: "",
     items: [],
-    itemQuantity: [],
   });
 
   useEffect(() => {
@@ -27,9 +27,9 @@ function ItemKitsForm() {
       try {
         const response = await axios.get("http://localhost:8000/item/");
         if (response.data.success) {
-          const itemsWithSelectedQuantity = response.data.data.map(item => ({
+          const itemsWithSelectedQuantity = response.data.data.map((item) => ({
             ...item,
-            selectedQuantity: ""
+            selectedQuantity: 0, // Initialize selected quantity
           }));
           setInventoryItems(itemsWithSelectedQuantity);
         } else {
@@ -46,11 +46,14 @@ function ItemKitsForm() {
   useEffect(() => {
     const fetchItemKits = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/itemkit/all",{
-          withCredentials:true,
+        const response = await axios.get("http://localhost:8000/itemkit/all", {
+          withCredentials: true,
         });
         if (response.data.success) {
-          const lastItemKitId = response.data.data.length > 0 ? response.data.data[response.data.data.length - 1].itemKitId : "kitId000";
+          const lastItemKitId =
+            response.data.data.length > 0
+              ? response.data.data[response.data.data.length - 1].itemKitId
+              : "kitId000";
           const nextItemKitId = generateNextItemKitId(lastItemKitId);
           setFormData((prevFormData) => ({
             ...prevFormData,
@@ -73,10 +76,8 @@ function ItemKitsForm() {
     return `kitId${nextNumericPart.toString().padStart(3, "0")}`;
   };
 
-  const [searchItem, setSearchItem] = useState("");
-
   const handleQuantityChange = (e, item) => {
-    const newQuantity = e.target.value;
+    const newQuantity = parseInt(e.target.value);
     if (isNaN(newQuantity) || newQuantity < 0) {
       message.error("Item quantity must be a positive number.");
       return;
@@ -88,9 +89,26 @@ function ItemKitsForm() {
       )
     );
   };
+  const showItemsModal = () => {
+    if (formData.items.length === 0) {
+      message.warning("No items added to this kit yet.");
+      return;
+    }
+    setIsModalVisible(true);
+  };
+  
+  const handleOk = () => {
+    setIsModalVisible(false);
+  };
+  
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+  
 
   const addItemToKit = (item) => {
     const selectedQuantity = parseInt(item.selectedQuantity);
+
     if (isNaN(selectedQuantity) || selectedQuantity <= 0) {
       message.error("Please enter a valid quantity.");
       return;
@@ -101,58 +119,45 @@ function ItemKitsForm() {
       return;
     }
 
-    const itemIndex = formData.items.findIndex((i) => i._id === item._id);
-    if (itemIndex >= 0) {
-      const newItems = [...formData.items];
-      const newItemQuantities = [...formData.itemQuantity];
-      const oldSelectedQuantity = newItemQuantities[itemIndex];
-      const newSelectedQuantity = selectedQuantity;
+    const existingItem = formData.items.find((i) => i._id === item._id);
 
-      newItemQuantities[itemIndex] = newSelectedQuantity;
-      const newPrice =
-        formData.price +
-        item.sellingPrice * (newSelectedQuantity - oldSelectedQuantity);
+    if (existingItem) {
+      const updatedItems = formData.items.map((i) =>
+        i._id === item._id
+          ? { ...i, quantity: existingItem.quantity + selectedQuantity }
+          : i
+      );
 
       setFormData((prevFormData) => ({
         ...prevFormData,
-        items: newItems,
-        itemQuantity: newItemQuantities,
-        price: newPrice,
+        items: updatedItems,
+        price: prevFormData.price + selectedQuantity * item.sellingPrice,
       }));
     } else {
-      const itemTotalPrice = item.sellingPrice * selectedQuantity;
+      const newItem = { ...item, quantity: selectedQuantity };
       setFormData((prevFormData) => ({
         ...prevFormData,
-        items: [...prevFormData.items, item],
-        itemQuantity: [...prevFormData.itemQuantity, selectedQuantity],
-        price: prevFormData.price + itemTotalPrice,
+        items: [...prevFormData.items, newItem],
+        price: prevFormData.price + selectedQuantity * item.sellingPrice,
       }));
     }
 
     setInventoryItems(
       inventoryItems.map((i) =>
-        i._id === item._id ? { ...i, quantity: i.quantity - selectedQuantity, selectedQuantity: "" } : i
+        i._id === item._id
+          ? {
+              ...i,
+              quantity: i.quantity - selectedQuantity,
+              selectedQuantity: 0,
+            }
+          : i
       )
     );
-
-    setSearchItem("");
-  };
-
-  const checkIfItemKitIdExists = async (itemKitId) => {
-    try {
-      const response = await axios.get(
-        `http://localhost:8000/itemkit/check/${itemKitId}`
-      );
-      return response.data.exists;
-    } catch (error) {
-      console.error("Error checking if item kit ID exists:", error);
-      return false;
-    }
+    setSearchTerm("");
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Submitting form data:", formData);
 
     const requiredFields = [
       "itemKitId",
@@ -165,38 +170,9 @@ function ItemKitsForm() {
 
     const allFieldsFilled = requiredFields.every((field) => formData[field]);
 
-    const itemsValid =
-      formData.items.length > 0 &&
-      formData.items.every((item) => item.productID && item.quantity);
-
-    const itemQuantityValid =
-      formData.itemQuantity.length > 0 &&
-      formData.itemQuantity.length === formData.items.length;
-
-    if (!allFieldsFilled || !itemsValid || !itemQuantityValid) {
+    if (!allFieldsFilled || formData.items.length === 0) {
       message.error(
-        "Please fill in all required fields and ensure items and quantities are correctly specified."
-      );
-      return;
-    }
-
-    const priceValid = Number(formData.price) >= 0;
-    const kitQuantityValid = Number(formData.kitQuantity) >= 0;
-    const itemsQuantityValid = formData.items.every(
-      (item) => Number(item.quantity) >= 0
-    );
-
-    if (!priceValid || !kitQuantityValid || !itemsQuantityValid) {
-      message.error(
-        "Price, kit quantity, and item quantity must be positive numbers."
-      );
-      return;
-    }
-
-    const itemKitIdExists = await checkIfItemKitIdExists(formData.itemKitId);
-    if (itemKitIdExists) {
-      message.error(
-        "An item kit with this ID already exists. Please choose a different ID."
+        "Please fill in all required fields and add at least one item to the kit."
       );
       return;
     }
@@ -206,257 +182,283 @@ function ItemKitsForm() {
         "http://localhost:8000/itemkit/create",
         formData
       );
-      console.log("Item kit submitted successfully:", response.data);
       message.success("Item kit created successfully!");
 
       const updatedInventoryItems = response.data.updatedInventoryItems;
       setInventoryItems(updatedInventoryItems);
-      
+
       navigate("/admin/inventory/item-kits");
     } catch (error) {
       console.error("Failed to submit item kit:", error.response.data);
       message.error("Error occurred when creating item kit.");
     }
   };
+   // Remove the item from the kit
 
-  const removeItemFromKit = (item) => {
-    AntdModal.confirm({
-      title: 'Confirm Removal',
-      content: `Are you sure you want to remove ${item.itemName} from the kit?`,
+  const removeItemFromKit = (itemId) => {
+    Modal.confirm({
+      title: "Confirm Removal",
+      content: "Are you sure you want to remove this item from the kit?",
+      okText: "Yes",
+      okType: "danger",
+      cancelText: "No",
       onOk: () => {
-        const itemIndex = formData.items.findIndex((i) => i._id === item._id);
-        if (itemIndex >= 0) {
-          const updatedItems = formData.items.filter((i) => i._id !== item._id);
-          const updatedQuantities = formData.itemQuantity.filter(
-            (_, index) => index !== itemIndex
-          );
-          const updatedPrice = formData.price - item.sellingPrice * parseInt(item.selectedQuantity || 0);
-          setFormData((prevFormData) => ({
-            ...prevFormData,
-            items: updatedItems,
-            itemQuantity: updatedQuantities,
-            price: updatedPrice,
-          }));
-
-          setInventoryItems(
-            inventoryItems.map((i) =>
-              i._id === item._id
-                ? { ...i, quantity: i.quantity + parseInt(item.selectedQuantity || 0), selectedQuantity: "" }
-                : i
-            )
-          );
-        }
-      },
-      onCancel() {
-        console.log('Cancelled');
+        const removedItem = formData.items.find((item) => item._id === itemId);
+  
+        
+        const updatedItems = formData.items.filter((item) => item._id !== itemId);
+  
+        
+        setFormData((prevFormData) => ({
+          ...prevFormData,
+          items: updatedItems,
+          price:
+            prevFormData.price - removedItem.quantity * removedItem.sellingPrice,
+        }));
+  
+        // Update the inventory items to reflect the removal of the item from the kit
+        setInventoryItems(
+          inventoryItems.map((i) =>
+            i._id === removedItem._id
+              ? {
+                  ...i,
+                  quantity: i.quantity + removedItem.quantity, 
+                }
+              : i
+          )
+        );
       },
     });
   };
+  
 
-  const filteredItems = inventoryItems.filter(item =>
-    item.itemName.toLowerCase().includes(searchItem.toLowerCase())
+
+  const filteredItems = inventoryItems.filter((item) =>
+    item.itemName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
     <div className="item_kit">
       <DefaultHandle>
-      <div className="container">
-        <div className="item_kits form">
-          <form onSubmit={handleSubmit}>
-            <p style={{ color: "red" }}>All the fields are required.</p>
-            <label htmlFor="itemKitId">Item Kit ID:</label>
-            <input
-              type="text"
-              id="itemKitId"
-              name="itemKitId"
-              className="common-field"
-              value={formData.itemKitId}
-              onChange={(e) =>
-                setFormData({ ...formData, itemKitId: e.target.value })
-              }
-            />
-
-            <label htmlFor="itemKitName">Item Kit Name:</label>
-            <input
-              type="text"
-              id="itemKitName"
-              name="itemKitName"
-              value={formData.itemKitName}
-              onChange={(e) =>
-                setFormData({ ...formData, itemKitName: e.target.value })
-              }
-            />
-
-            <label htmlFor="itemDescription">Item Description:</label>
-            <input
-              type="text"
-              id="itemDescription"
-              name="itemDescription"
-              value={formData.itemDescription}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  itemDescription: e.target.value,
-                })
-              }
-            />
-
-            <label htmlFor="price">Price(LKR):</label>
-            <input
-              type="number"
-              id="price"
-              name="price"
-              value={formData.price}
-              readOnly
-            />
-
-            <label htmlFor="kitQuantity">Item Kit Quantity:</label>
-            <input
-              type="number"
-              id="kitQuantity"
-              name="kitQuantity"
-              value={formData.kitQuantity}
-              onChange={(e) => {
-                if (e.target.value < 0) {
-                  message.error("Kit quantity must be a positive number.");
-                  return;
+        <div className="container">
+          <div className="item_kits form">
+            <form onSubmit={handleSubmit}>
+              <p style={{ color: "red" }}>All the fields are required.</p>
+              <label htmlFor="itemKitId">Item Kit ID:</label>
+              <input
+                type="text"
+                id="itemKitId"
+                name="itemKitId"
+                className="common-field"
+                value={formData.itemKitId}
+                onChange={(e) =>
+                  setFormData({ ...formData, itemKitId: e.target.value })
                 }
-                setFormData({ ...formData, kitQuantity: e.target.value });
-              }}
-            />
-            
-            <button type="submit" className="form_btn">
-              Create Item Kit
-            </button>
-          </form>
-        </div>
+              />
 
-        <div className="item_kits table">
-          <div >
-            <input
-              type="text"
-              placeholder="Search item"
-              value={searchItem}
-              onChange={(e) => setSearchItem(e.target.value)}
-              className="search_input"
-            />
+              <label htmlFor="itemKitName">Item Kit Name:</label>
+              <input
+                type="text"
+                id="itemKitName"
+                name="itemKitName"
+                value={formData.itemKitName}
+                onChange={(e) =>
+                  setFormData({ ...formData, itemKitName: e.target.value })
+                }
+              />
+
+              <label htmlFor="itemDescription">Item Description:</label>
+              <input
+                type="text"
+                id="itemDescription"
+                name="itemDescription"
+                value={formData.itemDescription}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    itemDescription: e.target.value,
+                  })
+                }
+              />
+
+              <label htmlFor="price">Total Kit Price(LKR):</label>
+              <input
+                type="number"
+                id="price"
+                name="price"
+                value={formData.price}
+                readOnly
+              />
+
+              <label htmlFor="kitQuantity">Item Kit Quantity:</label>
+              <input
+                type="number"
+                id="kitQuantity"
+                name="kitQuantity"
+                value={formData.kitQuantity}
+                onChange={(e) => {
+                  if (e.target.value < 0) {
+                    message.error("Kit quantity must be a positive number.");
+                    return;
+                  }
+                  setFormData({ ...formData, kitQuantity: e.target.value });
+                }}
+              />
+
+              <button type="submit" className="form_btn">
+                Create Item Kit
+              </button>
+            </form>
           </div>
 
-          {searchItem && filteredItems.length > 0 && (
-                <div className="search-results">
-                    {filteredItems.map(item => (
-                        <div key={item._id} className="search-item">
-                            <p style={{ fontWeight: 'bold', marginBottom: '5px' ,marginLeft:'5px'}}>Name: {item.itemName}</p>
-                            <p style={{marginLeft:'5px'}}>Available Quantity: {item.quantity}</p>
-                            <input
-                                type="number"
-                                placeholder="Enter quantity"
-                                value={item.selectedQuantity}
-                                onChange={(e) => handleQuantityChange(e, item)}
-                                // style={{ padding: '5px', marginBottom: '5px' ,marginRight:'5px',marginLeft:'5px'}}
-                                style={{
-                                  padding: '3px',
-                                  marginBottom: '5px',
-                                  marginRight: '5px',
-                                  marginLeft: '5px',
-                                  width: '150px', 
-                                  height: '25px', 
-                                  borderRadius: '3px',
-                                  border: '1px solid #ccc' 
-                                }}
-                            />
-                            <button
-                                onClick={() => addItemToKit(item)}
-                                // style={{
-                                //     backgroundColor: 'rgb(1, 1, 41)',
-                                //     color: 'white',
-                                //     borderRadius: '5px',
-                                //     padding: '5px 10px',
-                                //     border: 'none',
-                                //     cursor: 'pointer'
-                                // }}
-                                style={{
-                                  backgroundColor: 'rgb(1, 1, 41)',
-                                  color: 'white',
-                                  borderRadius: '3px', 
-                                  padding: '3px 7px', 
-                                  border: 'none',
-                                  cursor: 'pointer',
-                                  fontSize: '12px', 
-                                  marginLeft: '5px' 
-                                }}
-                            >
-                                Add to Kit
-                            </button>
-                        </div>
-                    ))}
-                </div>
-            )}
-
-          {formData.items.length > 0 && (
-            <div className="kit-items-table">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Item Name</th>
-                    <th>Quantity</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {formData.items.map((item, index) => (
-                    <tr key={item._id}>
-                      <td>{item.itemName}</td>
-                      <td>{formData.itemQuantity[index]}</td>
-                      <td>
-                        <DeleteTwoTone
-                            twoToneColor="rgb(1, 1, 41)"
-                            style={{ cursor: 'pointer' }}
-                            onClick={() => removeItemFromKit(item)}
-                        />
-                    </td>
+          <div className="item_kits table">
+            <input
+              className="search_input"
+              type="text"
+              placeholder="Search items by name"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <button
+              style={{
+                backgroundColor: "rgb(1, 1, 41)",
+                color: "white",
+                borderRadius: "3px",
+                padding: "3px 7px",
+                borderColor: "black",
+                fontSize: "12px",
+                marginRight:"10px",
+                marginLeft: "5px",
+                height:"30px"
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.backgroundColor = "white";
+                e.currentTarget.style.color = "black";
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.backgroundColor = "rgb(1, 1, 41)";
+                e.currentTarget.style.color = "white";
+              }}
+              onClick={showItemsModal}
+            >
+              See items in this Kit
+            </button>
+            <div
+              style={{
+                maxHeight: "400px",
+                overflowY: "auto",
+                border: "1px solid #ddd",
+              }}
+            >
+              {filteredItems.length === 0 ? (
+                <p>No items found</p>
+              ) : (
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Item Name</th>
+                      <th>Quantity in Stock</th>
+                      <th>Quantity to Add</th>
+                      <th>Actions</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {filteredItems.map((item) => (
+                      <tr key={item._id}>
+                        <td>{item.itemName}</td>
+                        <td>{item.quantity}</td>
+                        <td>
+                          <input
+                            type="number"
+                            min="0"
+                            value={item.selectedQuantity}
+                            onChange={(e) => handleQuantityChange(e, item)}
+                          />
+                        </td>
+                        <td>
+                          <button
+                            onClick={() => addItemToKit(item)}
+                            style={{
+                              backgroundColor: "rgb(1, 1, 41)",
+                              color: "white",
+                              borderRadius: "3px",
+                              padding: "3px 7px",
+                              borderColor: "black",
+                              cursor: "pointer",
+                              fontSize: "12px",
+                              marginLeft: "5px",
+                            }}
+                            onMouseOver={(e) => {
+                              e.currentTarget.style.backgroundColor = "white";
+                              e.currentTarget.style.color = "black";
+                            }}
+                            onMouseOut={(e) => {
+                              e.currentTarget.style.backgroundColor = "rgb(1, 1, 41)";
+                              e.currentTarget.style.color = "white";
+                            }}
+                          >
+                            Add
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
             </div>
-          )}
-          
+          </div>
+          {/* Modal for displaying items in the kit */}
+        <Modal
+          title="Items in Kit"
+          visible={isModalVisible}
+          onOk={handleOk}
+          onCancel={handleCancel}
+          footer={[
+ 
+          ]}
+        >
+          <div className="item_kits form table">
+          <div
+              style={{
+                maxHeight: "300px",
+                overflowY: "auto",
+                border: "1px solid #ddd",
+              }}
+            >
+            {formData.items.length > 0 ? (
+        <table>
+          <thead>
+            <tr>
+              <th>Item Name</th>
+              <th>Quantity</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {formData.items.map((item) => (
+              <tr key={item._id}>
+                <td>{item.itemName}</td>
+                <td>{item.quantity}</td>
+                <td>
+                  <DeleteTwoTone
+                    onClick={() => removeItemFromKit(item._id)}
+                  />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      ) : (
+        <p>No items in the kit yet.</p> 
+      )}
+            
+            </div>
+          </div>
+        </Modal>
         </div>
-      </div>
       </DefaultHandle>
     </div>
   );
 }
 
 export default ItemKitsForm;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

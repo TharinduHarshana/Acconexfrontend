@@ -149,7 +149,7 @@ function Reports() {
             >
               <Option value="dailysales">Daily Sales</Option>
               <Option value="monthsales">Monthly Sales</Option>
-              <Option value="weeksales">Weekly Sales</Option>
+              
             </Select>
           </Col>
           <Col>

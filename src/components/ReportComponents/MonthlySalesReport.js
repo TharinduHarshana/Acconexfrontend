@@ -3,6 +3,8 @@ import axios from "axios";
 import DefaultHandle from "../DefaultHandle";
 import { Button, Form, Input, Row, Col, Modal, message } from "antd";
 import { useLocation, useNavigate } from "react-router-dom";
+import downloadMonthlyReport from "./MonthlyReportDownload";
+import logo from "../../images/aconex.jpg";
 
 function MonthlySales() {
   const [totals, setTotals] = useState({
@@ -67,11 +69,11 @@ function MonthlySales() {
   };
 
   const handleDownload = () => {
-    message.success("Report downloaded successfully.");
+    downloadMonthlyReport(totals, selectedMonth, logo);
   };
 
   const handlePrint = () => {
-    window.print();
+   downloadMonthlyReport(totals, selectedMonth, logo,true); 
   };
 
   const handleClose = () => {

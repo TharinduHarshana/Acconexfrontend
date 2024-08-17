@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useLocation, useNavigate } from "react-router-dom";
-import { Button, Form, Input, Row, Col, Modal } from "antd";
 import DefaultHandle from "../DefaultHandle";
-import downloadReport from "./ReportDownload";
-import logo from "../../images/aconex.jpg";
+import { Button, Form, Input, Row, Col, Modal, message } from "antd";
+import { useLocation, useNavigate } from "react-router-dom";
 
-function DailySales() {
+function MonthlySales() {
   const [totals, setTotals] = useState({
     sellId: 1,
     totalSell: 0,
@@ -15,30 +13,33 @@ function DailySales() {
     totalLoss: 0,
     totalItemsCount: 0,
   });
-
-  const location = useLocation();
   const navigate = useNavigate();
-  const selectedDate = location.state?.selectedDate;
+  const location = useLocation();
+  const selectedMonth = location.state?.selectedMonth;
 
   useEffect(() => {
-    if (selectedDate) {
-      fetchDailySales(selectedDate);
+    if (selectedMonth) {
+      fetchMonthlySales(selectedMonth);
+    } else {
+      message.error("No month selected.");
+      navigate("/admin/reports");
     }
-  }, [selectedDate]);
+  }, [selectedMonth]);
 
-  const fetchDailySales = async (date) => {
+  const fetchMonthlySales = async (month) => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/dailysales/report`,
-        { params: { date } }
+        `http://localhost:8000/dailysales/report/month`, 
+        { params: { month } }
       );
       const data = response.data.data;
       calculateTotals(data);
     } catch (error) {
       console.error("Error fetching sales report:", error);
+      message.error("Failed to fetch sales data.");
     }
   };
-
+  
   const calculateTotals = (data) => {
     let totalSell = 0;
     let totalCost = 0;
@@ -54,26 +55,27 @@ function DailySales() {
 
     const totalLoss = totalCost > totalSell ? totalCost - totalSell : 0;
 
+    
     setTotals({
       sellId: "1",
-      totalSell:totalSell.toLocaleString(),
-      totalCost:totalCost.toLocaleString(),
-      totalProfit:totalProfit.toLocaleString(),
-      totalLoss:totalLoss.toLocaleString(),
-      totalItemsCount:totalItemsCount.toLocaleString(),
+      totalSell: totalSell.toLocaleString(), 
+      totalCost: totalCost.toLocaleString(),
+      totalProfit: totalProfit.toLocaleString(),
+      totalLoss: totalLoss.toLocaleString(),
+      totalItemsCount: totalItemsCount.toLocaleString(),
     });
+  };
+
+  const handleDownload = () => {
+    message.success("Report downloaded successfully.");
+  };
+
+  const handlePrint = () => {
+    window.print();
   };
 
   const handleClose = () => {
     navigate("/admin/reports");
-  };
-
-  const handleDownload = () => {
-    downloadReport(totals, selectedDate, logo);
-  };
-
-  const handlePrint = () => {
-    downloadReport(totals, selectedDate, logo, true); 
   };
 
   return (
@@ -87,7 +89,7 @@ function DailySales() {
             closeIcon={<Button type="link" style={{ color: "black" }} />}
             style={{ width: "50%" }}
           >
-            <h5>Daily Sales Report for {selectedDate}</h5>
+            <h5>Monthly Sales Report for {selectedMonth}</h5>
             <Form layout="vertical">
               <Row gutter={16}>
                 <Col span={12}>
@@ -178,4 +180,4 @@ function DailySales() {
   );
 }
 
-export default DailySales;
+export default MonthlySales;

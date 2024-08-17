@@ -62,6 +62,7 @@ import CreateUserForm from "./components/ManageUsers/CreateUser";
 import UserProfile from "./components/ManageUsers/UserProfile";
 import Reports from "./components/ReportComponents/SalesReport";
 import DailySalesReport from "./components/ReportComponents/DailySalesReport";
+import MonthlySales from "./components/ReportComponents/MonthlySalesReport";
 
 
 
@@ -108,6 +109,8 @@ function App() {
         <Route path="admin/editprofile" element={<UserProfile />} /> 
         <Route path="/admin/reports" element={<Reports/>}/>
         <Route path="/dailysale" element={<DailySalesReport/>}/>
+        <Route path="/monthlysale" element={<MonthlySales/>}/>
+
 
 
 

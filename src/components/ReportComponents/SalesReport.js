@@ -26,11 +26,13 @@ import "../../styles/reportmodal.css";
 
 const { Option } = Select;
 const { Title } = Typography;
+const { MonthPicker } = DatePicker;
 
 function Reports() {
   const [reportType, setReportType] = useState("dailysales");
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedMonth, setSelectedMonth] = useState(null);
   const [weeklySalesData, setWeeklySalesData] = useState([]);
   const navigate = useNavigate();
 
@@ -60,20 +62,18 @@ function Reports() {
   };
 
   const handleGenerateReportClick = () => {
-    if (reportType === "dailysales") {
-      setIsModalVisible(true);
-    } else if (reportType === "weeksales") {
-      // Code to handle weekly sales report generation can be added here
-    } else if (reportType === "monthsales") {
-      // Code to handle monthly sales report generation can be added here
-    }
+    setIsModalVisible(true);
   };
 
   const handleDateChange = (date, dateString) => {
     setSelectedDate(dateString);
   };
 
-  const checkDateData = async (date) => {
+  const handleMonthChange = (date, dateString) => {
+    setSelectedMonth(dateString);
+  };
+
+  const checkDailySalesData = async (date) => {
     try {
       const response = await axios.get(
         "http://localhost:8000/dailysales/report",
@@ -81,23 +81,49 @@ function Reports() {
       );
       return response.data.data.length > 0;
     } catch (error) {
-      console.error("Error fetching sales report:", error);
+      console.error("Error fetching daily sales report:", error);
+      return false;
+    }
+  };
+
+  const checkMonthlySalesData = async (month) => {
+    try {
+      const response = await axios.get(
+        "http://localhost:8000/dailysales/report/month",
+        { params: { month } }
+      );
+      return response.data.data.length > 0;
+    } catch (error) {
+      console.error("Error fetching monthly sales report:", error);
       return false;
     }
   };
 
   const handleModalSubmit = async () => {
-    if (!selectedDate) {
-      message.error("Please select a date.");
-      return;
-    }
-
-    setIsModalVisible(false);
-    const hasData = await checkDateData(selectedDate);
-    if (hasData) {
-      navigate(`/dailysale`, { state: { selectedDate } });
-    } else {
-      message.error("This date has no data available.");
+    if (reportType === "dailysales") {
+      if (!selectedDate) {
+        message.error("Please select a date.");
+        return;
+      }
+      setIsModalVisible(false);
+      const hasData = await checkDailySalesData(selectedDate);
+      if (hasData) {
+        navigate(`/dailysale`, { state: { selectedDate } });
+      } else {
+        message.error("This date has no data available.");
+      }
+    } else if (reportType === "monthsales") {
+      if (!selectedMonth) {
+        message.error("Please select a month.");
+        return;
+      }
+      setIsModalVisible(false);
+      const hasData = await checkMonthlySalesData(selectedMonth);
+      if (hasData) {
+        navigate(`/monthlysale`, { state: { selectedMonth } });
+      } else {
+        message.error("This month has no data available.");
+      }
     }
   };
 
@@ -166,19 +192,26 @@ function Reports() {
           </ResponsiveContainer>
         </div>
 
-        {/* Modal for Daily Sales Report */}
+        {/* Modal for Sales Report */}
         <Modal
-          title="Daily Sales Report"
+          title={reportType === "dailysales" ? "Daily Sales Report" : "Monthly Sales Report"}
           visible={isModalVisible}
           onOk={handleModalSubmit}
           onCancel={handleModalCancel}
           className="custom-modal"
         >
-          <label>Select Date:</label>
-          <DatePicker
-            onChange={handleDateChange}
-            style={{ width: "100%", marginTop: "10px" }}
-          />
+          <label>{reportType === "dailysales" ? "Select Date:" : "Select Month:"}</label>
+          {reportType === "dailysales" ? (
+            <DatePicker
+              onChange={handleDateChange}
+              style={{ width: "100%", marginTop: "10px" }}
+            />
+          ) : (
+            <MonthPicker
+              onChange={handleMonthChange}
+              style={{ width: "100%", marginTop: "10px" }}
+            />
+          )}
         </Modal>
       </div>
     </DefaultHandle>

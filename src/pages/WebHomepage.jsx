@@ -12,7 +12,7 @@ function WebHomepage() {
     const [items, setItems] = useState([]);
 
     useEffect(() => {
-        axios.get('https://acconex-backend.vercel.app//category/')
+        axios.get('http://localhost:8000/category/')
             .then(res => {
                 setCategories(res.data.data);
             })

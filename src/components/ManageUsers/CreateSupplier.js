@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { message } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
@@ -40,13 +41,11 @@ const CreateSupplierForm = () => {
 
   const fetchLatestSupplierId = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/supplier/get",{
-        withCredentials:true,
-      });
+      const response = await axios.get("http://localhost:8000/supplier/get");
       const lastSupplierId =
         response.data.data.length > 0
           ? response.data.data[response.data.data.length - 1].supplierId
-          : "sup000";
+          : "cus000";
       const nextSupplierId = generateNextSupplierId(lastSupplierId);
       setSupplierData((prevData) => ({
         ...prevData,
@@ -59,17 +58,8 @@ const CreateSupplierForm = () => {
   };
 
   const generateNextSupplierId = (currentSupplierId) => {
-    const prefix = "sup";
-    const numericPart = currentSupplierId.substring(prefix.length);
-    const nextNumber = parseInt(numericPart, 10) + 1;
-
-    // Ensure the next number is a valid number
-    if (isNaN(nextNumber)) {
-      console.error("Invalid supplier ID format:", currentSupplierId);
-      return `${prefix}001`;
-    }
-
-    return `${prefix}${nextNumber.toString().padStart(3, "0")}`;
+    const nextNumber = parseInt(currentSupplierId.substr(3)) + 1;
+    return `sup${nextNumber.toString().padStart(3, "0")}`;
   };
 
   // Function to handle form submission
@@ -89,9 +79,7 @@ const CreateSupplierForm = () => {
     try {
       const result = await axios.post(
         "http://localhost:8000/supplier/add",
-        supplierData,{
-          withCredentials:true,
-        }
+        supplierData
       );
       if (result.data.success) {
         message.success("Supplier added successfully!");
@@ -200,3 +188,4 @@ const CreateSupplierForm = () => {
 };
 
 export default CreateSupplierForm;
+

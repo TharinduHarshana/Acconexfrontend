@@ -38,7 +38,7 @@ const DefaultHandleSales = ({ children }) => {
   ];
 
   return (
-    <Layout>
+    <Layout style={{ height: '100vh', overflow: 'hidden' }}>
       <Sider trigger={null} collapsible collapsed={collapsed}>
         <div className="demo-logo-vertical" />
         <h3 className="title">ACONEX COMPUTER</h3>

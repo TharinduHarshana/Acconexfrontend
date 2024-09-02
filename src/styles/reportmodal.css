@@ -1,0 +1,15 @@
+/* customModalStyles.css */
+
+
+.custom-modal .ant-modal-footer .ant-btn {
+    background-color: rgb(1, 1, 41);
+    color: white;
+  }
+  
+  .custom-modal .ant-modal-footer .ant-btn:hover,
+  .custom-modal .ant-modal-footer .ant-btn:focus {
+    background-color:white; 
+    color:black ; 
+    border-color:black; 
+  }
+  

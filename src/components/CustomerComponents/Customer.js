@@ -7,7 +7,7 @@ import DefaultHandle from "../DefaultHandle";
 import axios from "axios";
 import CustomerForm from "./customerForm";
 import "../../styles/customer.css";
-import { EditFilled, DeleteFilled } from "@ant-design/icons";
+import { EditFilled, DeleteFilled,UserAddOutlined } from "@ant-design/icons";
 
 function Customer() {
   const [customers, setCustomers] = useState([]);
@@ -81,15 +81,6 @@ function Customer() {
 
   const handleFormSubmit = async (formData) => {
     try {
-      // Check if the customer ID already exists
-      const existingCustomer = customers.find(
-        (customer) => customer.cusid === formData.cusid
-      );
-      if (existingCustomer) {
-        message.error("Customer ID already exists. Please choose a different ID.");
-        return;
-      }
-
       // Add new customer
       const response = await axios.post(
         "http://localhost:8000/customer/add",
@@ -103,11 +94,11 @@ function Customer() {
         message.error(response.data.message);
       }
     } catch (error) {
-      console.error("Error submitting form:", error);
-      message.error("An error occurred while submitting the form.");
+      console.error("Error adding customer:", error);
+      // message.error("An error occurred while adding the customer.");
     }
   };
-
+  
   const handleEditCustomer = (customer) => {
     setShowForm(true);
     setEditingCustomer(customer);
@@ -180,7 +171,7 @@ function Customer() {
               </Button>
               <Link to="#" onClick={handleAddCustomer}>
                 {" "}
-                Add Customer
+                <UserAddOutlined/>Add Customer
               </Link>
             </div>
           </div>

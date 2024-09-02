@@ -5,15 +5,9 @@ import { useNavigate } from "react-router-dom";
 import "../../styles/userform.css";
 import { Row, Col } from "antd";
 import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
-import {
-  Button,
-  DatePicker,
-  Form,
-  Input,
-  Select,
-  Typography,
-  message,
-} from "antd";
+import { Button, DatePicker, Form, Input, Select, Typography, message } from "antd";
+import moment from "moment";
+
 const { Option } = Select;
 
 const CreateUserForm = () => {
@@ -30,6 +24,7 @@ const CreateUserForm = () => {
       sm: { span: 18 },
     },
   };
+
   // Ant Design form instance
   const [form] = Form.useForm();
 
@@ -60,8 +55,8 @@ const CreateUserForm = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/user/all",{
-        withCredentials:true,
+      const response = await axios.get("http://localhost:8000/user/all", {
+        withCredentials: true,
       });
       const lastUserId =
         response.data.data.length > 0
@@ -130,16 +125,14 @@ const CreateUserForm = () => {
     try {
       const userIdExists = await checkUserIdExists(formData.userId);
       if (userIdExists) {
-        message.error(
-          "User with this ID already exists! Try another User Id.."
-        );
+        message.error("User with this ID already exists! Try another User Id..");
         return;
       }
       const result = await axios.post(
         "http://localhost:8000/user/add",
         formData,
         {
-          withCredentials: true
+          withCredentials: true,
         }
       );
       if (result.data.success) {
@@ -166,18 +159,62 @@ const CreateUserForm = () => {
     }
   };
 
-  // Id number validation
+  // Id number validation and auto-fill logic
   const handleIdNumberChange = (e) => {
     const { value } = e.target;
     const isValid = /^[a-zA-Z0-9]{1,12}$/.test(value);
     if (isValid || value === "") {
       setFormData({ ...formData, idNumber: value });
       setIdNumberError("");
+
+      // Auto-fill gender and birthday based on ID number
+      const parsedData = parseNic(value);
+      if (parsedData) {
+        setFormData({
+          ...formData,
+          idNumber: value,
+          gender: parsedData.gender,
+          dob: parsedData.dob,
+        });
+        form.setFieldsValue({ gender: parsedData.gender, dob: moment(parsedData.dob) });
+      }
     } else {
       setIdNumberError(
         "Please enter only letters and numbers, and ensure the ID number has a maximum length of 12 characters"
       );
     }
+  };
+
+  // Function to parse NIC and extract gender and birthday
+  const parseNic = (nic) => {
+    if (nic.length !== 10 && nic.length !== 12) return null;
+
+    let year, month, day, gender;
+    if (nic.length === 10) {
+      year = "19" + nic.substr(0, 2);
+      const dayOfYear = parseInt(nic.substr(2, 3), 10);
+      gender = dayOfYear > 500 ? "female" : "male";
+      const dayOfYearAdjusted = dayOfYear > 500 ? dayOfYear - 500 : dayOfYear;
+      const date = new Date(year);
+      date.setMonth(0);
+      date.setDate(dayOfYearAdjusted);
+      month = (date.getMonth() + 1).toString().padStart(2, "0");
+      day = date.getDate().toString().padStart(2, "0");
+    } else if (nic.length === 12) {
+      year = nic.substr(0, 4);
+      const dayOfYear = parseInt(nic.substr(4, 3), 10);
+      gender = dayOfYear > 500 ? "female" : "male";
+      const dayOfYearAdjusted = dayOfYear > 500 ? dayOfYear - 500 : dayOfYear;
+      const date = new Date(year);
+      date.setMonth(0);
+      date.setDate(dayOfYearAdjusted);
+      month = (date.getMonth() + 1).toString().padStart(2, "0");
+      day = date.getDate().toString().padStart(2, "0");
+    } else {
+      return null;
+    }
+
+    return { dob: `${year}-${month}-${day}`, gender };
   };
 
   return (
@@ -240,31 +277,24 @@ const CreateUserForm = () => {
                   />
                 </Form.Item>
 
-                {/* First Name */}
-                <Form.Item
-                  label="First Name"
-                  name="firstName"
+               {/* Id Number */}
+               <Form.Item
+                  label="Id Number"
+                  name="idNumber"
                   rules={[
                     {
                       required: true,
-                      message: "Please input first name!",
-                    },
-                    {
-                      pattern: /^[A-Za-z]+$/,
-                      message:
-                        "First name should contain only alphabetic characters!",
+                      message: "Please input ID number!",
                     },
                   ]}
+                  validateStatus={idNumberError ? "error" : ""}
+                  help={idNumberError}
                 >
                   <Input
-                    value={formData.firstName}
-                    onChange={(e) =>
-                      e &&
-                      e.target &&
-                      setFormData({ ...formData, firstName: e.target.value })
-                    }
+                    value={formData.idNumber}
+                    onChange={handleIdNumberChange}
                   />
-                </Form.Item>
+                </Form.Item> 
 
                 {/* Password */}
                 <Form.Item
@@ -317,6 +347,7 @@ const CreateUserForm = () => {
                   ]}
                 >
                   <DatePicker
+                    value={formData.dob ? moment(formData.dob) : null}
                     onChange={(date, dateString) =>
                       date && setFormData({ ...formData, dob: dateString })
                     }
@@ -459,24 +490,31 @@ const CreateUserForm = () => {
                   />
                 </Form.Item>
 
-                {/* Id Number */}
-                <Form.Item
-                  label="Id Number"
-                  name="idNumber"
+             {/* First Name */}
+             <Form.Item
+                  label="First Name"
+                  name="firstName"
                   rules={[
                     {
                       required: true,
-                      message: "Please input ID number!",
+                      message: "Please input first name!",
+                    },
+                    {
+                      pattern: /^[A-Za-z]+$/,
+                      message:
+                        "First name should contain only alphabetic characters!",
                     },
                   ]}
-                  validateStatus={idNumberError ? "error" : ""}
-                  help={idNumberError}
                 >
                   <Input
-                    value={formData.idNumber}
-                    onChange={handleIdNumberChange}
+                    value={formData.firstName}
+                    onChange={(e) =>
+                      e &&
+                      e.target &&
+                      setFormData({ ...formData, firstName: e.target.value })
+                    }
                   />
-                </Form.Item>
+                </Form.Item>   
 
                 {/* User Role */}
                 <Form.Item
@@ -499,7 +537,6 @@ const CreateUserForm = () => {
                     <Option value="inventory manager">Inventory Manager</Option>
                     <Option value="cashier">Cashier</Option>
                     <Option value="sales staff">Sales Staff</Option>
-                    
                   </Select>
                 </Form.Item>
               </Col>

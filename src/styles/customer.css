@@ -40,6 +40,8 @@ body {
     font-size: 18px;
     border-radius: 5px;
     cursor: pointer;
+
+
   
 }
 .btn.btn_add{
@@ -130,10 +132,10 @@ body {
     margin-bottom: 10px;
 }
 
-/* Submit button styles */
+/* Submit button styles customer form*/
 .addContainer form button {
-    background-color: rgb(3, 68, 180);
-    color: white;
+    background-color: rgb(11, 2, 51);
+    color: rgb(255, 255, 255);
     font-weight: 500;
     margin-top: 20px;
 }
@@ -228,7 +230,7 @@ body {
 
 /* Edit button styles */
 .btn-edit {
-    background-color: rgba(8, 167, 246, 0.864);
+    background-color: rgb(11, 2, 51);
 }
 
 /* Delete button styles */

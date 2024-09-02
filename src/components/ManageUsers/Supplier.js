@@ -19,7 +19,7 @@ function Supplier() {
     const loadSuppliers = async () => {
       setLoading(true);
       try {
-        const response = await axios.get("http://localhost:8000/supplier/get", {
+        const response = await axios.get("https://acconex-backend.vercel.app/supplier/get", {
           withCredentials: true,
         });
         setSuppliers(response.data.data);
@@ -43,7 +43,7 @@ function Supplier() {
   // Function to handle deleting a supplier
   const handleDelete = async (_id) => {
     try {
-      await axios.delete(`http://localhost:8000/supplier/delete/${_id}`, {
+      await axios.delete(`https://acconex-backend.vercel.app/supplier/delete/${_id}`, {
         withCredentials: true,
       });
       setSuppliers(suppliers.filter((supplier) => supplier._id !== _id));

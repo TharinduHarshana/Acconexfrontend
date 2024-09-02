@@ -23,7 +23,7 @@ function Customer() {
 
   const fetchCustomers = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/customer", {
+      const response = await axios.get("https://acconex-backend.vercel.app/customer", {
         withCredentials: true,
       });
       setCustomers(response.data.data);
@@ -52,7 +52,7 @@ function Customer() {
 
   const handleDelete = async (cusid) => {
     try {
-      await axios.delete(`http://localhost:8000/customer/delete/${cusid}`);
+      await axios.delete(`https://acconex-backend.vercel.app/customer/delete/${cusid}`);
       setCustomers(customers.filter((customer) => customer.cusid !== cusid));
       message.success("Customer deleted successfully!");
     } catch (error) {
@@ -83,7 +83,7 @@ function Customer() {
     try {
       // Add new customer
       const response = await axios.post(
-        "http://localhost:8000/customer/add",
+        "https://acconex-backend.vercel.app/customer/add",
         formData
       );
       if (response.data.success) {
@@ -107,7 +107,7 @@ function Customer() {
   const handleUpdate = async (formData) => {
     try {
       const response = await axios.patch(
-        `http://localhost:8000/customer/update/${formData.cusid}`,
+        `https://acconex-backend.vercel.app/customer/update/${formData.cusid}`,
         formData
       );
       if (response.data.success) {

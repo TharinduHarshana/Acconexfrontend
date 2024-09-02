@@ -25,7 +25,7 @@ function WebCODorders() {
 
   const getCodConfirmOrders = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/cart/codOrders", {
+      const res = await axios.get("https://acconex-backend.vercel.app/cart/codOrders", {
         withCredentials: true,
       });
       setOrderDetails(res.data);
@@ -83,7 +83,7 @@ function WebCODorders() {
 
   const handleModalConfirm = async () => {
     try {
-      const res = await axios.post("http://localhost:8000/cart/updateOrder", {
+      const res = await axios.post("https://acconex-backend.vercel.app/cart/updateOrder", {
         orderId: selectedOrder.id,
         trackingCode,
       });

@@ -17,7 +17,7 @@ function TotalSale() {
   const fetchDailySales = async (date) => {
     console.log(`Fetching sales for date: ${date}`);
     try {
-      const response = await axios.get(`http://localhost:8000/dailysales/get/${date}`);
+      const response = await axios.get(`https://acconex-backend.vercel.app/dailysales/get/${date}`);
       const salesData = response.data.data;
       console.log('Fetched sales data:', salesData);
       calculateTotals(salesData);

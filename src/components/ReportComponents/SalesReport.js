@@ -43,7 +43,7 @@ function Reports() {
   const fetchWeeklySalesData = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:8000/dailysales/weekly_totals"
+        "https://acconex-backend.vercel.app/dailysales/weekly_totals"
       );
       const formattedData = response.data.data.map((item) => ({
         week: `Week ${item._id}`,
@@ -76,7 +76,7 @@ function Reports() {
   const checkDailySalesData = async (date) => {
     try {
       const response = await axios.get(
-        "http://localhost:8000/dailysales/report",
+        "https://acconex-backend.vercel.app/dailysales/report",
         { params: { date } }
       );
       return response.data.data.length > 0;
@@ -89,7 +89,7 @@ function Reports() {
   const checkMonthlySalesData = async (month) => {
     try {
       const response = await axios.get(
-        "http://localhost:8000/dailysales/report/month",
+        "https://acconex-backend.vercel.app/dailysales/report/month",
         { params: { month } }
       );
       return response.data.data.length > 0;

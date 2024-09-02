@@ -15,7 +15,7 @@ const ResetPassword = () => {
 
     const onFinish = async (values) => {
         try {
-            const response = await axios.post(`http://localhost:8000/webuser/resetPassword/${token}`, values);
+            const response = await axios.post(`https://acconex-backend.vercel.app/webuser/resetPassword/${token}`, values);
             console.log(response);
             if (response.data.status === "error") {
                 Swal.fire({

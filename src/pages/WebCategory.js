@@ -18,7 +18,7 @@ const WebCategory = (props) => {
   useEffect(() => {
     const fetchItems = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/webitem/${slug}`);
+        const response = await axios.get(`https://acconex-backend.vercel.app/webitem/${slug}`);
         setItems(response.data.data);
       } catch (err) {
         console.error(err);
@@ -37,7 +37,7 @@ const WebCategory = (props) => {
       }
 
       const token = localStorage.getItem('token'); // Retrieve the token from local storage
-      const res = await axios.post('http://localhost:8000/cart/add', {
+      const res = await axios.post('https://acconex-backend.vercel.app/cart/add', {
         Item_id: item._id,
         itemDisplayName: item.displayName,
         image: item.imageLink,

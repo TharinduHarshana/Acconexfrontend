@@ -19,7 +19,7 @@ function UserProfile() {
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/user/edit/profile", {
+        const response = await axios.get("https://acconex-backend.vercel.app/user/edit/profile", {
           withCredentials: true,
         });
         const profileData = response.data;
@@ -46,7 +46,7 @@ function UserProfile() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.patch("http://localhost:8000/user/profile", userProfile, {
+      await axios.patch("https://acconex-backend.vercel.app/user/profile", userProfile, {
         withCredentials: true,
       });
       message.success("Profile updated successfully!");

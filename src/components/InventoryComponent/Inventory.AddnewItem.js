@@ -72,8 +72,8 @@ const AddNewItem = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const categoriesResponse = await axios.get('http://localhost:8000/category/');
-        const suppliersResponse = await axios.get('http://localhost:8000/supplier/get');
+        const categoriesResponse = await axios.get('https://acconexfrontend.vercel.app/category/');
+        const suppliersResponse = await axios.get('https://acconexfrontend.vercel.app/supplier/get');
         setCategories(categoriesResponse.data.data);
         console.log(categoriesResponse.data.data);
         setSuppliers(suppliersResponse.data.data);
@@ -135,7 +135,7 @@ const AddNewItem = () => {
     };
     console.log(newItem);
     axios
-      .post('http://localhost:8000/item/add', newItem)
+      .post('https://acconexfrontend.vercel.app/item/add', newItem)
       .then((res) => {
         console.log(res);
         Swal.fire({

@@ -54,7 +54,7 @@ const Categories = () => {
     useEffect(() => {
       const fetchData = async () => {
         try {
-          const res = await axios.get('http://localhost:8000/category/');
+          const res = await axios.get('https://acconex-backend.vercel.app/category/');
           setCategories(res.data.data);
           setFilteredCategories(res.data.data);
         } catch (err) {
@@ -67,7 +67,7 @@ const Categories = () => {
     // Handle delete action
     const handleDelete = async (_id) => {
       try {
-        await axios.delete(`http://localhost:8000/category/delete/${_id}`);
+        await axios.delete(`https://acconex-backend.vercel.app/category/delete/${_id}`);
         Swal.fire({
           icon: 'success',
           title: 'Category Deleted Successfully!',

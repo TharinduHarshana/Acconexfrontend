@@ -16,7 +16,7 @@ function DisplayCart({ show, handleClose }) {
   const getCartItems = async () => {
     try {
       const token = localStorage.getItem('token'); // Retrieve the token from local storage
-      const res = await axios.get('http://localhost:8000/cart/get', {
+      const res = await axios.get('https://acconex-backend.vercel.app/cart/get', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       setCartItems(res.data);
@@ -67,7 +67,7 @@ function DisplayCart({ show, handleClose }) {
   
       if (result.isConfirmed) {
         const token = localStorage.getItem('token'); // Retrieve the token from local storage
-        const res = await axios.delete('http://localhost:8000/cart/delete', {
+        const res = await axios.delete('https://acconex-backend.vercel.app/cart/delete', {
           data: { item_id },
           headers: {
             'Authorization': `Bearer ${token}` // Include the token in the request headers
@@ -98,7 +98,7 @@ function DisplayCart({ show, handleClose }) {
   const updateCart = async (item_id, quantity, price) => {
     try {
       const token = localStorage.getItem('token'); // Retrieve the token from local storage
-      const res = await axios.put('http://localhost:8000/cart/update', {
+      const res = await axios.put('https://acconex-backend.vercel.app/cart/update', {
         item_id,
         quantity,
         price

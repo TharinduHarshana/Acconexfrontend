@@ -9,7 +9,7 @@ const CartSummary = () => {
     const getCartItems = async () => {
         try {
             const token = localStorage.getItem('token'); 
-            const res = await axios.get('http://localhost:8000/cart/get', {
+            const res = await axios.get('https://acconex-backend.vercel.app/cart/get', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             setCartItems(res.data);

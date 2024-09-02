@@ -25,7 +25,7 @@ function ItemKitsForm() {
   useEffect(() => {
     const fetchInventoryItems = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/item/");
+        const response = await axios.get("https://acconexfrontend.vercel.app/item/");
         if (response.data.success) {
           const itemsWithSelectedQuantity = response.data.data.map((item) => ({
             ...item,
@@ -46,7 +46,7 @@ function ItemKitsForm() {
   useEffect(() => {
     const fetchItemKits = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/itemkit/all", {
+        const response = await axios.get("https://acconexfrontend.vercel.app/itemkit/all", {
           withCredentials: true,
         });
         if (response.data.success) {
@@ -179,7 +179,7 @@ function ItemKitsForm() {
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/itemkit/create",
+        "https://acconexfrontend.vercel.app/itemkit/create",
         formData
       );
       message.success("Item kit created successfully!");

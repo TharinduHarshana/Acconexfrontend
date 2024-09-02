@@ -21,7 +21,7 @@ function DailySales() {
 
   const fetchDailySales = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/dailysales");
+      const response = await axios.get("https://acconex-backend.vercel.app/dailysales");
       const sortedData = response.data.data.sort((a, b) => new Date(b.datetime) - new Date(a.datetime));
       setDailySales(sortedData);
     } catch (error) {

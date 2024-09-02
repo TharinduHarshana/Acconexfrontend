@@ -29,7 +29,7 @@ function DailySales() {
   const fetchDailySales = async (date) => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/dailysales/report`,
+        `https://acconex-backend.vercel.app/dailysales/report`,
         { params: { date } }
       );
       const data = response.data.data;

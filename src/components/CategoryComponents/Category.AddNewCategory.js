@@ -73,7 +73,7 @@ const AddNewCategory = () => {
       };
       
   
-      axios.post('http://localhost:8000/category/add', newCategory)
+      axios.post('https://acconex-backend.vercel.app/category/add', newCategory)
        .then((res) => {
         console.log(newCategory)
           Swal.fire({

@@ -29,7 +29,7 @@ function WebHeader() {
         const token = localStorage.getItem('token');
         if (token) {
             try {
-                const response = await axios.get('http://localhost:8000/webuser/get', {
+                const response = await axios.get('https://acconex-backend.vercel.app/webuser/get', {
                     headers: { 'Authorization': token }
                 });
                 const { fname, profileImage } = response.data;
@@ -51,7 +51,7 @@ function WebHeader() {
 
 
   useEffect(() => {
-    axios.get('http://localhost:8000/webitem/')
+    axios.get('https://acconex-backend.vercel.app/webitem/')
       .then(res => {
         const uniqueCategories = Array.from(new Set(res.data.data.map(item => item.category)));
         setCategories(uniqueCategories);
@@ -94,7 +94,7 @@ function WebHeader() {
       title: 'Success',
       text: 'Logged out successfully',
     });
-    navigate('/web/home');
+    navigate('/');
   };
 
   // Get cart count with login user 
@@ -102,7 +102,7 @@ function WebHeader() {
     try {
       const token = localStorage.getItem('token');
       if (token) {
-        const res = await axios.get('http://localhost:8000/cart/count', {
+        const res = await axios.get('https://acconex-backend.vercel.app/cart/count', {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -119,7 +119,7 @@ function WebHeader() {
     const trimmedValue = value.trim().slice(0, 10);
     setSearchValue(trimmedValue);
     if (trimmedValue.length > 0) {
-      axios.get(`http://localhost:8000/webitem/search/${trimmedValue}`)
+      axios.get(`https://acconex-backend.vercel.app/webitem/search/${trimmedValue}`)
         .then(res => {
           const filtered = res.data.data.map(item => item.displayName);
           setFilteredData(filtered);

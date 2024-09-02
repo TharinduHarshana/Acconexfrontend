@@ -55,7 +55,7 @@ const CreateUserForm = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/user/all", {
+      const response = await axios.get("https://acconex-backend.vercel.app/user/all", {
         withCredentials: true,
       });
       const lastUserId =
@@ -98,7 +98,7 @@ const CreateUserForm = () => {
   const checkUserIdExists = async (userId) => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/user/check/${userId}`,
+        `https://acconex-backend.vercel.app/user/check/${userId}`,
         { withCredentials: true }
       );
       return response.data.exists;
@@ -129,7 +129,7 @@ const CreateUserForm = () => {
         return;
       }
       const result = await axios.post(
-        "http://localhost:8000/user/add",
+        "https://acconex-backend.vercel.app/user/add",
         formData,
         {
           withCredentials: true,

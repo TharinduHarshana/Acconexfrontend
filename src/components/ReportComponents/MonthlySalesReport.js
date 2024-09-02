@@ -31,7 +31,7 @@ function MonthlySales() {
   const fetchMonthlySales = async (month) => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/dailysales/report/month`, 
+        `https://acconex-backend.vercel.app/dailysales/report/month`, 
         { params: { month } }
       );
       const data = response.data.data;

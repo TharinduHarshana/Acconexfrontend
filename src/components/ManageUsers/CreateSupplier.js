@@ -41,7 +41,7 @@ const CreateSupplierForm = () => {
 
   const fetchLatestSupplierId = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/supplier/get");
+      const response = await axios.get("https://acconex-backend.vercel.app/supplier/get");
       const lastSupplierId =
         response.data.data.length > 0
           ? response.data.data[response.data.data.length - 1].supplierId
@@ -78,7 +78,7 @@ const CreateSupplierForm = () => {
 
     try {
       const result = await axios.post(
-        "http://localhost:8000/supplier/add",
+        "https://acconex-backend.vercel.app/supplier/add",
         supplierData
       );
       if (result.data.success) {

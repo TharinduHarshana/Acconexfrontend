@@ -70,7 +70,7 @@ const Items = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get('http://localhost:8000/item/');
+        const res = await axios.get('https://acconex-backend.vercel.app/item/');
         setItems(res.data.data);
         setFilterItems(res.data.data);
       } catch (err) {
@@ -89,7 +89,7 @@ const Items = () => {
   // Handle Delete Function
   const handleDelete = async (_id) => {
     try {
-      await axios.delete(`http://localhost:8000/item/delete/${_id}`, {
+      await axios.delete(`https://acconex-backend.vercel.app/item/delete/${_id}`, {
         withCredentials: true,
       });
       Swal.fire({

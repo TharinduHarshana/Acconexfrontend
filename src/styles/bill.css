@@ -95,7 +95,6 @@
 }
 
 .sales_print_bill_table thead {
-  position: sticky; /* Make thead sticky */
   top: 0; /* Stick the header to the top */
   z-index: 1; /* Ensure header stays above table body content */
 }

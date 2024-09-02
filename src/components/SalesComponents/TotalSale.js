@@ -130,8 +130,7 @@ function TotalSale() {
   return (
     <div>
       <DefaultHandleSales>
-        <div style={{ display: '', height: '500px', overflow: 'auto' }} className='maindiv'>
-          <div className='divcontent'>
+        <div style={{ display: '', height: '800px', overflow: 'hidden', marginTop:'-20px' }} className='maindiv'>
             <h3 style={{textAlign:'center'}}>Today's Total Sale</h3>
             <div>
               <label htmlFor='start' style={{fontWeight:'bold',marginLeft:'30px'}}>Enter Start Date:</label>
@@ -143,10 +142,10 @@ function TotalSale() {
                 onChange={handleDateChange}
                 style={{marginLeft:'20px',width:'200px'}}
               />
-              <button style={{backgroundColor:'rgb(11, 2, 51)',color:'white',width:'130px',height:'30px',marginLeft:'20px'}} onClick={handleSeeTotalSale}>See Total Sale</button>
+              <button style={{backgroundColor:'rgb(11, 2, 51)',color:'white',width:'130px',height:'40px',marginLeft:'20px'}} onClick={handleSeeTotalSale}>See Total Sale</button>
             </div>
             
-            <div className='table dataTable-container' >
+            <div className='table dataTable-container' style={{marginLeft:'20px',width:'900px'}} >
               <DataTable style={{marginTop:'20px'}}
                 columns={[
                   { name: "Payment Method", selector: row => row.paymentMethod, sortable: true },
@@ -223,7 +222,7 @@ function TotalSale() {
                 </div>
               )}
             </div>
-          </div>
+          
         </div>
       </DefaultHandleSales>
     </div>

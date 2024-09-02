@@ -10,7 +10,7 @@ const AboutUs = () => {
     const [categories, setCategories] = useState([]);
 
     useEffect(() => {
-        axios.get('http://localhost:8000/category/')
+        axios.get('https://acconex-backend.vercel.app/category/')
             .then(res => {
                 setCategories(res.data.data);
             })

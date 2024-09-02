@@ -10,7 +10,8 @@ import CustomerForm from "../../CustomerComponents/customerForm";
 import { message,Modal} from 'antd'; 
 import printBill from './printBill'; 
 import { Link } from "react-router-dom";
-import {EditFilled ,DeleteFilled } from '@ant-design/icons';
+import {EditFilled ,DeleteFilled,UserAddOutlined ,CheckCircleOutlined ,PauseCircleOutlined  ,CloseCircleOutlined} from '@ant-design/icons';
+
 
 
 const Bill = () => {
@@ -26,6 +27,7 @@ const Bill = () => {
   const [date, setDate] = useState('');
   const [total, setTotal] = useState(0);
   const [tendered, setTendered] = useState(0);
+  const [disc , setDisc] = useState(0);
   const [balance, setBalance] = useState(0);
   const [paymentMethod, setPaymentMethod] = useState('');
   const [showTenderedPopup, setShowTenderedPopup] = useState(false);
@@ -41,6 +43,7 @@ const Bill = () => {
   const [editRowIndex, setEditRowIndex] = useState(null); 
   const [showEditModal, setShowEditModal] = useState(false); 
   const [editQuantity, setEditQuantity] = useState(0); 
+
  
   useEffect(() => {
     // Fetch initial data
@@ -138,14 +141,17 @@ const generateNextCustomerId = (currentCustomerId) => {
 
     const calculatedTotal = billItems.reduce((acc, item) => acc + ((item.price * item.quantity) - item.discount), 0);
     setTotal(calculatedTotal);
-    if (tendered !== '') {
+    if (tendered !== '' ) {
       const enteredAmount = parseFloat(tendered);
-      const calculateBalance = enteredAmount - calculatedTotal;
+      const discount = parseFloat(disc);
+      
+      const discountAmount = (calculatedTotal * discount  ) / 100;
+      const totalAfterDiscount = calculatedTotal - discountAmount;
+
+      const calculateBalance = enteredAmount - totalAfterDiscount;
       setBalance(calculateBalance);
     }
-  }, [billItems, tendered,invoiceNo]);
-
-  
+  }, [billItems, tendered,invoiceNo,disc]);
 
   //get current date
   const getCurrentDateTime = () => {
@@ -180,9 +186,7 @@ const generateNextCustomerId = (currentCustomerId) => {
     }
     else{
       setShowModal(true);
-    }
-        
-       
+    } 
   };
 
   const handleConfirmAddToBill = async (formData) => {
@@ -194,7 +198,7 @@ const generateNextCustomerId = (currentCustomerId) => {
       try {
         // Make API call to reduce quantity in the database
         const response = await axios.patch(`http://localhost:8000/item/update/${selectedItem._id}`, {
-          quantity: selectedItem.quantity - formData.quantity
+          
         });
   
         if (response.data.success) {
@@ -240,14 +244,11 @@ const generateNextCustomerId = (currentCustomerId) => {
     setShowModal(false);
   };
   
-  
-
   //calculate  totlal qnt
   const calculateTotalQuantity = () => { return billItems.reduce((acc, item) => acc + parseInt(item.quantity), 0); };
 
   //calculate cost of total
   const calculateTotalCost = () => { return billItems.reduce((acc, item) => acc + (item.costPrice*item.quantity), 0);};
-  
   
 //function for complete the sale
 const handleCompleteSale = async () => {
@@ -255,9 +256,8 @@ const handleCompleteSale = async () => {
     const totalQuantity = calculateTotalQuantity();
     const totalCost = calculateTotalCost();
     const calculateProfit = total - totalCost;
-    
 
-    // Extract and prepare item details as comma-separated strings
+    // Extract and prepare item details
     const itemIds = billItems.map(item => item.productID).join(',');
     const itemNames = billItems.map(item => item.product).join(',');
     const quantities = billItems.map(item => item.quantity).join(',');
@@ -279,14 +279,49 @@ const handleCompleteSale = async () => {
       totalamount: total,
       totalcost: totalCost,
       profit: calculateProfit,
-      
     };
 
     console.log("Attempting to complete sale with data:", data);
+
+    // Save sale data
     const response = await axios.post("http://localhost:8000/dailysales/add", data);
 
     if (response.data.success) {
-     message.success("Sales complete Successfully...")
+      console.log("Sales data saved successfully");
+
+      // Prepare requests to update item quantities
+      const updateRequests = billItems.map(async (item) => {
+        if (item.productID) {
+          try {
+            // Fetch current quantity from the backend
+            const getItemResponse = await axios.get(`http://localhost:8000/item/get/${item.productID}`);
+            if (getItemResponse.data.success) {
+              const currentQuantity = Number(getItemResponse.data.data.quantity);
+              const reductionAmount = Number(item.quantity);
+              const newQuantity = currentQuantity - reductionAmount;
+
+              console.log(`Updating item with product ID: ${item.productID}, reducing quantity by: ${reductionAmount}, new quantity in backend: ${newQuantity}`);
+
+              // Send request to update the quantity in the backend
+              return axios.patch(`http://localhost:8000/item/update/productID/${item.productID}`, {
+                quantity: newQuantity // Ensure this is the reduced quantity
+              });
+            } else {
+              console.warn(`Failed to fetch current quantity for item with product ID: ${item.productID}`);
+            }
+          } catch (error) {
+            console.error(`Error fetching item with product ID: ${item.productID}:`, error);
+          }
+        } else {
+          console.warn(`Skipping update for item with undefined productID. Item details:`, item);
+          return Promise.resolve(); // Skip if productID is undefined
+        }
+      });
+
+      // Send all update requests concurrently
+      await Promise.all(updateRequests);
+
+      message.success("Sales completed and inventory updated successfully.");
 
       // Increment invoice number by 1 for the next sale
       const nextInvoiceNumber = generateNextInvoiceNumber(invoiceNo);
@@ -294,12 +329,6 @@ const handleCompleteSale = async () => {
 
       // Clear the bill items
       setBillItems([]);
-
-      // Clear the print contents
-      const printContents = document.getElementById('bill_form');
-      if (printContents) {
-        printContents.innerHTML = '';
-      }
     } else {
       message.error("Failed to save data to daily sales. Please try again later.");
       console.log("Failed to add data");
@@ -310,7 +339,10 @@ const handleCompleteSale = async () => {
   }
 };
 
-  
+
+
+
+
 //function for print tha bill
 const printAndCompleteSale = async () => {
 
@@ -323,12 +355,9 @@ const printAndCompleteSale = async () => {
     message.warning('Please add items to the bill before complete the bill.');
     return;
   }
-  //printout the bill
   handlePrint();
-  //store value to the daily sales table 
   await handleCompleteSale();
-  //refresh the page
-  window.location.reload();
+
 };
 
 //function for suspend sale
@@ -387,16 +416,19 @@ const handleSuspendSale = async () => {
 };
 
 const handlePrint = () => {
-  printBill(invoiceNo, cashier, date, paymentMethod, billItems, total, tendered, balance,selectedCustomerName);
+  printBill(invoiceNo, cashier, date, paymentMethod, billItems, total, tendered, balance,selectedCustomerName,disc);
 };
 
-
-
  //add tendered amount
-  const handleConfirmTendered = (tenderedAmount) => {
-    setTendered(tenderedAmount);
-    setShowTenderedPopup(false);
-  };
+ const handleConfirmTendered = ({ tenderedAmount, discountAmount }) => {
+  const parsedTenderedAmount = parseFloat(tenderedAmount);
+  
+  // Parse and format discount amount as a percentage
+  const formattedDiscountAmount = discountAmount ? `${parseFloat(discountAmount).toFixed(0)}%` : '0%';
+  setTendered(parsedTenderedAmount);
+  setDisc(formattedDiscountAmount);
+  setShowTenderedPopup(false);
+};
 
   //fomat the nummber to 0.00
   const formatNumber = (number) => {
@@ -404,13 +436,13 @@ const handlePrint = () => {
   };
 
   //handle payment method
-  const handleCashRadioChange = () => {
+  const handleCashChange = () => {
     setShowTenderedPopup(true);
     setPaymentMethod('cash');
   };
 
   //handle payment method
-  const handleBankTransferRadioChange = () => {
+  const handleBankTransferChange = () => {
     const formattedTotal = formatNumber(total); // Ensure that the total is formatted correctly
     setTendered(parseFloat(formattedTotal)); // Convert the formatted total to a number
     setPaymentMethod('bank');
@@ -452,11 +484,6 @@ const handlePrint = () => {
 //add customer to the databse
   const handleFormSubmit = async (formData) => {
     try {
-      const existingCustomer = customers.find((customer) => customer.cusid === formData.cusid);
-      if (existingCustomer) {
-        message.error("Customer ID already exists. Please choose a different ID.");
-        return;
-      }
       const response = await axios.post("http://localhost:8000/customer/add", formData);
       if (response.data.success) {
         message.success(response.data.message);
@@ -507,7 +534,7 @@ const handleConfirmDelete = () => {
   }
 };
 
-
+//edit quantity after added to the bill
   const handleEditQuantity = async() => {
     if (editRowIndex !== null) {
       const updatedBillItems = [...billItems];
@@ -544,31 +571,85 @@ const handleConfirmDelete = () => {
     setEditQuantity(billItems[index].quantity);
     setShowEditModal(true);
   };
-
-  const handleCancelSale = async () => {
-    
-      window.location.reload();
-     
-  };
   
+ //cancel sale
+ const handleCancelSale = () => {
+  if (billItems.length === 0) {
+      message.warning('There are no items in the bill to cancel.');
+      return;
+  }
+
+  // Validate billItems before processing
+  const invalidItems = billItems.filter(item => !item.productID);
+  if (invalidItems.length > 0) {
+      console.error("Invalid items without productID found:", invalidItems);
+      message.error('Some items in the bill are missing their product IDs.');
+      return;
+  }
+
+  // Create a map for quick lookup of quantities to add back
+  const quantityToAddBack = billItems.reduce((acc, item) => {
+      if (item.productID) {
+          const quantity = Number(item.quantity);
+          acc[item.productID] = (acc[item.productID] || 0) + quantity;
+      }
+      return acc;
+  }, {});
+
+  console.log('Quantity to Add Back:', quantityToAddBack);
+
+  // Update inventory quantities back
+  setItems(prevItems => {
+      const updatedItems = prevItems.map(item => {
+          const quantityToAdd = quantityToAddBack[item.productID];
+          if (quantityToAdd) {
+              const newQuantity = Number(item.quantity) + quantityToAdd;
+              console.log(`Updating ${item.productID}: old quantity = ${item.quantity}, add back = ${quantityToAdd}, new quantity = ${newQuantity}`);
+              return { ...item, quantity: newQuantity };
+          }
+          return item;
+      });
+
+      // After updating inventory, set the new filtered items
+      setFilteredItems(updatedItems.filter(
+        (row) =>
+          row.displayName.toLowerCase().includes(searchValue) ||
+          row.productID.toLowerCase().includes(searchValue)
+      ));
+
+      return updatedItems;
+  });
+
+  // Clear bill items and reset related state
+  setBillItems([]);
+  setSelectedCustomerName('');
+  setSelectedCustomerId('');
+  setTendered(0);
+  setDisc(0);
+  setBalance(0);
+};
+
+
+
   return (
     <div className='sales_bill_container'>
       <DefaultHandleSales>
-        <div  style={{ display: '', height: '500px', overflow: 'auto' }} className='sales_content'>
-          <div className='bill_container'>
+        <div  className='sales_content' style={{marginLeft:'10px',marginTop:'-25px'}}>
+          <div className='sales_bill_container'>
             <div>
               <div className='sales_bill_table_container'>
-                <input placeholder='Search item' value={searchValue} onChange={filterItem} style={{width:'550px',marginBottom: '10px'}}/>
+                <input placeholder='Search item' value={searchValue} onChange={filterItem} style={{width:'570px',marginBottom: '10px', marginLeft:'10px'}}/>
                 <div className='sales_bill_table_wrapper'>
-                <table className='sales_bill_table'>
+                <table 
+                className='sales_bill_table'>
                   <thead>
                     <tr>
                       <th style={{ width: '10px' }}>Item ID</th>
-                      <th style={{ width: '150px' }}>Item Name</th>
+                      <th style={{ width: '130px' }}>Item Name</th>
                       <th style={{ width: '20px' }}>Qnt</th>
                       <th style={{ width: '40px' }}>Price (LKR)</th>
                       <th style={{ width: '40px' }}> Cost (LKR)</th>
-                      <th style={{ width: '40px' }}>Action</th>
+                      <th style={{ width: '60px' }}>Action</th>
                     </tr>
                   </thead>
                   <tbody style={{border:'1px solid balck'}}>
@@ -580,7 +661,7 @@ const handleConfirmDelete = () => {
                         <td>{formatNumber(item.sellingPrice)}</td>
                         <td>{formatNumber(item.costPrice)}</td>
                         <td>
-                          <button style={{width:'50px',padding:'1px 1px'}} onClick={() => handleChange(item)}>Add</button>
+                          <button style={{width:'50px',padding:'2px 1px',fontSize:'11px'}} onClick={() => handleChange(item)}>Add to Bill</button>
                         </td>
                       </tr>
                     ))}
@@ -590,7 +671,7 @@ const handleConfirmDelete = () => {
             </div>
           </div>
           </div>
-          <div className='sales_print_bill' id='print_bill' style={{marginLeft:'-10px'}}>
+          <div className='sales_print_bill' id='sales_print_bill' style={{marginLeft:'-15px'}}>
             <div className='sales_searchcustomer'>
               <input placeholder='Search customer' value={searchCustomerValue} onChange={filterCustomer} style={{marginBottom: '20px'}}/>
               {searchCustomerValue && filteredCustomers.length > 0 && (
@@ -614,35 +695,18 @@ const handleConfirmDelete = () => {
               )}
             </div>
             <div className='sales_printout'>
-              <form className='sales_bill_form' id='bill_form'>
-                <div>
-                  <p style={{ textAlign: 'center', fontSize: 18, fontStyle: 'oblique' }}>Acconex Computers<br /></p>
-                  <p style={{ textAlign: 'center', fontSize: 11 }}>124/1/1, Anagarika Dharmapala MW, Matara<br /> Mob; 071-7314099  </p>
-                  <hr />
-                  <div className="sales_form-row">
-                    <div className="sales_print_bill_label">
-                      <label style={{ fontSize: 12 }} htmlFor='invoice_no'>Invoice No:</label><br />
-                      <label style={{ fontSize: 12 }} htmlFor='cashier'>Cashier:</label><br />
-                      <label style={{ fontSize: 12 }} htmlFor='date'>Date:</label>
-                    </div>
-                    <div className="sales_print_bill_input">
-                      <input type='text' style={{ fontSize: 12 }} id='invoice_no' className="input-no-border" value={invoiceNo} onChange={(e) => setInvoiceNo(e.target.value)} readOnly /><br />
-                      <input type='text' style={{ fontSize: 12 }} id='cashier' className="input-no-border" value={cashier} onChange={(e) => setCashier(e.target.value)} readOnly /><br />
-                      <input type='text' style={{ fontSize: 12 }} id='date' className="input-no-border" value={date} onChange={(e) => setDate(e.target.value)} readOnly />
-                    </div>
-                  </div>
-                </div>
-                <hr />
+              <form className='sales_bill_form' id='bill_form'style={{height:'800px'}}>
+                <hr/>
                 <div>
                   <table className='sales_print_bill_table'>
                     <thead>
                       <tr>
-                        <th style={{ width: '180px' }}>Product</th>
+                        <th style={{ width: '180px', fontSize:'11'}}>Product</th>
                         <th>Price (LKR)</th>
                         <th  style={{ width: '10px' ,padding:'2px 2px 2px',textAlign:'center'}}>Qty</th>
                         <th>Dis(LKR)</th>
                         <th>Amount (LKR)</th>
-                        <th>     </th>
+                        <th style={{width:'30px'}}>     </th>
                       </tr>
                     </thead>
                     <tbody>
@@ -667,25 +731,26 @@ const handleConfirmDelete = () => {
                 <hr />
                 <div className="sales_form-row">
                   <div className="print_bill_label">
-                    <label style={{ fontSize: 13 }} htmlFor='net_amount'>Net Amount:</label><br />
+                    <label style={{ fontSize: 13 }} htmlFor='net_amount'>Net Amount:</label><br />  
                     <label style={{ fontSize: 13 }} htmlFor='torent'>Tendered Amount:</label><br />
+                    <label style={{ fontSize: 13 }} htmlFor="discount">Discount:</label><br />
                     <label style={{ fontSize: 13 }} htmlFor='balance'>Due Amount:</label>
                   </div>
                   <div className="print_bill_input">
-                    <input type='float' id='net_amount' className="input-no-border" value={formatNumber(total)} readOnly /><br />
-                    <input type='float' id='torent' className="input-no-border" value={formatNumber(tendered)} onChange={(e) => setTendered(formatNumber(e.target.value))} /><br />
-                    <input type='float' id='balance' className="input-no-border" value={formatNumber(balance)} readOnly />
+                    <input style={{ fontSize: 13 }} type='float' id='net_amount' className="input-no-border" value={formatNumber(total)} readOnly /><br />
+                    <input style={{ fontSize: 13 }} type='float' id='torent' className="input-no-border" value={formatNumber(tendered)} readOnly onChange={(e) => setTendered(formatNumber(e.target.value))} /><br />
+                    <input style={{ fontSize: 13 }} type="float" id="discount" className="input-no-border" readOnly value={disc} onChange={(e) => setDisc(e.target.value)}/><br />
+                    <input style={{ fontSize: 13 }} type='float' id='balance' className="input-no-border" value={formatNumber(balance)} readOnly />
                   </div>
                 </div>
                 <br />
                 <div className='sales_payment-method-container'>
                   <div className="payment-method">
-                    <input type='radio' name='paymentMethod' id='cash' checked={paymentMethod === 'cash'} value='cash' onChange={handleCashRadioChange} />
-                    <label htmlFor='cash'>Cash</label>
+                    <button type='button' name='paymentMethod' id='cash' onClick={handleCashChange}>Cash</button>
+  
                   </div>
                   <div className="payment-method">
-                    <input type='radio' name='paymentMethod' id='bank' checked={paymentMethod === 'bank'} value='bank' onChange={handleBankTransferRadioChange} />
-                    <label htmlFor='bank'>Bank Transfer</label>
+                    <button type='button' name='paymentMethod' id='bank' onClick={handleBankTransferChange}>Bank Transfer</button>
                   </div>
                 </div>
                 <hr />
@@ -717,10 +782,10 @@ const handleConfirmDelete = () => {
             />
           )}
           <div className='sales_bill_btn'>
-            <button className='sales_complete_sale' onClick={printAndCompleteSale}>Complete Sell</button>
-            <button className='sales_add_customer' onClick={handleAddCustomer}>Add Customer</button>
-            <button className='sales_suspend_sale'onClick={handleSuspendSale}>Suspend Sale</button>
-            <button className='sales_cancel_btn'onClick={handleCancelSale}>Cancel Sale</button>
+            <button className='sales_add_customer' onClick={handleAddCustomer}><UserAddOutlined/><br/>Add customer</button>
+            <button className='sales_suspend_sale'onClick={handleSuspendSale}><PauseCircleOutlined /><br/>Suspend Sale</button>
+            <button className='sales_complete_sale' onClick={printAndCompleteSale}><CheckCircleOutlined /> <br/>Complete sale</button>
+            <button className='sales_cancel_btn'onClick={handleCancelSale}><CloseCircleOutlined /><br/>Cancel Sale</button>
             
           </div>
         </div>

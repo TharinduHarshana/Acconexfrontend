@@ -1,5 +1,5 @@
 import logo from  '../../../images/icon.jpg'
-const printBill = (invoiceNo, cashier, date, paymentMethod, billItems, total, tendered, balance,customerName) => {
+const printBill = (invoiceNo, cashier, date, paymentMethod, billItems, total, tendered, balance,customerName,disc) => {
     // Validate and escape inputs to prevent HTML injection
     const escapeHtml = (unsafe) => {
       return unsafe
@@ -20,6 +20,8 @@ const printBill = (invoiceNo, cashier, date, paymentMethod, billItems, total, te
 
   // Convert tendered amount to a number if it's not already
   tendered = Number(tendered);
+  tendered = parseFloat(tendered) || 0;
+  disc = parseFloat(disc) || 0;
     
     // Construct the bill content
     let billContent = `
@@ -141,7 +143,7 @@ const printBill = (invoiceNo, cashier, date, paymentMethod, billItems, total, te
                       <td>${escapeHtml(item.product)}</td>
                       <td>${escapeHtml(item.quantity.toString())}</td>
                       <td>${formatCurrency(item.price)}</td>
-                      <td>${(item.discount)}</td>
+                      <td>${(item.discount) || 0}</td>
                       <td>${formatCurrency((item.price * item.quantity) - item.discount)}</td>
                     </tr>
                   `).join('')}
@@ -151,6 +153,9 @@ const printBill = (invoiceNo, cashier, date, paymentMethod, billItems, total, te
             <br/><hr><br/>
             <div class="bill-total">
               <span>Total:</span><span> ${formatCurrency(total)}</span>
+            </div>
+            <div class="bill-total">
+              <span>Discount:</span><span> ${formatCurrency(disc)}</span>
             </div>
             <div class="bill-total">
               <span>Tendered:</span><span> ${formatCurrency(tendered)}</span>

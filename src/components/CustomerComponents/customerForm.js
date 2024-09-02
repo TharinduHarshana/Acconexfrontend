@@ -52,11 +52,13 @@ const CustomerForm = ({ handleSubmit, handleClose, formData = {}, editing, }) =>
     });
   };
 
-//  const mobileUnique = (mobile) => {
-//   const existingCustomers = fetchCustomers(); 
-
-//   return !existingCustomers.some(customer => customer.mobile === mobile);
-//  }
+  const mobileUnique = (mobile) => {
+    // Assuming you have a way to access the list of customers (e.g., via props or fetching it from a context or global state)
+    const existingCustomers = []; // Replace with actual customer list
+    message.error('The mobile number already exists. Please use a different mobile number.');
+    return !existingCustomers.some(customer => customer.mobile === mobile);
+  };
+  
  
   //validate form(check empty)
   const validateForm = () => {
@@ -64,18 +66,20 @@ const CustomerForm = ({ handleSubmit, handleClose, formData = {}, editing, }) =>
       message.error('Please fill in all the required fields.');
       return false;
     }
-    // if (mobileError) {
-    //   message.error('Please correct the mobile number field.');
-    //   return false;
-    // }
-    
-    // if (!mobileUnique(customerData.mobile)) {
-    //   message.error('The mobile number already exists. Please use a different mobile number.');
-    //   return false;
-    // }
-    // if(mobile)
-    // return true;
+  
+    if (!mobileUnique(customerData.mobile)) {
+      message.error('The mobile number already exists. Please use a different mobile number.');
+      return false;
+    }
+  
+    if (mobileError) {
+      message.error('Please correct the mobile number field.');
+      return false;
+    }
+  
+    return true;
   };
+  
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -84,6 +88,7 @@ const CustomerForm = ({ handleSubmit, handleClose, formData = {}, editing, }) =>
     }
     handleSubmit(customerData);
   };
+  
 
   return (
     <div className='addContainer'>
@@ -107,7 +112,7 @@ const CustomerForm = ({ handleSubmit, handleClose, formData = {}, editing, }) =>
 
         {mobileError && <p className="error">{mobileError}</p>}
 
-        <button className='btn'>Submit</button>
+        <button className='customer_form_btn'>Submit</button>
       </form>
     </div>
   );

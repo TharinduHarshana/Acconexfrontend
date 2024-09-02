@@ -31,15 +31,15 @@ import Customer from './components/CustomerComponents/Customer';
 import SuspendSale from './components/SalesComponents/SuspendSale';
 import Dailysales from './components/SalesComponents/Daily_sales';
 import TotalSale from './components/SalesComponents/TotalSale';
-
+import BankTransfer from './components/SalesComponents/Bill_components/BankTransferModal';
 
 // import web components
+import WebHomepage from "./pages/WebHomepage";
 import Category from './pages/WebCategory';
 import WebRegister from './components/WebComponent/WebRegister';
 import WebLogin from "./components/WebComponent/WebLogin";
 import FrogotPassword from './components/WebComponent/WebFrogotPassword';
 import ResetPassword from "./components/WebComponent/WebResetPassword";
-import WebHomepage from "./pages/WebHomepage";
 import SearchResults from "./components/WebComponent/web.SearchResult";
 import Checkout from "./pages/WebCkeckout";
 import AboutUs from "./pages/WebAboutUs";
@@ -80,7 +80,7 @@ function App() {
     <BrowserRouter>
       <Routes>
     {/* user routing path */}
-    <Route path='/web/home' element={<WebHomepage/>} />
+    <Route path='/' element={<WebHomepage/>} />
     <Route path='/web/:slug' element={<Category/>} />
     <Route path='/web/register' element={<WebRegister/>} />
     <Route path='/web/login' element={<WebLogin/>} />
@@ -138,10 +138,16 @@ function App() {
         <Route path='/admin/holdbill' element={<SuspendSale/>}/>
         <Route path='/admin/dailysales' element={<Dailysales/>}/>
         <Route path='/admin/totalsale' element={<TotalSale/>}/>
+        <Route path="/banktransfer" component={<BankTransfer/>} />
 
         <Route path='/admin/inventory' element={<InventoryHome/>}/>
         <Route path='/admin/inventory/addnewitem' element={<InventoryAdd/>}/>
         <Route path='/admin/inventory/update/:id' element={<InventoryUpdate/>}/>
+
+        <Route path='/admin/inventory' element={<InventoryHome/>}/>
+        <Route path="/admin/addnewitem" element={<InventoryAdd/>}/> 
+        <Route path="/admin/inventory/updateitem/:id" element={<InventoryUpdate/>}/>
+        
         
 
 

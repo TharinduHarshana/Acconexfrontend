@@ -7,7 +7,6 @@ import axios from "axios";
 import "../../styles/customer.css";
 import GenerateSales from './GenerateSales';
 
-
 function DailySales() {
   const [dailySales, setDailySales] = useState([]);
   const [searchValue, setSearchValue] = useState("");
@@ -54,6 +53,19 @@ function DailySales() {
     navigate('/admin/totalsale'); // Navigate to the TotalSale component
   };
 
+  // Helper function to render table rows
+  const renderTableRows = (items) => {
+    return items[0].map((_, index) => (
+      <tr key={index}>
+        <td style={{ border: '1px solid black', padding: '8px' }}>{items[0][index]}</td>
+        <td style={{ border: '1px solid black', padding: '8px' }}>{items[1][index]}</td>
+        <td style={{ border: '1px solid black', padding: '8px' }}>{items[2][index]}</td>
+        <td style={{ border: '1px solid black', padding: '8px' }}>{items[3][index]}</td>
+        <td style={{ border: '1px solid black', padding: '8px' }}>{items[4][index]}</td>
+      </tr>
+    ));
+  };
+
   return (
     <div>
       <DefaultHandleSales>
@@ -90,7 +102,7 @@ function DailySales() {
           onRowClicked={handleRowClick}
         />
         <Modal
-          title={'Invoice Details'}
+          title={'Invoice Details'} fontWeight = '500'
           visible={showviewModal}
           onCancel={handleCancel}
           footer={[
@@ -101,20 +113,27 @@ function DailySales() {
         >
           {selectedSale && (
             <div>
-              <p><strong>Invoice number:</strong>{selectedSale.POSNO}</p>
-              {/* <p>Cashier Name: {selectedSale.cashirename}</p> */}
-              {/* <p>Date: {selectedSale.datetime}</p> */}
-              {/* <p>Customer Name: {selectedSale.customername}</p> */}
-              {/* <p>Item Count: {selectedSale.itemcount}</p> */}
-              <p><strong>Item_ID:</strong><br />{selectedSale.Item_IDs}</p>
-              <p><strong>Item Name:</strong> <br />{selectedSale.Item_Names}</p>
-              <p><strong>Item Quantity:</strong><br />{selectedSale.Qnt}</p>
-              <p><strong>Item Prices:</strong><br />{selectedSale.Prices}</p>
-              <p><strong>Item discounts:</strong><br />{selectedSale.Discounts}</p>
-              {/* <p>payment Method:{selectedSale.paymentmethod}</p> */}
-              {/* <p>Net Amount: {selectedSale.totalamount}</p> */}
-              {/* <p>tota Cost :{selectedSale.totalcost}</p> */}
-              {/* <p>Profit:{selectedSale.profit}</p> */}
+              <p><strong>Invoice number:</strong> {selectedSale.POSNO}</p>
+              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px', border: '1px solid black' }}>
+                <thead>
+                  <tr>
+                    <th style={{ border: '1px solid black', padding: '8px' }}>Item_ID</th>
+                    <th style={{ border: '1px solid black', padding: '8px' }}>Item Name</th>
+                    <th style={{ border: '1px solid black', padding: '8px' }}>Item Quantity</th>
+                    <th style={{ border: '1px solid black', padding: '8px' }}>Item Prices</th>
+                    <th style={{ border: '1px solid black', padding: '8px' }}>Item discounts</th>
+                  </tr>
+                </thead>
+                <tbody >
+                  {renderTableRows([ 
+                    selectedSale.Item_IDs.split(','),
+                    selectedSale.Item_Names.split(','),
+                    selectedSale.Qnt.split(','),
+                    selectedSale.Prices.split(','),
+                    selectedSale.Discounts.split(',')
+                  ])}
+                </tbody>
+              </table>
             </div>
           )}
         </Modal>

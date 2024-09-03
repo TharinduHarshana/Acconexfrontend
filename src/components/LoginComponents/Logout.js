@@ -10,8 +10,10 @@ const useLogout = () => {
   const logout = async () => {
     try {
       const response = await axios.get("https://acconex-backend.vercel.app/user/logout", {
-        // Make a GET request to the logout endpoint
-        withCredentials: true, // Include credentials in the request
+        withCredentials: true, 
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
       // Check if the response message indicates successful logout
       if (response.data.message === "Logged out successfully") {

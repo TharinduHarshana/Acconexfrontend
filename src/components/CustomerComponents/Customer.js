@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { message, Modal, Input, Button } from "antd";
 import DataTable from "react-data-table-component";
-import { CSVLink } from "react-csv";
 import DefaultHandle from "../DefaultHandle";
 import axios from "axios";
 import CustomerForm from "./customerForm";
@@ -138,14 +137,7 @@ function Customer() {
       row.cusid.toLowerCase().includes(searchValue.toLowerCase())
   );
 
-  const prepareCsvData = () => {
-    return customers.map((customer) => ({
-      cusid: customer.cusid,
-      name: customer.name,
-      address: customer.address,
-      mobile: customer.mobile.toString(),
-    }));
-  };
+
 
   return (
     <div>
@@ -165,14 +157,7 @@ function Customer() {
               style={{ marginBottom: "12px", width: "300px" }}
             />
             <div>
-              <Button style={{ marginRight: "10px" }}>
-                <CSVLink
-                  data={prepareCsvData()}
-                  filename={"customers_report.csv"}
-                >
-                  Export CSV
-                </CSVLink>
-              </Button>
+              
               <Link to="#" onClick={handleAddCustomer}>
                 {" "}
                 <UserAddOutlined/>Add Customer

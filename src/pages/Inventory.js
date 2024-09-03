@@ -136,14 +136,27 @@ const Items = () => {
     <DefaultHandle>
       <div style={{ display: '', height: '500px', overflow: 'auto' }}>
         <div>
-          <input type="text" className="input" placeholder="Search..." onChange={filterItem} />
+          <input type="text" className="input" placeholder="Search item ..." onChange={filterItem} style={{
+              marginBottom: "12px",
+              width: "300px",
+              padding: "5px",
+              border: isHovered ? "1px solid black" : "1px solid #ccc",
+              borderRadius: "5px",
+              transition: "border-color 0.3s",
+            }}  />
         </div>
 
-        <div className="text-end">
-          <Link to="/admin/addnewitem">
-            <button style={newItemBtnStyle}>New Item</button>
+        <div style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            alignItems: "center",
+            marginBottom: "25px",
+          }}>
+          <Space size={12}></Space> 
+          <Link to="/admin/addnewitem" style={{ fontSize: "14px" }}>
+           Add  Item
           </Link>
-        </div>
+       </div>
 
         <DataTable columns={column} data={items} pagination selectableRows></DataTable>
 

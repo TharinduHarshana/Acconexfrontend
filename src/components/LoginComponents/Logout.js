@@ -9,7 +9,7 @@ const useLogout = () => {
   // Define async function to handle logout
   const logout = async () => {
     try {
-      const response = await axios.get("https://acconexfrontend.vercel.app/user/logout", {
+      const response = await axios.get("https://acconex-backend.vercel.app/user/logout", {
         // Make a GET request to the logout endpoint
         withCredentials: true, // Include credentials in the request
       });

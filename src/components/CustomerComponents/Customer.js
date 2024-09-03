@@ -26,7 +26,9 @@ function Customer() {
       const response = await axios.get("https://acconex-backend.vercel.app/customer", {
         withCredentials: true,
       });
+      console.log("Response:", response);
       setCustomers(response.data.data);
+      
 
       // Get last customer ID and generate next customer ID
       const lastCustomerId =
@@ -81,12 +83,14 @@ function Customer() {
 
   const handleFormSubmit = async (formData) => {
     try {
+      console.log("Adding new customer with data:", formData);
       // Add new customer
       const response = await axios.post(
         "https://acconex-backend.vercel.app/customer/add",
         formData
       );
       if (response.data.success) {
+        console.log("Customer added successfully:", response.data);
         message.success(response.data.message);
         setShowForm(false);
         fetchCustomers();

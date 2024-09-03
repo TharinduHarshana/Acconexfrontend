@@ -336,7 +336,7 @@ function ItemKitsForm() {
                 borderRadius: "3px",
                 padding: "3px 7px",
                 borderColor: "black",
-                fontSize: "12px",
+                fontSize: "11px",
                 marginRight:"10px",
                 marginLeft: "5px",
                 height:"30px"

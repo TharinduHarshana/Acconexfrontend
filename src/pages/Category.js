@@ -5,6 +5,7 @@ import DataTable from "react-data-table-component";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import DefaultHandle from "../components/DefaultHandle";
+import { Space } from 'antd';
 import { EditFilled, DeleteFilled } from "@ant-design/icons";
 
 const Categories = () => {
@@ -75,7 +76,7 @@ const Categories = () => {
     };
     fetchData();
   }, []);
-  
+
   if (loading) {
     return <div>Loading...</div>;
   }

@@ -5,12 +5,13 @@ import DataTable from 'react-data-table-component';
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import DefaultHandle from '../components/DefaultHandle';
-import { Modal } from 'antd';
+import { Modal,Space } from 'antd';
 import swal from 'sweetalert';
 import {EditFilled ,DeleteFilled } from '@ant-design/icons';
 
 const Items = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const [isAccessDeniedVisible, setIsAccessDeniedVisible] = useState(false);
   // Assign Items
   const column = [
@@ -69,6 +70,7 @@ const Items = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       try {
         const res = await axios.get('https://acconex-backend.vercel.app/item/');
         setItems(res.data.data);
@@ -81,6 +83,8 @@ const Items = () => {
           icon: 'error',
           button: 'OK',
         });
+      }finally{
+        setLoading(false);
       }
     };
     fetchData();
@@ -125,6 +129,11 @@ const Items = () => {
     );
     setItems(itemData);
   };
+  
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
 
   // Modal Close Function
   const closeModal = () => {
@@ -140,7 +149,6 @@ const Items = () => {
               marginBottom: "12px",
               width: "300px",
               padding: "5px",
-              border: isHovered ? "1px solid black" : "1px solid #ccc",
               borderRadius: "5px",
               transition: "border-color 0.3s",
             }}  />

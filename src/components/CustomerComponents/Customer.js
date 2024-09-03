@@ -15,12 +15,14 @@ function Customer() {
   const [searchValue, setSearchValue] = useState("");
   const [customerId, setCustomerId] = useState("");
   const [isAccessDeniedVisible, setIsAccessDeniedVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetchCustomers();
   }, []);
 
   const fetchCustomers = async () => {
+    setLoading(true);
     try {
       const response = await axios.get("https://acconex-backend.vercel.app/customer", {
         withCredentials: true,
@@ -43,6 +45,8 @@ function Customer() {
         console.error("Error fetching customers:", error);
         message.error("An error occurred while fetching customers.");
       }
+    }finally {
+      setLoading(false);
     }
   };
 
@@ -137,6 +141,9 @@ function Customer() {
       row.cusid.toLowerCase().includes(searchValue.toLowerCase())
   );
 
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
 
   return (
@@ -160,7 +167,7 @@ function Customer() {
               
               <Link to="#" onClick={handleAddCustomer}>
                 {" "}
-                <UserAddOutlined/>Add Customer
+                Add Customer
               </Link>
             </div>
           </div>

@@ -741,9 +741,9 @@ const handleConfirmDelete = () => {
                 <div className="sales_form-row">
                   <div className="print_bill_label">
                     <label style={{ fontSize: 13 }} htmlFor='net_amount'>Net Amount:</label><br />  
-                    <label style={{ fontSize: 13 }} htmlFor='torent'>Tendered Amount:</label><br />
+                    <label style={{ fontSize: 13 }} htmlFor='torent'>Paid Amount:</label><br />
                     <label style={{ fontSize: 13 }} htmlFor="discount">Discount:</label><br />
-                    <label style={{ fontSize: 13 }} htmlFor='balance'>Due Amount:</label>
+                    <label style={{ fontSize: 13 }} htmlFor='balance'>Balance:</label>
                   </div>
                   <div className="print_bill_input">
                     <input style={{ fontSize: 13 }} type='float' id='net_amount' className="input-no-border" value={formatNumber(total)} readOnly /><br />

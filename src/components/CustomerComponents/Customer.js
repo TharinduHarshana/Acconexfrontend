@@ -6,7 +6,8 @@ import DefaultHandle from "../DefaultHandle";
 import axios from "axios";
 import CustomerForm from "./customerForm";
 import "../../styles/customer.css";
-import { EditFilled, DeleteFilled,UserAddOutlined } from "@ant-design/icons";
+import swal from 'sweetalert';
+import { EditFilled, DeleteFilled} from "@ant-design/icons";
 
 function Customer() {
   const [customers, setCustomers] = useState([]);
@@ -57,10 +58,25 @@ function Customer() {
 
   const handleDelete = async (cusid) => {
     try {
-      await axios.delete(`https://acconex-backend.vercel.app/customer/delete/${cusid}`);
+      await axios.delete(`https://acconex-backend.vercel.app/customer/delete/${cusid}`,
+      {
+        withCredentials: true,
+      }
+      );
       setCustomers(customers.filter((customer) => customer.cusid !== cusid));
       message.success("Customer deleted successfully!");
     } catch (error) {
+      if (error.response && error.response.status === 403) {
+        setIsAccessDeniedVisible(true);
+      } else {
+        console.error('Error deleting customer:', error);
+        swal({
+          title: 'Error',
+          text: 'An error occurred while deleting customer.',
+          icon: 'error',
+          button: 'OK',
+        });
+      }
       console.error("Error deleting customer:", error);
       message.error("An error occurred while deleting the customer.");
     }
@@ -145,7 +161,10 @@ function Customer() {
     return <div>Loading...</div>;
   }
 
-
+ // Modal Close Function
+ const closeModal = () => {
+  setIsAccessDeniedVisible(false);
+};
   return (
     <div>
       <DefaultHandle>
@@ -210,14 +229,14 @@ function Customer() {
         <Modal
           title="Access Denied"
           visible={isAccessDeniedVisible}
-          onCancel={() => setIsAccessDeniedVisible(false)}
+          onCancel={closeModal}
           footer={[
             <Button key="ok" onClick={() => setIsAccessDeniedVisible(false)}>
               OK
             </Button>,
           ]}
         >
-          <p>You do not have permission to view this page.</p>
+          <p>You do not have permission to delete the customer..</p>
         </Modal>
       </DefaultHandle>
     </div>

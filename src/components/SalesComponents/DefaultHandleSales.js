@@ -62,7 +62,7 @@ const DefaultHandleSales = ({ children }) => {
             <Link to="/admin/dailysales">Daily Sale</Link>
           </Menu.Item>
           <Menu.Item key="/log" icon={<LogoutOutlined />}>
-            <Link to="/log">Logout</Link>
+            <Link to="/admin/dashboard">Logout</Link>
           </Menu.Item>
         </Menu>
       </Sider>

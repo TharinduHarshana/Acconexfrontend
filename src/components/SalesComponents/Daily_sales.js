@@ -66,6 +66,33 @@ function DailySales() {
     ));
   };
 
+  // Custom styles to set the max height for the table's body
+  const customStyles = {
+    rows: {
+      style: {
+        minHeight: '40px', // override the row height
+      },
+    },
+    headCells: {
+      style: {
+        paddingLeft: '8px', // override the cell padding for head cells
+        paddingRight: '8px',
+      },
+    },
+    cells: {
+      style: {
+        paddingLeft: '8px', // override the cell padding for data cells
+        paddingRight: '8px',
+      },
+    },
+    tableWrapper: {
+      style: {
+        maxHeight: '400px', // Set the max height of the table container
+        overflowY: 'auto', // Adds scroll if content exceeds the max height
+      },
+    },
+  };
+
   return (
     <div>
       <DefaultHandleSales>
@@ -100,6 +127,7 @@ function DailySales() {
           fixedHeader
           pagination
           onRowClicked={handleRowClick}
+          customStyles={customStyles}
         />
         <Modal
           title={'Invoice Details'} fontWeight = '500'

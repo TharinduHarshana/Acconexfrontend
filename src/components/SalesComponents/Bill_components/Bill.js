@@ -114,7 +114,7 @@ const Bill = () => {
     //get current date when resotre
     const currentDate = getCurrentDateTime();
     setDate(currentDate);
-    setCashier('hiru');
+    setCashier('thusitha');
   }, []);
   
   
@@ -634,11 +634,12 @@ const handleConfirmDelete = () => {
   return (
     <div className='sales_bill_container'>
       <DefaultHandleSales>
-        <div  className='sales_content' style={{marginLeft:'10px',marginTop:'-25px'}}>
+        <div  className='sales_content' style={{marginLeft:'-20px',marginTop:'-25px'}}>
           <div className='sales_bill_container'>
             <div>
               <div className='sales_bill_table_container'>
                 <input placeholder='Search item' value={searchValue} onChange={filterItem} style={{width:'570px',marginBottom: '10px', marginLeft:'10px'}}/>
+                    
                 <div className='sales_bill_table_wrapper'>
                 <table 
                 className='sales_bill_table'>
@@ -667,12 +668,20 @@ const handleConfirmDelete = () => {
                     ))}
                   </tbody>
                 </table>
+                
               </div>
-            </div>
+              <br/><br/><br/><br/>
+              <hr/>
+              <button className='sales_add_customer' onClick={handleAddCustomer}><UserAddOutlined/><br/>Add customer</button>
+                      <button className='sales_suspend_sale'onClick={handleSuspendSale}><PauseCircleOutlined /><br/>Suspend Sale</button>
+                      <button className='sales_complete_sale' onClick={printAndCompleteSale}><CheckCircleOutlined /> <br/>Complete sale</button>
+                      <button className='sales_cancel_btn'onClick={handleCancelSale}><CloseCircleOutlined /><br/>Cancel Sale</button>
+              </div>
           </div>
           </div>
-          <div className='sales_print_bill' id='sales_print_bill' style={{marginLeft:'-15px'}}>
+          <div className='sales_print_bill' id='sales_print_bill' style={{marginLeft:'0px'}}>
             <div className='sales_searchcustomer'>
+              
               <input placeholder='Search customer' value={searchCustomerValue} onChange={filterCustomer} style={{marginBottom: '20px'}}/>
               {searchCustomerValue && filteredCustomers.length > 0 && (
                 <div className='sales_customer-list'>
@@ -694,8 +703,8 @@ const handleConfirmDelete = () => {
                 </div>
               )}
             </div>
-            <div className='sales_printout'>
-              <form className='sales_bill_form' id='bill_form'style={{height:'800px'}}>
+            <div className='sales_printout' >
+              <form className='sales_bill_form' id='bill_form'style={{height:'600px'}}>
                 <hr/>
                 <div>
                   <table className='sales_print_bill_table'>
@@ -781,13 +790,7 @@ const handleConfirmDelete = () => {
               formData={{ cusid: nextCustomerId }} // Pass the next customer ID
             />
           )}
-          <div className='sales_bill_btn'>
-            <button className='sales_add_customer' onClick={handleAddCustomer}><UserAddOutlined/><br/>Add customer</button>
-            <button className='sales_suspend_sale'onClick={handleSuspendSale}><PauseCircleOutlined /><br/>Suspend Sale</button>
-            <button className='sales_complete_sale' onClick={printAndCompleteSale}><CheckCircleOutlined /> <br/>Complete sale</button>
-            <button className='sales_cancel_btn'onClick={handleCancelSale}><CloseCircleOutlined /><br/>Cancel Sale</button>
-            
-          </div>
+          
         </div>
         <Modal
               title='Confirm Remove'

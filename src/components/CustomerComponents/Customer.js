@@ -33,10 +33,12 @@ function Customer() {
       
 
       // Get last customer ID and generate next customer ID
+      const customers = response.data.data;
       const lastCustomerId =
-        response.data.data.length > 0
-          ? response.data.data[response.data.data.length - 1].cusid
-          : "cus000";
+        customers.length > 0 ? customers[customers.length - 1].cusid : "cus000";
+  
+      console.log("Last Customer ID:", lastCustomerId); // Debugging log
+  
       const nextCustomerId = generateNextCustomerId(lastCustomerId);
       setCustomerId(nextCustomerId);
     } catch (error) {
@@ -50,11 +52,24 @@ function Customer() {
       setLoading(false);
     }
   };
-
+  
   const generateNextCustomerId = (currentCustomerId) => {
-    const nextNumber = parseInt(currentCustomerId.substr(3)) + 1;
-    return `cus${nextNumber.toString().padStart(3, "0")}`;
+    if (!currentCustomerId || currentCustomerId.length < 4) {
+      console.error("Invalid Customer ID format:", currentCustomerId);
+      return "cus001"; // Fallback to default if ID is not valid
+    }
+  
+    const numericPart = currentCustomerId.substr(3);
+    const nextNumber = parseInt(numericPart, 10);
+  
+    if (isNaN(nextNumber)) {
+      console.error("Unable to parse numeric part of Customer ID:", numericPart);
+      return "cus001"; // Fallback to default if parsing fails
+    }
+  
+    return `cus${(nextNumber + 1).toString().padStart(3, "0")}`;
   };
+  
 
   const handleDelete = async (cusid) => {
     try {
@@ -157,6 +172,39 @@ function Customer() {
       row.cusid.toLowerCase().includes(searchValue.toLowerCase())
   );
 
+  const prepareCsvData = () => {
+    return customers.map((customer) => ({
+      cusid: customer.cusid,
+      name: customer.name,
+      address: customer.address,
+      mobile: customer.mobile.toString(),
+    }));
+  };
+  const customStyles = {
+    rows: {
+      style: {
+        minHeight: '40px', // override the row height
+      },
+    },
+    headCells: {
+      style: {
+        paddingLeft: '8px', // override the cell padding for head cells
+        paddingRight: '8px',
+      },
+    },
+    cells: {
+      style: {
+        paddingLeft: '8px', // override the cell padding for data cells
+        paddingRight: '8px',
+      },
+    },
+    tableWrapper: {
+      style: {
+        maxHeight: '400px', // Set the max height of the table container
+        overflowY: 'auto', // Adds scroll if content exceeds the max height
+      },
+    },
+  };
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -217,6 +265,7 @@ function Customer() {
           selectableRows
           fixedHeader
           pagination
+          customStyles={customStyles}
         />
         {showForm && (
           <CustomerForm

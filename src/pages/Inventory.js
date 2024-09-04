@@ -5,12 +5,13 @@ import DataTable from 'react-data-table-component';
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import DefaultHandle from '../components/DefaultHandle';
-import { Modal } from 'antd';
+import { Modal,Space } from 'antd';
 import swal from 'sweetalert';
 import {EditFilled ,DeleteFilled } from '@ant-design/icons';
 
 const Items = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const [isAccessDeniedVisible, setIsAccessDeniedVisible] = useState(false);
   // Assign Items
   const column = [
@@ -69,8 +70,9 @@ const Items = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       try {
-        const res = await axios.get('http://localhost:8000/item/');
+        const res = await axios.get('https://acconex-backend.vercel.app/item/');
         setItems(res.data.data);
         setFilterItems(res.data.data);
       } catch (err) {
@@ -81,6 +83,8 @@ const Items = () => {
           icon: 'error',
           button: 'OK',
         });
+      }finally{
+        setLoading(false);
       }
     };
     fetchData();
@@ -89,7 +93,7 @@ const Items = () => {
   // Handle Delete Function
   const handleDelete = async (_id) => {
     try {
-      await axios.delete(`http://localhost:8000/item/delete/${_id}`, {
+      await axios.delete(`https://acconex-backend.vercel.app/item/delete/${_id}`, {
         withCredentials: true,
       });
       Swal.fire({
@@ -125,6 +129,11 @@ const Items = () => {
     );
     setItems(itemData);
   };
+  
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
 
   // Modal Close Function
   const closeModal = () => {
@@ -136,14 +145,26 @@ const Items = () => {
     <DefaultHandle>
       <div style={{ display: '', height: '500px', overflow: 'auto' }}>
         <div>
-          <input type="text" className="input" placeholder="Search..." onChange={filterItem} />
+          <input type="text" className="input" placeholder="Search item ..." onChange={filterItem} style={{
+              marginBottom: "12px",
+              width: "300px",
+              padding: "5px",
+              borderRadius: "5px",
+              transition: "border-color 0.3s",
+            }}  />
         </div>
 
-        <div className="text-end">
-          <Link to="/admin/addnewitem">
-            <button style={newItemBtnStyle}>New Item</button>
+        <div style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            alignItems: "center",
+            marginBottom: "25px",
+          }}>
+          <Space size={12}></Space> 
+          <Link to="/admin/addnewitem" style={{ fontSize: "14px" }}>
+           Add  Item
           </Link>
-        </div>
+       </div>
 
         <DataTable columns={column} data={items} pagination selectableRows></DataTable>
 

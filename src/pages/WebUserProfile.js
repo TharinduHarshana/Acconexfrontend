@@ -66,7 +66,7 @@ function WebUserProfile() {
         const token = localStorage.getItem('token');
         if (token) {
             try {
-                const response = await axios.put('http://localhost:8000/webuser/update', userData, {
+                const response = await axios.put('https://acconex-backend.vercel.app/webuser/update', userData, {
                     headers: { 'Authorization': token }
                 });
                 Swal.fire({
@@ -92,7 +92,7 @@ function WebUserProfile() {
             const token = localStorage.getItem('token');
             if (token) {
                 try {
-                    const response = await axios.get('http://localhost:8000/webuser/get', {
+                    const response = await axios.get('https://acconex-backend.vercel.app/webuser/get', {
                         headers: { 'Authorization': token }
                     });
                     const { fname, lname, email, address, city, zip, contactNumber, profileImage, shippingAddres, shippingCity, shippingZip, shippingContactNumber } = response.data;

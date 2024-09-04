@@ -28,7 +28,7 @@ function UpdateItem() {
   const [loading, setLoading] = useState(true);
         
         useEffect(()=>{
-            axios.patch('http://localhost:8000/item/update/'+id)
+            axios.patch('https://acconexfrontend.vercel.app/item/update/'+id)
             .then(res => { console.log(res.data.data)
               setDisplayName(res.data.data.displayName)
               setItemName(res.data.data.itemName)
@@ -51,8 +51,8 @@ function UpdateItem() {
         useEffect(() => {
           const fetchData = async () => {
             try {
-              const categoriesResponse = await axios.get('http://localhost:8000/category/');
-              const suppliersResponse = await axios.get('http://localhost:8000/supplier/get');
+              const categoriesResponse = await axios.get('https://acconexfrontend.vercel.app/category/');
+              const suppliersResponse = await axios.get('https://acconexfrontend.vercel.app/supplier/get');
               setCategories(categoriesResponse.data.data);
               console.log(categoriesResponse.data.data);
               setSuppliers(suppliersResponse.data.data);
@@ -87,7 +87,7 @@ function UpdateItem() {
           };
       
           try {
-            await axios.patch(`http://localhost:8000/item/update/${id}`, updatedItem)
+            await axios.patch(`https://acconexfrontend.vercel.app/item/update/${id}`, updatedItem)
             Swal.fire({
               icon: 'success',
               title: 'Item updated successfully!',

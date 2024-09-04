@@ -12,7 +12,7 @@ function WebHomepage() {
     const [items, setItems] = useState([]);
 
     useEffect(() => {
-        axios.get('http://localhost:8000/category/')
+        axios.get('https://acconex-backend.vercel.app/category/')
             .then(res => {
                 setCategories(res.data.data);
             })
@@ -20,7 +20,7 @@ function WebHomepage() {
     }, []);
 
     useEffect(() => {
-        axios.get('http://localhost:8000/webitem/')
+        axios.get('https://acconex-backend.vercel.app/webitem/')
             .then(res => {
                 const sortedItems = res.data.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 10);
                 setItems(sortedItems);

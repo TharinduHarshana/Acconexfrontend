@@ -21,7 +21,7 @@ function Users() {
     const loadUsers = async () => {
       setLoading(true);
       try {
-        const response = await axios.get("http://localhost:8000/user/all", {
+        const response = await axios.get("https://acconex-backend.vercel.app/user/all", {
           withCredentials: true,
         });
         setUsers(response.data.data);
@@ -53,7 +53,7 @@ function Users() {
         message.error("Cannot delete admin user!");
         return;
       }
-      await axios.delete(`http://localhost:8000/user/delete/${_id}`, {
+      await axios.delete(`https://acconex-backend.vercel.app/user/delete/${_id}`, {
         withCredentials: true,
       });
       const updatedUsers = users.filter(user => user._id !== _id);

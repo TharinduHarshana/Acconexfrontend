@@ -10,6 +10,7 @@ function ItemKitsForm() {
   const navigate = useNavigate();
 
   const [inventoryItems, setInventoryItems] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -24,12 +25,13 @@ function ItemKitsForm() {
 
   useEffect(() => {
     const fetchInventoryItems = async () => {
+      setLoading(true);
       try {
-        const response = await axios.get("http://localhost:8000/item/");
+        const response = await axios.get("https://acconex-backend.vercel.app/item/");
         if (response.data.success) {
           const itemsWithSelectedQuantity = response.data.data.map((item) => ({
             ...item,
-            selectedQuantity: 0, // Initialize selected quantity
+            selectedQuantity: 0, 
           }));
           setInventoryItems(itemsWithSelectedQuantity);
         } else {
@@ -37,6 +39,9 @@ function ItemKitsForm() {
         }
       } catch (error) {
         console.error("Error fetching inventory items:", error);
+      }
+      finally {
+        setLoading(false); 
       }
     };
 
@@ -46,7 +51,7 @@ function ItemKitsForm() {
   useEffect(() => {
     const fetchItemKits = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/itemkit/all", {
+        const response = await axios.get("https://acconex-backend.vercel.app/itemkit/all", {
           withCredentials: true,
         });
         if (response.data.success) {
@@ -179,7 +184,7 @@ function ItemKitsForm() {
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/itemkit/create",
+        "https://acconexfrontend.vercel.app/itemkit/create",
         formData
       );
       message.success("Item kit created successfully!");
@@ -235,6 +240,11 @@ function ItemKitsForm() {
 
   const filteredItems = inventoryItems.filter((item) =>
     item.itemName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+  const NoItemsMessage = () => (
+    <div style={{ color: 'red', fontWeight: 'bold' }}>
+      No items found
+    </div>
   );
 
   return (
@@ -326,7 +336,7 @@ function ItemKitsForm() {
                 borderRadius: "3px",
                 padding: "3px 7px",
                 borderColor: "black",
-                fontSize: "12px",
+                fontSize: "11px",
                 marginRight:"10px",
                 marginLeft: "5px",
                 height:"30px"
@@ -351,7 +361,7 @@ function ItemKitsForm() {
               }}
             >
               {filteredItems.length === 0 ? (
-                <p>No items found</p>
+                <NoItemsMessage />
               ) : (
                 <table>
                   <thead>

@@ -14,7 +14,7 @@ const UserDetailsForm = () => {
     const getCartItems = async () => {
         try {
             const token = localStorage.getItem('token'); 
-            const res = await axios.get('http://localhost:8000/cart/get', {
+            const res = await axios.get('https://acconex-backend.vercel.app/cart/get', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             setCartItems(res.data);
@@ -32,7 +32,7 @@ const UserDetailsForm = () => {
     const deleteAllCartItems = async () => {
         try {
             const token = localStorage.getItem('token');
-            const res = await axios.delete('http://localhost:8000/cart/deleteAll', {
+            const res = await axios.delete('https://acconex-backend.vercel.app/cart/deleteAll', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.status === 200) {
@@ -74,7 +74,7 @@ const UserDetailsForm = () => {
             const token = localStorage.getItem('token');
             if (token) {
                 try {
-                    const response = await axios.get('http://localhost:8000/webuser/get', {
+                    const response = await axios.get('https://acconex-backend.vercel.app/webuser/get', {
                         headers: { 'Authorization': token }
                     });
                     const { fname, lname, email, address, city, zip, contactNumber } = response.data;
@@ -120,7 +120,7 @@ const UserDetailsForm = () => {
                 orderDate: new Date().toISOString() // Add current date
             };
 
-            const res = await axios.post('http://localhost:8000/cart/submit', orderDetails, {
+            const res = await axios.post('https://acconex-backend.vercel.app/cart/submit', orderDetails, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
 
@@ -174,12 +174,12 @@ const UserDetailsForm = () => {
                 paymentMethod: paymentMethod,
                 orderDate: new Date().toISOString(),
                 line_items: line_items, // Added line_items to the request
-                success_url: 'http://localhost:3000/success',
-                cancel_url: 'http://localhost:3000/cancel'
+                success_url: 'https://acconex-backend.vercel.app/success',
+                cancel_url: 'https://acconex-backend.vercel.app/cancel'
             };
     
             // Call your backend to create a Stripe Checkout Session
-            const response = await axios.post('http://localhost:8000/payment', orderDetails, {
+            const response = await axios.post('https://acconex-backend.vercel.app/payment', orderDetails, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
     

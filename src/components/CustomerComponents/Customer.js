@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { message, Modal, Input, Button } from "antd";
 import DataTable from "react-data-table-component";
-import { CSVLink } from "react-csv";
 import DefaultHandle from "../DefaultHandle";
 import axios from "axios";
 import CustomerForm from "./customerForm";
 import "../../styles/customer.css";
-import { EditFilled, DeleteFilled,UserAddOutlined } from "@ant-design/icons";
+import swal from 'sweetalert';
+import { EditFilled, DeleteFilled} from "@ant-design/icons";
 
 function Customer() {
   const [customers, setCustomers] = useState([]);
@@ -16,18 +16,22 @@ function Customer() {
   const [searchValue, setSearchValue] = useState("");
   const [customerId, setCustomerId] = useState("");
   const [isAccessDeniedVisible, setIsAccessDeniedVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetchCustomers();
   }, []);
 
   const fetchCustomers = async () => {
+    setLoading(true);
     try {
-      const response = await axios.get("http://localhost:8000/customer", {
+      const response = await axios.get("https://acconex-backend.vercel.app/customer", {
         withCredentials: true,
       });
+      console.log("Response:", response);
       setCustomers(response.data.data);
-  
+      
+
       // Get last customer ID and generate next customer ID
       const customers = response.data.data;
       const lastCustomerId =
@@ -44,6 +48,8 @@ function Customer() {
         console.error("Error fetching customers:", error);
         message.error("An error occurred while fetching customers.");
       }
+    }finally {
+      setLoading(false);
     }
   };
   
@@ -67,10 +73,25 @@ function Customer() {
 
   const handleDelete = async (cusid) => {
     try {
-      await axios.delete(`http://localhost:8000/customer/delete/${cusid}`);
+      await axios.delete(`https://acconex-backend.vercel.app/customer/delete/${cusid}`,
+      {
+        withCredentials: true,
+      }
+      );
       setCustomers(customers.filter((customer) => customer.cusid !== cusid));
       message.success("Customer deleted successfully!");
     } catch (error) {
+      if (error.response && error.response.status === 403) {
+        setIsAccessDeniedVisible(true);
+      } else {
+        console.error('Error deleting customer:', error);
+        swal({
+          title: 'Error',
+          text: 'An error occurred while deleting customer.',
+          icon: 'error',
+          button: 'OK',
+        });
+      }
       console.error("Error deleting customer:", error);
       message.error("An error occurred while deleting the customer.");
     }
@@ -96,12 +117,14 @@ function Customer() {
 
   const handleFormSubmit = async (formData) => {
     try {
+      console.log("Adding new customer with data:", formData);
       // Add new customer
       const response = await axios.post(
-        "http://localhost:8000/customer/add",
+        "https://acconex-backend.vercel.app/customer/add",
         formData
       );
       if (response.data.success) {
+        console.log("Customer added successfully:", response.data);
         message.success(response.data.message);
         setShowForm(false);
         fetchCustomers();
@@ -122,7 +145,7 @@ function Customer() {
   const handleUpdate = async (formData) => {
     try {
       const response = await axios.patch(
-        `http://localhost:8000/customer/update/${formData.cusid}`,
+        `https://acconex-backend.vercel.app/customer/update/${formData.cusid}`,
         formData
       );
       if (response.data.success) {
@@ -182,6 +205,14 @@ function Customer() {
       },
     },
   };
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+ // Modal Close Function
+ const closeModal = () => {
+  setIsAccessDeniedVisible(false);
+};
   return (
     <div>
       <DefaultHandle>
@@ -200,17 +231,10 @@ function Customer() {
               style={{ marginBottom: "12px", width: "300px" }}
             />
             <div>
-              <Button style={{ marginRight: "10px" }}>
-                <CSVLink
-                  data={prepareCsvData()}
-                  filename={"customers_report.csv"}
-                >
-                  Export CSV
-                </CSVLink>
-              </Button>
+              
               <Link to="#" onClick={handleAddCustomer}>
                 {" "}
-                <UserAddOutlined/>Add Customer
+                Add Customer
               </Link>
             </div>
           </div>
@@ -254,14 +278,14 @@ function Customer() {
         <Modal
           title="Access Denied"
           visible={isAccessDeniedVisible}
-          onCancel={() => setIsAccessDeniedVisible(false)}
+          onCancel={closeModal}
           footer={[
             <Button key="ok" onClick={() => setIsAccessDeniedVisible(false)}>
               OK
             </Button>,
           ]}
         >
-          <p>You do not have permission to view this page.</p>
+          <p>You do not have permission to delete the customer..</p>
         </Modal>
       </DefaultHandle>
     </div>

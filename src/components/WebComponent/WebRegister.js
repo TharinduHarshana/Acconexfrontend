@@ -13,7 +13,7 @@ const WebRegister = () => {
 
    
     const onFinish = (values) => {
-        axios.post('http://localhost:8000/webuser/register', values)
+        axios.post('https://acconex-backend.vercel.app/webuser/register', values)
             .then(res => {
                 console.log(res);
                 if (res.data.status === 'succes') { 

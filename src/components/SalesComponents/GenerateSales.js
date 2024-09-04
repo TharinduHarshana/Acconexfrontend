@@ -14,7 +14,7 @@ function GenerateSales({ handleCancel }) {
      
     // Fetch sales data
     try {
-      const response = await axios.get('http://localhost:8000/dailysales/', {
+      const response = await axios.get('https://acconex-backend.vercel.app/dailysales/', {
         params: {
             startDate,
             endDate,

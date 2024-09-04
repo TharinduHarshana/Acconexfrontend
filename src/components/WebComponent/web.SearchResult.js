@@ -17,7 +17,7 @@ function SearchResults() {
 
   useEffect(() => {
     if (value && value.trim().length > 0) {
-      axios.get(`http://localhost:8000/webitem/search/${value}`)
+      axios.get(`https://acconex-backend.vercel.app/webitem/search/${value}`)
       .then(res => {
         setResults(res.data.data);
       })
@@ -29,7 +29,7 @@ function SearchResults() {
   const handleAddToCart = async (item) => {
     try {
       const token = localStorage.getItem('token'); // Retrieve the token from local storage
-      const res = await axios.post('http://localhost:8000/cart/add', {
+      const res = await axios.post('https://acconex-backend.vercel.app/cart/add', {
         Item_id: item._id,
         itemDisplayName: item.displayName,
         image: item.imageLink,

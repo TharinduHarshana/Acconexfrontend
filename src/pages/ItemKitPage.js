@@ -21,7 +21,7 @@ const ItemKit = () => {
     const loadItemKit = async () => {
       setLoading(true);
       try {
-        const response = await axios.get("http://localhost:8000/itemkit/all", {
+        const response = await axios.get("https://acconex-backend.vercel.app/itemkit/all", {
           withCredentials: true,
         });
         setItemKit(response.data.data);
@@ -47,7 +47,7 @@ const ItemKit = () => {
 
   const handleDelete = async (_id) => {
     try {
-      await axios.delete(`http://localhost:8000/itemkit/delete/${_id}`,{
+      await axios.delete(`https://acconex-backend.vercel.app/itemkit/delete/${_id}`,{
         withCredentials:true,
       });
       setItemKit(itemKit.filter((itemKit) => itemKit._id !== _id));

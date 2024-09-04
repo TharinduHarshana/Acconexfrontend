@@ -19,7 +19,7 @@ function SuspendSale() {
 
   const fetchSuspendSale = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/suspendsale/');
+      const response = await axios.get('https://acconex-backend.vercel.app/suspendsale/');
       const sortedData = response.data.data.sort((a,b) =>new Date(b.Date) - new Date(a.Date));
       setSuspendSale(sortedData); // Adjust this line based on actual response structure
     } catch (error) {
@@ -58,7 +58,7 @@ function SuspendSale() {
       }));
 
       try {
-        await axios.delete(`http://localhost:8000/suspendsale/delete/${selectedSale.suspend_id}`);
+        await axios.delete(`https://acconex-backend.vercel.app/suspendsale/delete/${selectedSale.suspend_id}`);
         message.success('Suspended sale restored and deleted successfully');
         fetchSuspendSale(); // Refresh the suspended sale list
       } catch (error) {
@@ -73,7 +73,7 @@ function SuspendSale() {
 
   const handleDelete = async (suspend_id) => {
     try {
-      await axios.delete(`http://localhost:8000/suspendsale/delete/${suspend_id}`);
+      await axios.delete(`https://acconex-backend.vercel.app/suspendsale/delete/${suspend_id}`);
       message.success('Suspended sale deleted successfully');
       fetchSuspendSale(); // Refresh the suspended sale list
     } catch (error) {

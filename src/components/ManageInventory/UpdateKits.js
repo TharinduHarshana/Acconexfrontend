@@ -389,7 +389,7 @@ function UpdateItemKitForm() {
   useEffect(() => {
     const fetchInventoryItems = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/item/");
+        const response = await axios.get("https://acconexfrontend.vercel.app/item/");
         if (response.data.success) {
           const itemsWithSelectedQuantity = response.data.data.map((item) => ({
             ...item,
@@ -410,7 +410,7 @@ function UpdateItemKitForm() {
   useEffect(() => {
     const fetchItemKitData = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/itemkit/${id}`);
+        const response = await axios.get(`https://acconexfrontend.vercel.app/itemkit/${id}`);
         if (response.data.success) {
           const kitData = response.data.data;
           setFormData({
@@ -595,7 +595,7 @@ function UpdateItemKitForm() {
 
     try {
       const response = await axios.patch(
-        `http://localhost:8000/itemkit/update/${id}`,
+        `https://acconexfrontend.vercel.app/itemkit/update/${id}`,
       
       );
       console.log("Item kit updated successfully:", response.data);

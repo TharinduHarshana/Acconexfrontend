@@ -18,7 +18,7 @@ const downloadReport = (totals, selectedDate, logo, isPrint = false) => {
 
   // Report Header
   doc.setFontSize(18);
-  doc.setFont("Helvetica", "bold"); // Make the title bold
+  doc.setFont("Helvetica", "bold"); 
   doc.setTextColor(0, 0, 0);
   doc.text(
     "Daily Sales Summary Report - Aconex Computers",

@@ -31,7 +31,7 @@ const AdminDashboard = () => {
 
   const getCountSales = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/dailysales/count');
+      const response = await axios.get('https://acconex-backend.vercel.app/dailysales/count');
       setSalesCount(response.data.data);
     } catch (error) {
       console.error('Error fetching sales count:', error);
@@ -40,7 +40,7 @@ const AdminDashboard = () => {
 
   const getCountCustomer = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/customer/count');
+      const response = await axios.get('https://acconex-backend.vercel.app/customer/count');
       setCustomerCount(response.data.data);
     } catch (error) {
       console.error('Error fetching customer count:', error);
@@ -49,7 +49,7 @@ const AdminDashboard = () => {
 
   const getItemCount = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/item/count');
+      const response = await axios.get('https://acconex-backend.vercel.app/item/count');
       setItemCount(response.data.data);
     } catch (error) {
       console.error('Error fetching item count:', error);
@@ -58,7 +58,7 @@ const AdminDashboard = () => {
 
   const getItemKitCount = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/itemkit/count');
+      const response = await axios.get('https://acconex-backend.vercel.app/itemkit/count');
       setItemKitCount(response.data.data);
     } catch (error) {
       console.error('Error fetching item kit count:', error);
@@ -69,7 +69,7 @@ const AdminDashboard = () => {
  
   const fetchMonthlyTotalSalesData = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/dailysales/monthly_totals');
+      const response = await axios.get('https://acconex-backend.vercel.app/dailysales/monthly_totals');
       setMonthlyTotalSalesData(response.data.data);
     } catch (error) {
       console.error('Error fetching monthly total sales data:', error);
@@ -78,7 +78,7 @@ const AdminDashboard = () => {
 
   const fetchWeeklyTotalSalesData = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/dailysales/weekly_totals');
+      const response = await axios.get('https://acconex-backend.vercel.app/dailysales/weekly_totals');
       setWeeklyTotalSalesData(response.data.data);
     } catch (error) {
       console.error('Error fetching weekly total sales data:', error);

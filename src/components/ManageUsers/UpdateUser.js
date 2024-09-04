@@ -27,7 +27,7 @@ function UpdateUser() {
   useEffect(() => {
     // Fetch user data from the backend API
     axios
-      .get(`http://localhost:8000/user/${id}`, { withCredentials: true })
+      .get(`https://acconex-backend.vercel.app/user/${id}`, { withCredentials: true })
       .then((response) => {
         const userData = response.data.data;
         // Update the user state with data from the response
@@ -48,13 +48,13 @@ function UpdateUser() {
     try {
       // Fetch user data from the backend API
       const response = await axios.get(
-        `http://localhost:8000/user/check/${userId}`
+        `https://acconex-backend.vercel.app/user/check/${userId}`
       );
       const { exists } = response.data;
       // If the user ID exists in the database
       if (exists) {
         // Fetch the user data by ID
-        const userData = await axios.get(`http://localhost:8000/user/${id}`);
+        const userData = await axios.get(`https://acconex-backend.vercel.app/user/${id}`);
         // If the fetched user ID is the same as the current user's ID, return false (no conflict)
         if (userData.data.data.userId === userId) {
           return false;
@@ -86,7 +86,7 @@ function UpdateUser() {
       }
 
       // Update user data in the backend
-      await axios.patch(`http://localhost:8000/user/update/${id}`, user, {
+      await axios.patch(`https://acconex-backend.vercel.app/user/update/${id}`, user, {
         withCredentials: true,
       });
       console.log("User updated successfully:", user);

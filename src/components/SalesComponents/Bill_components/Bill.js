@@ -51,10 +51,10 @@ const Bill = () => {
       try {
         // Fetch items, customers, and daily sales
         const [itemsResponse, customersResponse, dailySalesResponse,suspendSalesResponse] = await Promise.all([
-          axios.get('http://localhost:8000/item/'),
-          axios.get('http://localhost:8000/customer/'),
-          axios.get('http://localhost:8000/dailysales/'),
-          axios.get('http://localhost:8000/suspendsale/')
+          axios.get('https://acconex-backend.vercel.app/item/'),
+          axios.get('https://acconex-backend.vercel.app/customer/'),
+          axios.get('https://acconex-backend.vercel.app/dailysales/'),
+          axios.get('https://acconex-backend.vercel.app/suspendsale/')
         ]);
         // Update state with fetched data
         const itemsData = itemsResponse.data.data;
@@ -197,7 +197,7 @@ const generateNextCustomerId = (currentCustomerId) => {
   
       try {
         // Make API call to reduce quantity in the database
-        const response = await axios.patch(`http://localhost:8000/item/update/${selectedItem._id}`, {
+        const response = await axios.patch(`https://acconex-backend.vercel.app/item/update/${selectedItem._id}`, {
           
         });
   
@@ -284,7 +284,7 @@ const handleCompleteSale = async () => {
     console.log("Attempting to complete sale with data:", data);
 
     // Save sale data
-    const response = await axios.post("http://localhost:8000/dailysales/add", data);
+    const response = await axios.post("https://acconex-backend.vercel.app/dailysales/add", data);
 
     if (response.data.success) {
       console.log("Sales data saved successfully");
@@ -294,7 +294,7 @@ const handleCompleteSale = async () => {
         if (item.productID) {
           try {
             // Fetch current quantity from the backend
-            const getItemResponse = await axios.get(`http://localhost:8000/item/get/${item.productID}`);
+            const getItemResponse = await axios.get(`https://acconex-backend.vercel.app/item/get/${item.productID}`);
             if (getItemResponse.data.success) {
               const currentQuantity = Number(getItemResponse.data.data.quantity);
               const reductionAmount = Number(item.quantity);
@@ -303,7 +303,7 @@ const handleCompleteSale = async () => {
               console.log(`Updating item with product ID: ${item.productID}, reducing quantity by: ${reductionAmount}, new quantity in backend: ${newQuantity}`);
 
               // Send request to update the quantity in the backend
-              return axios.patch(`http://localhost:8000/item/update/productID/${item.productID}`, {
+              return axios.patch(`https://acconex-backend.vercel.app/item/update/productID/${item.productID}`, {
                 quantity: newQuantity // Ensure this is the reduced quantity
               });
             } else {
@@ -394,7 +394,7 @@ const handleSuspendSale = async () => {
       total: total
     };
 
-    const response = await axios.post("http://localhost:8000/suspendsale/add", suspendData);
+    const response = await axios.post("https://acconex-backend.vercel.app/suspendsale/add", suspendData);
 
     if (response.data.success) {
       message.success("Sale suspended successfully.");
@@ -471,7 +471,7 @@ const handlePrint = () => {
   //add customer form
   const handleAddCustomer = async () => {
     try {
-      const customersResponse = await axios.get('http://localhost:8000/customer/');
+      const customersResponse = await axios.get('https://acconex-backend.vercel.app/customer/');
       const lastCustomerId = customersResponse.data.data.length > 0 ? customersResponse.data.data[customersResponse.data.data.length - 1].cusid : 'cus000';
       const nextCustomerId = generateNextCustomerId(lastCustomerId);
       setNextCustomerId(nextCustomerId);
@@ -484,7 +484,7 @@ const handlePrint = () => {
 //add customer to the databse
   const handleFormSubmit = async (formData) => {
     try {
-      const response = await axios.post("http://localhost:8000/customer/add", formData);
+      const response = await axios.post("https://acconex-backend.vercel.app/customer/add", formData);
       if (response.data.success) {
         message.success(response.data.message);
         setShowForm(false);

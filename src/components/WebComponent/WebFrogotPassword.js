@@ -12,7 +12,7 @@ const FrogotPassword = () => {
 
     const onFinish = async (values) => {
         try {
-            const response = await axios.post('http://localhost:8000/webuser/frogotpassword', values);
+            const response = await axios.post('https://acconex-backend.vercel.app/webuser/frogotpassword', values);
             console.log(response);
             if (response.data.status === "error") {
                 Swal.fire({

@@ -22,7 +22,7 @@ function UpdateSupplier() {
   // Effect hook to fetch supplier data when component mounts
   useEffect(() => {
     axios
-      .get(`http://localhost:8000/supplier/${id}`)
+      .get(`https://acconex-backend.vercel.app/supplier/${id}`)
       .then((response) => {
         const supplierData = response.data.data;
         // Update supplier state with fetched data
@@ -43,14 +43,14 @@ function UpdateSupplier() {
     try {
       // Fetch supplier data from the backend API
       const response = await axios.get(
-        `http://localhost:8000/supplier/check/${supplierId}`
+        `https://acconex-backend.vercel.app/supplier/check/${supplierId}`
       );
       const { exists } = response.data;
       // If the supplier ID exists in the database
       if (exists) {
         // Fetch the supplier data by ID
         const supplierData = await axios.get(
-          `http://localhost:8000/supplier/${id}`
+          `https://acconex-backend.vercel.app/supplier/${id}`
         );
         // If the fetched supplier ID is the same as the current supplier's ID, return false (no conflict)
         if (supplierData.data.data.supplierId === supplierId) {
@@ -81,7 +81,7 @@ function UpdateSupplier() {
       }
 
       await axios.patch(
-        `http://localhost:8000/supplier/update/${id}`,
+        `https://acconex-backend.vercel.app/supplier/update/${id}`,
         supplier
       );
       console.log("Supplier updated successfully:", supplier);

@@ -2,7 +2,7 @@ import axios from "axios";
 
 // Create an axios instance with baseURL and withCredentials
 const api = axios.create({
-  baseURL: "http://localhost:8000/user",
+  baseURL: "https://acconexfrontend.vercel.app/user",
   withCredentials: true,
 });
 

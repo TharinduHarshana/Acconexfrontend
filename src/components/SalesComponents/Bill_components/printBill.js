@@ -155,7 +155,7 @@ const printBill = (invoiceNo, cashier, date, paymentMethod, billItems, total, te
               <span>Total:</span><span> ${formatCurrency(total)}</span>
             </div>
             <div class="bill-total">
-              <span>Discount:</span><span> ${formatCurrency(disc)}</span>
+              <span>Discount:</span><span> ${disc}%</span>
             </div>
             <div class="bill-total">
               <span>Tendered:</span><span> ${formatCurrency(tendered)}</span>

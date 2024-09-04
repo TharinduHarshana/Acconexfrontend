@@ -31,7 +31,6 @@ import Customer from './components/CustomerComponents/Customer';
 import SuspendSale from './components/SalesComponents/SuspendSale';
 import Dailysales from './components/SalesComponents/Daily_sales';
 import TotalSale from './components/SalesComponents/TotalSale';
-import BankTransfer from './components/SalesComponents/Bill_components/BankTransferModal';
 
 
 // import web components
@@ -139,7 +138,6 @@ function App() {
         <Route path='/admin/holdbill' element={<SuspendSale/>}/>
         <Route path='/admin/dailysales' element={<Dailysales/>}/>
         <Route path='/admin/totalsale' element={<TotalSale/>}/>
-        <Route path="/banktransfer" component={<BankTransfer/>} />
 
         <Route path='/admin/inventory' element={<InventoryHome/>}/>
         <Route path='/admin/inventory/addnewitem' element={<InventoryAdd/>}/>

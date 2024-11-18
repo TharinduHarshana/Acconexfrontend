@@ -67,10 +67,6 @@ const CustomerForm = ({ handleSubmit, handleClose, formData = {}, editing, }) =>
       return false;
     }
   
-    if (!mobileUnique(customerData.mobile)) {
-      message.error('The mobile number already exists. Please use a different mobile number.');
-      return false;
-    }
   
     if (mobileError) {
       message.error('Please correct the mobile number field.');

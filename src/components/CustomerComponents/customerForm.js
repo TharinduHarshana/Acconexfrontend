@@ -52,12 +52,6 @@ const CustomerForm = ({ handleSubmit, handleClose, formData = {}, editing, }) =>
     });
   };
 
-  const mobileUnique = (mobile) => {
-    // Assuming you have a way to access the list of customers (e.g., via props or fetching it from a context or global state)
-    const existingCustomers = []; // Replace with actual customer list
-    message.error('The mobile number already exists. Please use a different mobile number.');
-    return !existingCustomers.some(customer => customer.mobile === mobile);
-  };
   
  
   //validate form(check empty)
